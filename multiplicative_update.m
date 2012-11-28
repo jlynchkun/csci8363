@@ -8,10 +8,10 @@ function  [W,H1,H2] = multiplicative_update(X1,X2,W,H1,H2,A,B,L1,L2,L3,r1,r2,K)
 %lambda3 -> L3 = ??? THIS IS FOR "learn B" parameter. 0 means don't learn
 %B (i.e. don't push H1'*H2 to be like B)
 
-errordiff = 1;
+errordiff = 1000000;
 
 error = [];
-while errordiff > eps %TODO: need a better (but princpled) ending point
+while errordiff > 1000 %TODO: need a better (but princpled) ending point
     
     %this update is directly from Zhang's code, plus 
     W = W.*([H1 H2]*[X1 X2]')'./(W*([H1 H2]*[H1 H2]'+r1*eye(K))+eps);    %Update rule-1;  
@@ -27,6 +27,6 @@ while errordiff > eps %TODO: need a better (but princpled) ending point
     pause(.1) %to get the plot to show
 
     try
-        errordiff = error(end-1)-error(end)
+        errordiff = error(end-1)-error(end);
     end
 end

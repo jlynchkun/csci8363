@@ -59,7 +59,7 @@ B = abs(B);
 
 
 %% Do updates
-num_iterations = 10;
+num_iterations = 1;
 results_counter = 1;
 
 %dimensionality of result
@@ -78,6 +78,11 @@ for gamma1 = parameter_values
         for lambda1 = parameter_values
             for lambda2 = parameter_values
                 for lambda3 = parameter_values
+                    gamma1
+                    gamma2
+                    lambda1
+                    lambda2
+                    lambda3
                     results_temp = [];
                     for iter=1:num_iterations
                         iter
@@ -151,17 +156,17 @@ for gamma1 = parameter_values
                         end
 
 
-                        %CASE 5 - Image data only
-                        pval_image = [];
+                        %CASE 5 - Gene data only
+                        pval_gene = [];
                         for i=1:K
                             [val idx] = sort(W1_gene(:,i),'descend');[junka junkb p] = logrank_no_fig(survival(idx(1:num_p)), survival(idx(end-num_p+1:end)));
-                            pval_image = [pval_image; p];
+                            pval_gene = [pval_gene; p];
                         end
 
 
                         %RECORD RESULTS
                         sig_cutoff = 0.05;
-                        results_temp(iter,:) = [gamma1 gamma2 gamma3 lambda1 lambda2 length(find(pval1 < sig_cutoff))  length(find(pval2 < sig_cutoff)) length(find(pval3 < sig_cutoff)) length(find(pval_image < sig_cutoff)) length(find(pval_gene < sig_cutoff))];
+                        results_temp(iter,:) = [gamma1 gamma2 lambda1 lambda2 lambda3 length(find(pval1 < sig_cutoff))  length(find(pval2 < sig_cutoff)) length(find(pval3 < sig_cutoff)) length(find(pval_image < sig_cutoff)) length(find(pval_gene < sig_cutoff))];
 
                         
 
