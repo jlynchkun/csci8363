@@ -46,11 +46,17 @@ A =[gene_network gene_network;
    gene_network gene_network];
 
 %Create B - correlation matrix between Gene_expression_data and Image_data
-%THIS SHOULD BE SIMILAR TO MULTIPLYING H1*H2'
+%THIS SHOULD BE SIMILAR TO MULTIPLYING H1'*H2 - CHECK TO SEE IF IT IS
+%QUESTION - SHOULD WE JUST DO THIS LIKE Zhang DOES?
 disp('Calculating gene-image correlation matrix...')
 correlations = corrcoef([X1,X2]);
 B = correlations(end-size(X1,2)+1:end,1:size(X2,2)); %B is just the lower quarter of this correlation matrix - WEIRD DISTRIBUTION?
 B = abs(B);
+
+
+
+
+
 
 %% Do updates
 num_iterations = 10;
@@ -72,6 +78,7 @@ for gamma1 = parameter_values
         for lambda1 = parameter_values
             for lambda2 = parameter_values
                 for lambda3 = parameter_values
+                    results_temp = [];
                     for iter=1:num_iterations
                         iter
                         % initialize random factors for |X - WH1| + |X - WH2|
@@ -83,6 +90,7 @@ for gamma1 = parameter_values
                         H1 = rand(K,m1);   %initialize H to random numbers between 0 and 1
                         H2 = rand(K,m2);
 
+                        %% UPDATES
                         %case 1 - omit B, so gamma2 = 0, lambda3 = 0
                         [W1_1,H1_1,H2_1] = multiplicative_update(X1,X2,W,H1,H2,A,B,lambda1,lambda2,0,gamma1,0,K);
 
@@ -95,29 +103,82 @@ for gamma1 = parameter_values
 
                         %case 4 - only image data
                         maxiter = 50;
-                        %[W1_image, H1_image] = nnmf_by_taehyun(X1, W, H1, maxiter);
+                        [W1_image, H1_image] = non_negative_matrix_factorization(X1, W, H1, maxiter);
 
                         %case 5 - only genetic data
-                        %[W1_gene, H1_gene] = nnmf_by_taehyun(X2, W, H2, maxiter);
+                        [W1_gene, H1_gene] = non_negative_matrix_factorization(X2, W, H2, maxiter);
+                        
+
+                        %% SIGNIFICANCE OF RESULT
+                        %Do logrank test (Mantel-Cox test) statistics
+                        %In each case, go through each column and sort the
+                        %values. Take the highest and lowest num_p subjects
+                        %and see if their survival rates are significantly
+                        %different using the Mantel-Cox test.  Record the
+                        %p-values from the test results.  
+                        
+                        num_p = 50; %Number of patients to test in each group
+
+                        % CASE 1
+                        pval1 = [];
+                        for i=1:K
+                            [val idx] = sort(W1_1(:,i),'descend');[junka junkb p] = logrank_no_fig(survival(idx(1:num_p)), survival(idx(end-num_p+1:end)));
+                            pval1 = [pval1; p];
+                        end
+
+
+                        %CASE 2
+                        pval2 = [];
+                        for i=1:K
+                            [val idx] = sort(W1_2(:,i),'descend');[junka junkb p] = logrank_no_fig(survival(idx(1:num_p)), survival(idx(end-num_p+1:end)));
+                            pval2 = [pval2; p];
+                        end
+
+
+                        %CASE 3
+                        pval3 = [];
+                        for i=1:K
+                            [val idx] = sort(W1_3(:,i),'descend');[junka junkb p] = logrank_no_fig(survival(idx(1:num_p)), survival(idx(end-num_p+1:end)));
+                            pval3 = [pval3; p];
+                        end
+
+
+                        %CASE 4 - Image only
+                        pval_image = [];
+                        for i=1:K
+                            [val idx] = sort(W1_image(:,i),'descend');[junka junkb p] = logrank_no_fig(survival(idx(1:num_p)), survival(idx(end-num_p+1:end)));
+                            pval_image = [pval_image; p];
+                        end
+
+
+                        %CASE 5 - Image data only
+                        pval_image = [];
+                        for i=1:K
+                            [val idx] = sort(W1_gene(:,i),'descend');[junka junkb p] = logrank_no_fig(survival(idx(1:num_p)), survival(idx(end-num_p+1:end)));
+                            pval_image = [pval_image; p];
+                        end
+
+
+                        %RECORD RESULTS
+                        sig_cutoff = 0.05;
+                        results_temp(iter,:) = [gamma1 gamma2 gamma3 lambda1 lambda2 length(find(pval1 < sig_cutoff))  length(find(pval2 < sig_cutoff)) length(find(pval3 < sig_cutoff)) length(find(pval_image < sig_cutoff)) length(find(pval_gene < sig_cutoff))];
+
                         
 
                         
-                        %Calculate Kaplan-Meyer statistics
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
-                        
                     end
+                    %combine results
+                    for ii=1:num_iterations
+                        results(results_counter,:) = results_temp(ii,:);
+                        results_counter = results_counter+1;
+                    end   
+                    
+                    
+                    
                 end
             end
         end
-end
+    end
 end
 
 % 
