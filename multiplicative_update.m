@@ -1,3 +1,9 @@
+% ||X1-WH1||_F^2 + ||X2-WH2||_F^2 
+% -L1 Tr(H2AH2^T)  gene-gene interaction
+% -L2 Tr(H1BH2^t)
+% + gamma1 ||W||_F^2 + gamma2 * (sum(hj) + sum(hj'))
+% + L3 * ||B0 - H1^TH2||_F^2
+%
 function  [W,H1,H2] = multiplicative_update(X1,X2,W,H1,H2,A,B,L1,L2,L3,r1,r2,K)
 %multiplicative update from page i404 of Zhang et al 2011
 %from paper, the following are equivalent
