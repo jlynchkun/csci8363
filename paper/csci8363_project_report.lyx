@@ -72,11 +72,27 @@ Joshua Lynch
 \end_layout
 
 \begin_layout Part
-This is the first part
+Introduction
 \end_layout
 
 \begin_layout Part
-This is the second part
+Supervised Approach
+\end_layout
+
+\begin_layout Part
+Unsupervised Approach
+\end_layout
+
+\begin_layout Part
+Clustering
+\end_layout
+
+\begin_layout Part
+Discussion
+\end_layout
+
+\begin_layout Part
+Conclusion
 \end_layout
 
 \begin_layout Section
@@ -158,10 +174,6 @@ X_{1} & =\begin{bmatrix}\begin{bmatrix}1 & 1 & 0 & 1\\
 \end_inset
 
 
-\end_layout
-
-\begin_layout Part
-Don't you think there should be three parts?
 \end_layout
 
 \end_body

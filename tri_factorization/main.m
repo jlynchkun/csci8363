@@ -1,6 +1,8 @@
-%function [return1 return2] = main(GeneName,Gene_expression_data,Image_data,survival, gene_name_ge,ppiMatrixTF)
+%function [return1 return2] = main(Gene_expression_data,Image_data,survival,Clinical_numeric)
 %% Use tri-matrix factorization to uncover latent relationships between
 % genes and image data.
+
+%load Breast_cancer_image.mat
 
 % robust sparse non-negative matrix tri-factorization
 % 2012. 1. Seung-Jun Kim
@@ -8,12 +10,6 @@
 % Performs column normalization of F & G per iteration
 
 
-
-
-%% FOR some reason, we are getting lots of "inadmissible zeros" results
-
-
-%rng('default')
 
 
 %%set parameters
@@ -26,67 +22,77 @@ kappa = 1e-6;   % Inadmissible structural zero avoidance adjustment (e.g. 1e-6)
 kappa_tol = 1e-10;  % Tolerance for identifying a potential structural nonzero (e.g., 1e-10)
 epsilon = 1e-10;    % minimum divisor to prevent divide-by-zero (e.g. 1e-10)
 
-%% generate test data - this is fake. Might want to take this out.
-% m = 10;
-% n = 15;
-% k1 = 3;
-% k2 = 4;
-% F = zeros(m,k1);
-% S = zeros(k1,k2);
-% G = zeros(n,k2);
-% Z = zeros(m,n); 
-% F(1:3, 1) = 1;
-% F(4:7, 2) = 1; F(4:5, 1) = 1;
-% F(7:10,3) = 1;
-% G(1:4, 1) = 1;
-% G(5:9, 2) = 1;
-% G(9:12,3) = 1;
-% G(13:15,4) = 1;
-% S(1,[1 3]) = 1;
-% S(2,[2 ]) = 1;              %S(2,[2 3]) = 1;
-% S(3,[3 4]) = 1;             %S(3,4) = 1;
-% 
-% X = F*S*G' > 0.5;
-% %X = F*S*G';
-% Z(1,1) = 1; % outliers
-% Z(4,10) = 1;
-% 
-% Xtrue = X;
-% Ftrue = F; 
-% Strue = S;
-% Gtrue = G;
-% Ztrue = Z;
-% 
-% X = X - Z;
-
 
 
 %% Prepare data
-%TODO Make Genes and Images same scale!!!!!!!!
+
+%remove some genes???
 
 
 % avoid this kind of colomn or row: sum == 0
+index = find(sum(Gene_expression_data,1) == 0);
+Gene_expression_data(:,index) = Gene_expression_data(:,index) + eps;
+index = find(sum(Image_data,1) == 0);
+Image_data(:,index) = Image_data(:,index) + eps;
+
+
+%MAKE DATA SAME SCALE - normalize by column
+Gene_expression_data = zscore(Gene_expression_data);
+Image_data = zscore(Image_data);
+
+
+%make positive
 part1 = [max(Gene_expression_data,0) max(-Gene_expression_data,0)];
 part2 = [max(Image_data,0) max(-Image_data,0)];
 
 
+%SORT BY survival/metastasis status
+survival = survival/12; %survival from month to year scale
+% correct labels 
+labels = Clinical_numeric(:,6); %metastasis status
+labels(labels==1)=-1; %metastasis
+labels(labels==0)=1; %non-metastasis
+
+%put everything in the right order
+[Y I] = sort(labels,'descend'); %sort labels by class - I is indices
+labels_sorted = labels(I);
+W0 = [labels_sorted > 0 labels_sorted < 0];
+survival = survival(I,:);
+part1 = part1(I,:);
+part2 = part2(I,:);
+
+
+%combine into data matrix
 X = [part1'; part2'];
+G = W0;
+% 
+% 
+% % 
+%  X(X<3)=0;
+%  return1 = X;
+%   return2 = W0; 
+%   return
+% 
+%  
+ 
+ 
+%  
+% 
+% %make all rows of X nonzero
+% index = find(sum(X,2) == 0);
+% X(index,:) = X(index,:) + eps;
+% 
+% %make all columns nonzero
+% G = Clinical_numeric(:,[5 6 7 8]); %this is clinical data for survival
+% index = find(sum(G,1) == 0);
+% G(:,index) = G(:,index) + eps;
 
-
-%make all rows of X nonzero
-index = find(sum(X,2) == 0);
-X(index,:) = X(index,:) + eps;
-
-%make all columns nonzero
-G = Clinical_numeric(:,[5 6 7 8]); %this is clinical data for survival
-index = find(sum(G,1) == 0);
-G(:,index) = G(:,index) + eps;
 
 
 
 [m n] = size(X);
-k1 = 4;
-k2 = 4;
+k1 = 10; %columns of F
+k2 = 2; %rows of G - want to be the same as number of labels
 
 
 
@@ -113,11 +119,11 @@ while (obj_old - obj > 1e-6)
     if sum(sum(Q)) > 0 disp(sprintf('inadmissible zeros in S (iter = %d)',length(obj_traj))), end
     S = (S + Q).*upd_factor;
     
-    upd_factor = ((X-Z)'*F*S)./(G*S'*F'*F*S + lambG*sum(sum(G)) + epsilon);
-    Q = kappa*(upd_factor > 1 & G < kappa_tol);
-    if sum(sum(Q)) > 0 disp(sprintf('inadmissible zeros in G (iter = %d)',length(obj_traj))), end
-    G = (G + Q).*upd_factor;
-    [G,d2] = norm_cols(G,2); S = S*diag(d2);
+%    upd_factor = ((X-Z)'*F*S)./(G*S'*F'*F*S + lambG*sum(sum(G)) + epsilon);
+%    Q = kappa*(upd_factor > 1 & G < kappa_tol);
+%    if sum(sum(Q)) > 0 disp(sprintf('inadmissible zeros in G (iter = %d)',length(obj_traj))), end
+%    G = (G + Q).*upd_factor;
+%    [G,d2] = norm_cols(G,2); S = S*diag(d2);
     
     T = X - F*S*G';
     Z = min(X, sign(T).*max(abs(T) - lambO,0));
@@ -126,6 +132,8 @@ while (obj_old - obj > 1e-6)
     obj = 0.5*(norm(X - F*S*G' - Z,'fro')^2 + lambF*sum(sum(F))^2 + ...
         lambS*sum(sum(S))^2 + lambG*sum(sum(G))^2) + lambO*sum(sum(abs(Z)));
     obj_traj = [obj_traj obj];
+    plot(obj_traj)
+    pause(.1)
 end
 disp(sprintf('Total # of iteration = %d',length(obj_traj)));
 
