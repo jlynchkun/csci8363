@@ -72,19 +72,59 @@ Joshua Lynch
 \end_layout
 
 \begin_layout Part
-Introduction
+Introduction 
+\end_layout
+
+\begin_layout Standard
+The availability of detailed bioinformatic data is growing quickly, but
+ reliable methods of relating this wealth of information to patient prognosis
+ and diagnosis are often lacking.
+ 
+\end_layout
+
+\begin_layout Standard
+Image data -> prognosis prediction
+\end_layout
+
+\begin_layout Standard
+Gene expression microarray data -> prognosis prediction
+\end_layout
+
+\begin_layout Standard
+Way to combine those? Either to uncover connections between gene expression
+ (genotypes) and breast cancer image features (phenotypes)?
 \end_layout
 
 \begin_layout Part
 Supervised Approach
 \end_layout
 
+\begin_layout Standard
+tri-matrix factorization
+\end_layout
+
 \begin_layout Part
 Unsupervised Approach
 \end_layout
 
+\begin_layout Standard
+Zhang 2011
+\end_layout
+
 \begin_layout Part
 Clustering
+\end_layout
+
+\begin_layout Standard
+shared nearest neighbor
+\end_layout
+
+\begin_layout Standard
+spectral clustering
+\end_layout
+
+\begin_layout Standard
+problem of feature selection
 \end_layout
 
 \begin_layout Part
@@ -108,7 +148,8 @@ The formulation of the Network-Regularized Multiple NMF objective function:
 \begin{align*}
 F(W,H_{1},H_{2}) & =||X_{1}-WH_{1}||_{F}^{2}+||X_{2}-WH_{2}||_{F}^{2}\\
  & -\lambda_{1}Tr(H_{2}AH_{2}^{T})-\lambda_{2}Tr(H_{1}BH_{2}^{T})\\
- & +\gamma_{1}||W||_{F}^{2}+\gamma_{2}(\sum_{j}||h_{j}||_{1}^{2}+\sum_{j'}||h_{j'}||_{1}^{2})
+ & +\gamma_{1}||W||_{F}^{2}+\gamma_{2}(\sum_{j}||h_{j}||_{1}^{2}+\sum_{j'}||h_{j'}||_{1}^{2})\\
+ & +\lambda_{3}||H_{1}^{T}H_{2}-B||
 \end{align*}
 
 \end_inset
@@ -170,6 +211,113 @@ X_{1} & =\begin{bmatrix}\begin{bmatrix}1 & 1 & 0 & 1\\
 0 & 1 & 0 & 1
 \end{bmatrix}\end{bmatrix}
 \end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+F(W,H_{1},H_{2}) & ={\displaystyle \sum_{I=1,2}}||X_{I}-WH_{I}||_{F}^{2}\\
+\\
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Multiplicative updates
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\min_{W\geq0}\sum_{I=1,2}||X_{I}-WH_{I}||_{F}^{2}+\gamma_{1}||W||^{2}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+w_{ij}\leftarrow w_{ij}\frac{(W_{1}H_{1}^{T}+X_{2}H_{2}^{T})_{ij}}{(WH_{1}H_{1}^{T}+WH_{2}H_{2}^{2}+\frac{\gamma_{1}}{2}W_{ij}}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\min_{H_{1},H_{2}\geq0}\sum_{I=1,2}||X_{I}-WH_{I}||_{F}^{2}-\lambda_{1}Tr(H_{2}AH_{2}^{T})-\lambda_{2}Tr(H_{1}BH_{2}^{T})+\gamma_{2}(\sum_{j}||h_{j}||_{1}^{2}+\sum_{j'}||h_{j'}||_{1}^{2})
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+h_{ij}^{1}\leftarrow h_{ij}^{1}\frac{(W^{T}X_{1}+\frac{\lambda_{2}}{2}H_{2}B^{T})_{ij}}{[(W^{T}W+\gamma_{2}e_{k\times k})H_{2}]_{ij}}
+\]
+
+\end_inset
+
+ 
+\begin_inset Formula 
+\[
+h_{ij}^{2}\leftarrow h_{ij}^{2}\frac{(W^{T}X_{2}+\lambda_{1}H_{2}A+\frac{\lambda_{2}}{2}H_{1}B^{T})_{ij}}{[(W^{T}W+\gamma_{2}e_{k\times k})H_{2}]_{ij}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+tri-matrix factorization
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\min_{F\geq0,S\geq0,G\geq0}\frac{1}{2}(||X-FSG^{T}||_{F}^{2}+\lambda_{F}||F||_{1}^{2}+\lambda_{S}||S||_{1}^{2}+\lambda_{G}||G||_{1}^{2})
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+F_{ij}\leftarrow F_{ij}\frac{(XGS^{T})_{ij}}{(FSG^{T}GS^{T})_{ij}+\lambda_{F}||F||_{1}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+S_{ij}\leftarrow S_{ij}\frac{(F^{T}XG)_{ij}}{(F^{T}FSG^{T}G)_{ij}+\lambda_{S}||S||_{1}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+G_{ij}\leftarrow G_{ij}\frac{(X^{T}FS)_{ij}}{(GS^{T}F^{T}FS)_{ij}+\lambda_{G}||G||_{1}}
+\]
 
 \end_inset
 
