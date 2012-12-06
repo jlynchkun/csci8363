@@ -293,7 +293,7 @@ Sparse Decomposition
 \end_layout
 
 \begin_layout Subsection
-Matrix Decomposition as Optimization
+Matrix Decomposition as Optimization (JOSH?)
 \end_layout
 
 \begin_layout Subsubsection
@@ -305,52 +305,67 @@ Legrange Multipliers
 \end_layout
 
 \begin_layout Subsubsection
-Multiplicative Updates
+Multiplicative Updates (THOMAS?)
 \end_layout
 
 \begin_layout Part
+Experiments
+\end_layout
+
+\begin_layout Section
 Supervised Approach
 \end_layout
 
-\begin_layout Standard
-Singular value decomposition (SVD) is a common approach to uncoveringA common
- approach to 
+\begin_layout Subsection
+Non-negative Matrix Tri-factorization
 \end_layout
 
 \begin_layout Standard
-tri-matrix factorization
+orthogonal and non
 \end_layout
 
-\begin_layout Part
+\begin_layout Subsection
+Problem Formulation (incl multiplicative updates)
+\end_layout
+
+\begin_layout Subsection
+Results
+\end_layout
+
+\begin_layout Section
 Unsupervised Approach
+\end_layout
+
+\begin_layout Subsection
+Bifactorization with additional constraints
+\end_layout
+
+\begin_layout Subsection
+???
 \end_layout
 
 \begin_layout Standard
 Zhang 2011
 \end_layout
 
-\begin_layout Part
+\begin_layout Section
 Clustering
 \end_layout
 
-\begin_layout Standard
-shared nearest neighbor
+\begin_layout Subsection
+Shared Nearest Neighbor Similarity
 \end_layout
 
-\begin_layout Standard
-spectral clustering
+\begin_layout Subsection
+Spectral Clustering
 \end_layout
 
-\begin_layout Standard
-problem of feature selection
+\begin_layout Subsection
+Feature Selection?
 \end_layout
 
 \begin_layout Part
 Discussion
-\end_layout
-
-\begin_layout Part
-Conclusion
 \end_layout
 
 \begin_layout Section
