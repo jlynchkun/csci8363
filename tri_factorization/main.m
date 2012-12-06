@@ -58,8 +58,8 @@ labels(labels==0)=1; %non-metastasis
 labels_sorted = labels(I);
 W0 = [labels_sorted > 0 labels_sorted < 0];
 survival = survival(I,:);
-part1 = part1(I,:);
-part2 = part2(I,:);
+%part1 = part1(I,:); CHANGE BACK
+%part2 = part2(I,:);
 
 
 %combine into data matrix
