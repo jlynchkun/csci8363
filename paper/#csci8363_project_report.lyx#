@@ -263,21 +263,8 @@ One approach to createing interpretable latent sources is to introduce the
 
 \begin_layout Standard
 Biometric data is often of mixed sign.
- When faced with a 
-\begin_inset Formula $m\times n$
-\end_inset
-
- matrix X with mixed-sign entries, a common technique for imposing nonnegativity
- is to construct a new 
-\begin_inset Formula $m\times2n$
-\end_inset
-
- matrix X'=[max(X,0) max(-X,0)].
- In other words, the left half of X' consists of the originally positive
- values in X with the negative values replaces by 0.
- The right half of X consists of the absolute value of originally negative
- values of X, with 0's replacing corresponding positive values.
- This is the approached used in the methods below.
+ When faced with a matrix X with mixed-sign entries, One technique commonly
+ used is to create a matrix 
 \end_layout
 
 \begin_layout Standard

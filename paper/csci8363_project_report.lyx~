@@ -149,163 +149,29 @@ ity of the data.
  
 \end_layout
 
-\begin_layout Subsection
-Matrix Decomposition
-\end_layout
-
 \begin_layout Standard
 To model the relationship between latent variables and measurable features,
  we can assume that each feature is a linear combination of some number
  of latent variables.
  Mathematically, the features measured for each patient can be written as
  a vector 
-\begin_inset Formula $\mathbf{x}$
+\begin_inset Formula $\mathbf{x}.$
 \end_inset
 
- , where
-\begin_inset Formula $\mathbf{X}=[x_{1}x_{2}...x_{n}]$
-\end_inset
-
- is an 
-\begin_inset Formula $m\times n$
-\end_inset
-
- matrix with 
-\begin_inset Formula $m$
-\end_inset
-
- features and 
-\begin_inset Formula $n$
-\end_inset
-
- patients.
- In order to uncover the latent factors, we can decompose 
-\begin_inset Formula $X$
-\end_inset
-
- into two factors 
-\begin_inset Formula $W$
-\end_inset
-
- and 
-\begin_inset Formula $H$
-\end_inset
-
- such that 
-\begin_inset Formula $X=WH$
-\end_inset
-
-.
- In this factorization, 
-\begin_inset Formula $W$
-\end_inset
-
- is 
-\begin_inset Formula $m\times k$
-\end_inset
-
- matrix whose component vectors span the column space of X, where entries
- of H provide vector weights.
- In other words, X consists of a linear combination of the column vectors
- of W with weights from H.
- W provides the k 
-\begin_inset Quotes eld
-\end_inset
-
-sources
-\begin_inset Quotes erd
-\end_inset
-
- or latent variables and H describes how they linearly combine to produce
- the features in X.
+ All 
 \end_layout
 
 \begin_layout Standard
-Matrix factorization is not unique, so an important question is how to decompose
- X into H and W.
- One principled way to perform such a factorization is to find component
- vectors that are mutually orthogonal.
- This is called Singular Value Decomposition (SVD), and constructs a unique
- factorization 
-\begin_inset Formula $X=USV^{-1}$
-\end_inset
-
-, where U corresponds to W and the latter product corresponds to H.
- This approach is mathematically robust and well-understood.
- From the perspective of uncovering latient sources, however, SVD presents
- several problems.
- First, it may well be the case that latent sources are not actuall orthogonal.
- In this case, the U matrix would not correspond to any domain-specific
- functional process but would be a mere mathematical convenience (CITE Josh's
- paper).
- In addition, SVD does not impose a constraint on the sign of values of
- H.
- A combination of positive and negative coeffients create both additive
- and subtractive components of each feature, making it very difficult to
- interpret how latent sources combine to create features.
- 
-\end_layout
-
-\begin_layout Subsection
-Non-Negative Matrix Factorization (NMF)
+Image data -> prognosis prediction
 \end_layout
 
 \begin_layout Standard
-One approach to createing interpretable latent sources is to introduce the
- additional requirement that the data have values greater than or equal
- to zero, and perform matrix decomposition in such a way that values of
- H and W are exclusively nonnegative.
- This means that the underlying components of X combine in a purely additive
- way to produce X.
- The benefit of this approach is that (INTERPRETABILITY? MORE HERE).
- 
+Gene expression microarray data -> prognosis prediction
 \end_layout
 
 \begin_layout Standard
-Biometric data is often of mixed sign.
- When faced with a 
-\begin_inset Formula $m\times n$
-\end_inset
-
- matrix X with mixed-sign entries, a common technique for imposing nonnegativity
- is to construct a new 
-\begin_inset Formula $m\times2n$
-\end_inset
-
- matrix X'=[max(X,0) max(-X,0)].
- In other words, the left half of X' consists of the originally positive
- values in X with the negative values replaces by 0.
- The right half of X consists of the absolute value of originally negative
- values of X, with 0's replacing corresponding positive values.
- This is the approached used in the methods below.
-\end_layout
-
-\begin_layout Standard
-Non-orthogonality (COMPONENTS MAY BE OVERLAPPING - SEE TAE's TNMF paper)
-\end_layout
-
-\begin_layout Subsection
-Sparse Decomposition
-\end_layout
-
-\begin_layout Standard
-(SEE KIM AND PARK 2007)
-\end_layout
-
-\begin_layout Subsection
-Matrix Decomposition as Optimization
-\end_layout
-
-\begin_layout Subsubsection
-Convex Optimization
-\end_layout
-
-\begin_layout Subsubsection
-Legrange Multipliers
-\end_layout
-
-\begin_layout Subsubsection
-Multiplicative Updates
+Way to combine those? Either to uncover connections between gene expression
+ (genotypes) and breast cancer image features (phenotypes)?
 \end_layout
 
 \begin_layout Part
