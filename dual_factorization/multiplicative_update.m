@@ -15,10 +15,10 @@ function  [W,H1,H2] = multiplicative_update(X1,X2,W,H1,H2,A,B,L1,L2,L3,r1,r2,K)
 %B (i.e. don't push H1'*H2 to be like B)
 
 errordiff = 1000000;
-
+error_ratio = 0.5;
 error = [];
-while errordiff > 1000 %TODO: need a better (but princpled) ending point
-    
+%while errordiff > 1000 %TODO: need a better (but princpled) ending point
+while error_ratio < 0.99 && error_ratio > 0.1 % is this principled?
     %this update is directly from Zhang's code, plus 
     W = W.*([H1 H2]*[X1 X2]')'./(W*([H1 H2]*[H1 H2]'+r1*eye(K))+eps);    %Update rule-1;  
 %    HH1 = H1.*(W'*X1 + L2/2*H2*B')./((W'*W+r2*ones(K))*H1+eps);     %%Update H1 H2 simultaneously
@@ -34,5 +34,6 @@ while errordiff > 1000 %TODO: need a better (but princpled) ending point
 
     try
         errordiff = error(end-1)-error(end);
+        error_ratio = error(end)/error(end-1)
     end
 end
