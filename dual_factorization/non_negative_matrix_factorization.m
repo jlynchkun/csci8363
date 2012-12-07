@@ -1,4 +1,4 @@
-function [W, H] = nnmf_by_taehyun(X, W, H, iterations)
+function [W, H] = non_negative_matrix_factorization(X, W, H, iterations)
 %NNMF - non-negative matrix factorization
 %
 % [W, H] = nnmf(V, r, iterations)
