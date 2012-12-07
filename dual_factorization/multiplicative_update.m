@@ -17,8 +17,10 @@ function  [W,H1,H2] = multiplicative_update(X1,X2,W,H1,H2,A,B,L1,L2,L3,r1,r2,K)
 errordiff = 1000000;
 error_ratio = 0.5;
 error = [];
+num_iterations = 0;
 %while errordiff > 1000 %TODO: need a better (but princpled) ending point
-while error_ratio < 0.99 && error_ratio > 0.1 % is this principled?
+while (error_ratio < 0.9999 && error_ratio > 0.1) || num_iterations<5% is this principled?
+    num_iterations = num_iterations + 1;
     %this update is directly from Zhang's code, plus 
     W = W.*([H1 H2]*[X1 X2]')'./(W*([H1 H2]*[H1 H2]'+r1*eye(K))+eps);    %Update rule-1;  
 %    HH1 = H1.*(W'*X1 + L2/2*H2*B')./((W'*W+r2*ones(K))*H1+eps);     %%Update H1 H2 simultaneously
