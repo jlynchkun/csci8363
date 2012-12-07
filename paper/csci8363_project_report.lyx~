@@ -1,0 +1,412 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\use_hyperref false
+\papersize default
+\use_geometry false
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+CSci 8363 Final Project Paper
+\end_layout
+
+\begin_layout Author
+Thomas Christie
+\end_layout
+
+\begin_layout Author
+Joshua Lynch
+\end_layout
+
+\begin_layout Part
+Introduction 
+\end_layout
+
+\begin_layout Section
+Motivation
+\end_layout
+
+\begin_layout Standard
+The availability of detailed bioinformatic data is growing quickly, but
+ reliable methods of relating this wealth of information to patient prognosis
+ and diagnosis are often lacking.
+ In the medical domain, biometric data often consists of an array of features
+ for each patient.
+ These features may be simple measures such as height and weight, or the
+ results of complex analyses such as the presence or absence of certain
+ genetic sequences in a patient's DNA.
+ 
+\end_layout
+
+\begin_layout Standard
+With the recent explosive growth in computing power, it is becoming more
+ common to collect all available data and determine relationships between
+ data values and patient prognosis and outcomes after the fact.
+ For example, recent studies have shown that collected gene expression data
+ (CITE) and quantatized features from breast cancer images (CITE) are predictive
+ of cancer metastasis.
+ Though this 
+\begin_inset Quotes eld
+\end_inset
+
+data-driven
+\begin_inset Quotes erd
+\end_inset
+
+ analysis can lead to the production of unnecessarily large amounts of data,
+ there are many bnefits to this approach.
+ First, data is not deemed useless apriori due to the verdict of domain
+ experts, and this can lead to the discovery of previously unexplored relationsh
+ips.
+ In (IMAGE STUDY), image features were discovered that predicted patient
+ outcome better than features traditionally used by physicians (BE MORE
+ SPECIFIC).
+ Moreover, relationships between features can increase the predictive power
+ of the dataset.
+ In (Zhang 2011), relationships between gene expression data and ??? were
+ ???.
+\end_layout
+
+\begin_layout Section
+Mathematical Approach
+\end_layout
+
+\begin_layout Standard
+In the case of biometric data, it can be useful to assume that an underlying
+ 
+\begin_inset Quotes eld
+\end_inset
+
+cause
+\begin_inset Quotes erd
+\end_inset
+
+ is expressed in several of the collected features.
+ For example, the presence of a specific gene can give rise to the synthesis
+ of many proteins (SOURCE?).
+ Similarly, a disease may give rise to a collection of phenotypes.
+ One way to model this relationship is to posit a latent causal or explanatory
+ structure underlying the measurable data (see FIGURE ?).
+ Discovering hidden explanatory features can potentially lead to a simple
+ explanation for various features, as well as drastically reduce the dimensional
+ity of the data.
+ Though the domain is drastically different, a simliar approach is often
+ used to uncover semantic cotent underlying language data (see e.g.
+ SOURCE?).
+ 
+\end_layout
+
+\begin_layout Standard
+To model the relationship between latent variables and measurable features,
+ we can assume that each feature is a linear combination of some number
+ of latent variables.
+ Mathematically, the features measured for each patient can be written as
+ a vector 
+\begin_inset Formula $\mathbf{x}.$
+\end_inset
+
+ All 
+\end_layout
+
+\begin_layout Standard
+Image data -> prognosis prediction
+\end_layout
+
+\begin_layout Standard
+Gene expression microarray data -> prognosis prediction
+\end_layout
+
+\begin_layout Standard
+Way to combine those? Either to uncover connections between gene expression
+ (genotypes) and breast cancer image features (phenotypes)?
+\end_layout
+
+\begin_layout Part
+Supervised Approach
+\end_layout
+
+\begin_layout Standard
+Singular value decomposition (SVD) is a common approach to uncoveringA common
+ approach to 
+\end_layout
+
+\begin_layout Standard
+tri-matrix factorization
+\end_layout
+
+\begin_layout Part
+Unsupervised Approach
+\end_layout
+
+\begin_layout Standard
+Zhang 2011
+\end_layout
+
+\begin_layout Part
+Clustering
+\end_layout
+
+\begin_layout Standard
+shared nearest neighbor
+\end_layout
+
+\begin_layout Standard
+spectral clustering
+\end_layout
+
+\begin_layout Standard
+problem of feature selection
+\end_layout
+
+\begin_layout Part
+Discussion
+\end_layout
+
+\begin_layout Part
+Conclusion
+\end_layout
+
+\begin_layout Section
+This is the section about math
+\end_layout
+
+\begin_layout Standard
+The formulation of the Network-Regularized Multiple NMF objective function:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+F(W,H_{1},H_{2}) & =||X_{1}-WH_{1}||_{F}^{2}+||X_{2}-WH_{2}||_{F}^{2}\\
+ & -\lambda_{1}Tr(H_{2}AH_{2}^{T})-\lambda_{2}Tr(H_{1}BH_{2}^{T})\\
+ & +\gamma_{1}||W||_{F}^{2}+\gamma_{2}(\sum_{j}||h_{j}||_{1}^{2}+\sum_{j'}||h_{j'}||_{1}^{2})\\
+ & +\lambda_{3}||H_{1}^{T}H_{2}-B||
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The formulation for our problem:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+F(H_{1},H_{2}) & =||X_{1}-H_{1}^{T}H_{2}||_{F}^{2}+||X_{2}-H_{1}^{T}H_{2}||
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+These are the variables we are using.
+ 
+\begin_inset Formula $X_{1}$
+\end_inset
+
+ is a subjects x (2x) image features.
+ 
+\begin_inset Formula $X_{2}$
+\end_inset
+
+ is subjects x (2x) gene expression.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\hat{X_{1}} & =\begin{bmatrix}1 & 1 & -1 & 1\\
+1 & -1 & -1 & -1\\
+1 & -1 & 1 & -1
+\end{bmatrix}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+X_{1} & =\begin{bmatrix}\begin{bmatrix}1 & 1 & 0 & 1\\
+1 & 0 & 0 & 0\\
+1 & 0 & 1 & 0
+\end{bmatrix} & \begin{bmatrix}0 & 0 & 1 & 0\\
+0 & 1 & 1 & 1\\
+0 & 1 & 0 & 1
+\end{bmatrix}\end{bmatrix}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+F(W,H_{1},H_{2}) & ={\displaystyle \sum_{I=1,2}}||X_{I}-WH_{I}||_{F}^{2}\\
+\\
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Multiplicative updates
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\min_{W\geq0}\sum_{I=1,2}||X_{I}-WH_{I}||_{F}^{2}+\gamma_{1}||W||^{2}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+w_{ij}\leftarrow w_{ij}\frac{(W_{1}H_{1}^{T}+X_{2}H_{2}^{T})_{ij}}{(WH_{1}H_{1}^{T}+WH_{2}H_{2}^{2}+\frac{\gamma_{1}}{2}W_{ij}}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\min_{H_{1},H_{2}\geq0}\sum_{I=1,2}||X_{I}-WH_{I}||_{F}^{2}-\lambda_{1}Tr(H_{2}AH_{2}^{T})-\lambda_{2}Tr(H_{1}BH_{2}^{T})+\gamma_{2}(\sum_{j}||h_{j}||_{1}^{2}+\sum_{j'}||h_{j'}||_{1}^{2})
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+h_{ij}^{1}\leftarrow h_{ij}^{1}\frac{(W^{T}X_{1}+\frac{\lambda_{2}}{2}H_{2}B^{T})_{ij}}{[(W^{T}W+\gamma_{2}e_{k\times k})H_{2}]_{ij}}
+\]
+
+\end_inset
+
+ 
+\begin_inset Formula 
+\[
+h_{ij}^{2}\leftarrow h_{ij}^{2}\frac{(W^{T}X_{2}+\lambda_{1}H_{2}A+\frac{\lambda_{2}}{2}H_{1}B^{T})_{ij}}{[(W^{T}W+\gamma_{2}e_{k\times k})H_{2}]_{ij}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+tri-matrix factorization
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\min_{F\geq0,S\geq0,G\geq0}\frac{1}{2}(||X-FSG^{T}||_{F}^{2}+\lambda_{F}||F||_{1}^{2}+\lambda_{S}||S||_{1}^{2}+\lambda_{G}||G||_{1}^{2})
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+F_{ij}\leftarrow F_{ij}\frac{(XGS^{T})_{ij}}{(FSG^{T}GS^{T})_{ij}+\lambda_{F}||F||_{1}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+S_{ij}\leftarrow S_{ij}\frac{(F^{T}XG)_{ij}}{(F^{T}FSG^{T}G)_{ij}+\lambda_{S}||S||_{1}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+G_{ij}\leftarrow G_{ij}\frac{(X^{T}FS)_{ij}}{(GS^{T}F^{T}FS)_{ij}+\lambda_{G}||G||_{1}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document

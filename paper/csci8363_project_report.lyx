@@ -72,27 +72,300 @@ Joshua Lynch
 \end_layout
 
 \begin_layout Part
-Introduction
+Introduction 
+\end_layout
+
+\begin_layout Section
+Motivation
+\end_layout
+
+\begin_layout Standard
+The availability of detailed bioinformatic data is growing quickly, but
+ reliable methods of relating this wealth of information to patient prognosis
+ and diagnosis are often lacking.
+ In the medical domain, biometric data often consists of an array of features
+ for each patient.
+ These features may be simple measures such as height and weight, or the
+ results of complex analyses such as the presence or absence of certain
+ genetic sequences in a patient's DNA.
+ 
+\end_layout
+
+\begin_layout Standard
+With the recent explosive growth in computing power, it is becoming more
+ common to collect all available data and determine relationships between
+ data values and patient prognosis and outcomes after the fact.
+ For example, recent studies have shown that collected gene expression data
+ (CITE) and quantatized features from breast cancer images (CITE) are predictive
+ of cancer metastasis.
+ Though this 
+\begin_inset Quotes eld
+\end_inset
+
+data-driven
+\begin_inset Quotes erd
+\end_inset
+
+ analysis can lead to the production of unnecessarily large amounts of data,
+ there are many bnefits to this approach.
+ First, data is not deemed useless apriori due to the verdict of domain
+ experts, and this can lead to the discovery of previously unexplored relationsh
+ips.
+ In (IMAGE STUDY), image features were discovered that predicted patient
+ outcome better than features traditionally used by physicians (BE MORE
+ SPECIFIC).
+ Moreover, relationships between features can increase the predictive power
+ of the dataset.
+ In (Zhang 2011), relationships between gene expression data and ??? were
+ ???.
+\end_layout
+
+\begin_layout Section
+Mathematical Approach
+\end_layout
+
+\begin_layout Standard
+In the case of biometric data, it can be useful to assume that an underlying
+ 
+\begin_inset Quotes eld
+\end_inset
+
+cause
+\begin_inset Quotes erd
+\end_inset
+
+ is expressed in several of the collected features.
+ For example, the presence of a specific gene can give rise to the synthesis
+ of many proteins (SOURCE?).
+ Similarly, a disease may give rise to a collection of phenotypes.
+ One way to model this relationship is to posit a latent causal or explanatory
+ structure underlying the measurable data (see FIGURE ?).
+ Discovering hidden explanatory features can potentially lead to a simple
+ explanation for various features, as well as drastically reduce the dimensional
+ity of the data.
+ Though the domain is drastically different, a simliar approach is often
+ used to uncover semantic cotent underlying language data (see e.g.
+ SOURCE?).
+ 
+\end_layout
+
+\begin_layout Subsection
+Matrix Decomposition
+\end_layout
+
+\begin_layout Standard
+To model the relationship between latent variables and measurable features,
+ we can assume that each feature is a linear combination of some number
+ of latent variables.
+ Mathematically, the features measured for each patient can be written as
+ a vector 
+\begin_inset Formula $\mathbf{x}$
+\end_inset
+
+ , where
+\begin_inset Formula $\mathbf{X}=[x_{1}x_{2}...x_{n}]$
+\end_inset
+
+ is an 
+\begin_inset Formula $m\times n$
+\end_inset
+
+ matrix with 
+\begin_inset Formula $m$
+\end_inset
+
+ features and 
+\begin_inset Formula $n$
+\end_inset
+
+ patients.
+ In order to uncover the latent factors, we can decompose 
+\begin_inset Formula $X$
+\end_inset
+
+ into two factors 
+\begin_inset Formula $W$
+\end_inset
+
+ and 
+\begin_inset Formula $H$
+\end_inset
+
+ such that 
+\begin_inset Formula $X=WH$
+\end_inset
+
+.
+ In this factorization, 
+\begin_inset Formula $W$
+\end_inset
+
+ is 
+\begin_inset Formula $m\times k$
+\end_inset
+
+ matrix whose component vectors span the column space of X, where entries
+ of H provide vector weights.
+ In other words, X consists of a linear combination of the column vectors
+ of W with weights from H.
+ W provides the k 
+\begin_inset Quotes eld
+\end_inset
+
+sources
+\begin_inset Quotes erd
+\end_inset
+
+ or latent variables and H describes how they linearly combine to produce
+ the features in X.
+\end_layout
+
+\begin_layout Standard
+Matrix factorization is not unique, so an important question is how to decompose
+ X into H and W.
+ One principled way to perform such a factorization is to find component
+ vectors that are mutually orthogonal.
+ This is called Singular Value Decomposition (SVD), and constructs a unique
+ factorization 
+\begin_inset Formula $X=USV^{-1}$
+\end_inset
+
+, where U corresponds to W and the latter product corresponds to H.
+ This approach is mathematically robust and well-understood.
+ From the perspective of uncovering latient sources, however, SVD presents
+ several problems.
+ First, it may well be the case that latent sources are not actuall orthogonal.
+ In this case, the U matrix would not correspond to any domain-specific
+ functional process but would be a mere mathematical convenience (CITE Josh's
+ paper).
+ In addition, SVD does not impose a constraint on the sign of values of
+ H.
+ A combination of positive and negative coeffients create both additive
+ and subtractive components of each feature, making it very difficult to
+ interpret how latent sources combine to create features.
+ 
+\end_layout
+
+\begin_layout Subsection
+Non-Negative Matrix Factorization (NMF)
+\end_layout
+
+\begin_layout Standard
+One approach to createing interpretable latent sources is to introduce the
+ additional requirement that the data have values greater than or equal
+ to zero, and perform matrix decomposition in such a way that values of
+ H and W are exclusively nonnegative.
+ This means that the underlying components of X combine in a purely additive
+ way to produce X.
+ The benefit of this approach is that (INTERPRETABILITY? MORE HERE).
+ 
+\end_layout
+
+\begin_layout Standard
+Biometric data is often of mixed sign.
+ When faced with a 
+\begin_inset Formula $m\times n$
+\end_inset
+
+ matrix X with mixed-sign entries, a common technique for imposing nonnegativity
+ is to construct a new 
+\begin_inset Formula $m\times2n$
+\end_inset
+
+ matrix X'=[max(X,0) max(-X,0)].
+ In other words, the left half of X' consists of the originally positive
+ values in X with the negative values replaces by 0.
+ The right half of X consists of the absolute value of originally negative
+ values of X, with 0's replacing corresponding positive values.
+ This is the approached used in the methods below.
+\end_layout
+
+\begin_layout Standard
+Non-orthogonality (COMPONENTS MAY BE OVERLAPPING - SEE TAE's TNMF paper)
+\end_layout
+
+\begin_layout Subsection
+Sparse Decomposition
+\end_layout
+
+\begin_layout Standard
+(SEE KIM AND PARK 2007)
+\end_layout
+
+\begin_layout Subsection
+Matrix Decomposition as Optimization (JOSH?)
+\end_layout
+
+\begin_layout Subsubsection
+Convex Optimization
+\end_layout
+
+\begin_layout Subsubsection
+Legrange Multipliers
+\end_layout
+
+\begin_layout Subsubsection
+Multiplicative Updates (THOMAS?)
 \end_layout
 
 \begin_layout Part
+Experiments
+\end_layout
+
+\begin_layout Section
 Supervised Approach
 \end_layout
 
-\begin_layout Part
+\begin_layout Subsection
+Non-negative Matrix Tri-factorization
+\end_layout
+
+\begin_layout Standard
+orthogonal and non
+\end_layout
+
+\begin_layout Subsection
+Problem Formulation (incl multiplicative updates)
+\end_layout
+
+\begin_layout Subsection
+Results
+\end_layout
+
+\begin_layout Section
 Unsupervised Approach
 \end_layout
 
-\begin_layout Part
+\begin_layout Subsection
+Bifactorization with additional constraints
+\end_layout
+
+\begin_layout Subsection
+???
+\end_layout
+
+\begin_layout Standard
+Zhang 2011
+\end_layout
+
+\begin_layout Section
 Clustering
+\end_layout
+
+\begin_layout Subsection
+Shared Nearest Neighbor Similarity
+\end_layout
+
+\begin_layout Subsection
+Spectral Clustering
+\end_layout
+
+\begin_layout Subsection
+Feature Selection?
 \end_layout
 
 \begin_layout Part
 Discussion
-\end_layout
-
-\begin_layout Part
-Conclusion
 \end_layout
 
 \begin_layout Section
@@ -108,7 +381,8 @@ The formulation of the Network-Regularized Multiple NMF objective function:
 \begin{align*}
 F(W,H_{1},H_{2}) & =||X_{1}-WH_{1}||_{F}^{2}+||X_{2}-WH_{2}||_{F}^{2}\\
  & -\lambda_{1}Tr(H_{2}AH_{2}^{T})-\lambda_{2}Tr(H_{1}BH_{2}^{T})\\
- & +\gamma_{1}||W||_{F}^{2}+\gamma_{2}(\sum_{j}||h_{j}||_{1}^{2}+\sum_{j'}||h_{j'}||_{1}^{2})
+ & +\gamma_{1}||W||_{F}^{2}+\gamma_{2}(\sum_{j}||h_{j}||_{1}^{2}+\sum_{j'}||h_{j'}||_{1}^{2})\\
+ & +\lambda_{3}||H_{1}^{T}H_{2}-B||
 \end{align*}
 
 \end_inset
@@ -170,6 +444,113 @@ X_{1} & =\begin{bmatrix}\begin{bmatrix}1 & 1 & 0 & 1\\
 0 & 1 & 0 & 1
 \end{bmatrix}\end{bmatrix}
 \end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+F(W,H_{1},H_{2}) & ={\displaystyle \sum_{I=1,2}}||X_{I}-WH_{I}||_{F}^{2}\\
+\\
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Multiplicative updates
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\min_{W\geq0}\sum_{I=1,2}||X_{I}-WH_{I}||_{F}^{2}+\gamma_{1}||W||^{2}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+w_{ij}\leftarrow w_{ij}\frac{(W_{1}H_{1}^{T}+X_{2}H_{2}^{T})_{ij}}{(WH_{1}H_{1}^{T}+WH_{2}H_{2}^{2}+\frac{\gamma_{1}}{2}W_{ij}}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\min_{H_{1},H_{2}\geq0}\sum_{I=1,2}||X_{I}-WH_{I}||_{F}^{2}-\lambda_{1}Tr(H_{2}AH_{2}^{T})-\lambda_{2}Tr(H_{1}BH_{2}^{T})+\gamma_{2}(\sum_{j}||h_{j}||_{1}^{2}+\sum_{j'}||h_{j'}||_{1}^{2})
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+h_{ij}^{1}\leftarrow h_{ij}^{1}\frac{(W^{T}X_{1}+\frac{\lambda_{2}}{2}H_{2}B^{T})_{ij}}{[(W^{T}W+\gamma_{2}e_{k\times k})H_{2}]_{ij}}
+\]
+
+\end_inset
+
+ 
+\begin_inset Formula 
+\[
+h_{ij}^{2}\leftarrow h_{ij}^{2}\frac{(W^{T}X_{2}+\lambda_{1}H_{2}A+\frac{\lambda_{2}}{2}H_{1}B^{T})_{ij}}{[(W^{T}W+\gamma_{2}e_{k\times k})H_{2}]_{ij}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+tri-matrix factorization
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\min_{F\geq0,S\geq0,G\geq0}\frac{1}{2}(||X-FSG^{T}||_{F}^{2}+\lambda_{F}||F||_{1}^{2}+\lambda_{S}||S||_{1}^{2}+\lambda_{G}||G||_{1}^{2})
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+F_{ij}\leftarrow F_{ij}\frac{(XGS^{T})_{ij}}{(FSG^{T}GS^{T})_{ij}+\lambda_{F}||F||_{1}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+S_{ij}\leftarrow S_{ij}\frac{(F^{T}XG)_{ij}}{(F^{T}FSG^{T}G)_{ij}+\lambda_{S}||S||_{1}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+G_{ij}\leftarrow G_{ij}\frac{(X^{T}FS)_{ij}}{(GS^{T}F^{T}FS)_{ij}+\lambda_{G}||G||_{1}}
+\]
 
 \end_inset
 

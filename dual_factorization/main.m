@@ -59,14 +59,15 @@ B = abs(B);
 
 
 %% Do updates
-num_iterations = 1;
+num_iterations = 3;
 results_counter = 1;
 
 %dimensionality of result
 K=50;
 
 %range of parameters to be tested
-parameter_values = [.0001 .001 .01 .1 1 10 20];
+%parameter_values = [.0001 .001 .01 .1 1 10 20];
+parameter_values = [.0001 .01 1 20];
 
 %results are [B_cutoff lambda_1 lambda_2 gamma_1 gamma_2 case1 case2 case3 case4 case5]
 %where "case#" is the number of significant columns found in W with regard
@@ -84,7 +85,7 @@ for gamma1 = parameter_values
                     lambda2
                     lambda3
                     results_temp = [];
-                    for iter=1:num_iterations
+                    parfor iter=1:num_iterations
                         iter
                         % initialize random factors for |X - WH1| + |X - WH2|
                         %KEY - we only want to use a common W/H for each run to be sure that we
@@ -186,6 +187,9 @@ for gamma1 = parameter_values
     end
 end
 
+
+return1 = results;
+return2 = 0;
 % 
 % %% %Set parameters for Non-negative matrix factorization
 % L1 = 1; L2 = 1; %parameter for H1*A*H1^T - corresponds to LAMBDA_1
