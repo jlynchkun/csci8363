@@ -168,6 +168,10 @@ ity of the data.
  
 \end_layout
 
+\begin_layout Standard
+also relationships between different data types
+\end_layout
+
 \begin_layout Subsection
 Matrix Decomposition
 \end_layout
@@ -182,7 +186,7 @@ To model the relationship between latent variables and measurable features,
 \end_inset
 
  , where
-\begin_inset Formula $\mathbf{X}=[x_{1}x_{2}...x_{n}]$
+\begin_inset Formula $\mathbf{X}=[x_{1}x_{2}...x_{n}]^{T}$
 \end_inset
 
  is an 
@@ -190,11 +194,11 @@ To model the relationship between latent variables and measurable features,
 \end_inset
 
  matrix with 
-\begin_inset Formula $m$
+\begin_inset Formula $n$
 \end_inset
 
  features and 
-\begin_inset Formula $n$
+\begin_inset Formula $m$
 \end_inset
 
  patients.
@@ -500,7 +504,7 @@ Problem Formulation (incl multiplicative updates)
 \end_layout
 
 \begin_layout Subsection
-Results
+Results	
 \end_layout
 
 \begin_layout Section
@@ -508,7 +512,7 @@ Unsupervised Approach
 \end_layout
 
 \begin_layout Standard
-find features that predict patient outcome
+find latent features that predict patient outcome
 \end_layout
 
 \begin_layout Standard
@@ -545,6 +549,10 @@ Spectral Clustering (JOSH)
 
 \begin_layout Subsection
 Feature Selection???
+\end_layout
+
+\begin_layout Standard
+Look at clusters and compute entropy vs ALL measures
 \end_layout
 
 \begin_layout Part
