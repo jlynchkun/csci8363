@@ -1,4 +1,4 @@
-function [return1 return2] = main(GeneName,Gene_expression_data,Image_data,survival, gene_name_ge,ppiMatrixTF)
+function [return1 return2] = dual_factorization(GeneName,Gene_expression_data,Image_data,survival, gene_name_ge,ppiMatrixTF)
 %% Use matrix factorization to learn W in such a way that the rows of W 
 %correspond to subjects and the columns of W correspond to k "discovered" 
 %latent explanatory vectors
