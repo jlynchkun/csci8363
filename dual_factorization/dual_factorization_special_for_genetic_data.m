@@ -86,7 +86,7 @@ lambda3=.0001;
 
 %FOR LOOP GOES HERE
 all_results = {};
-for iter=1:20
+for iter=1:5
 
 % initialize random factors for |X - WH1| + |X - WH2|
 %KEY - we only want to use a common W/H for each run to be sure that we
@@ -217,4 +217,4 @@ isdouble=1;
 
 
 
-save(['factors_k_' num2str(K) '.mat'],'Co_module_1','Co_module_2','Co_module_3','bestW1_1','bestW1_2','bestW1_3','W1_image','W1_gene','bestH1_1','bestH1_2','bestH1_3','H1_image','H1_gene','bestH2_1','bestH2_2','bestH2_3','all_results');
+save(['factors_5_iterations_high_threshold_k_' num2str(K) '.mat'],'Co_module_1','Co_module_2','Co_module_3','bestW1_1','bestW1_2','bestW1_3','W1_image','W1_gene','bestH1_1','bestH1_2','bestH1_3','H1_image','H1_gene','bestH2_1','bestH2_2','bestH2_3','all_results');
