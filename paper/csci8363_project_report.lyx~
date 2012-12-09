@@ -96,8 +96,21 @@ With the recent explosive growth in computing power, it is becoming more
  common to collect all available data and determine relationships between
  data values and patient prognosis and outcomes after the fact.
  For example, recent studies have shown that collected gene expression data
- (CITE) and quantatized features from breast cancer images (CITE) are predictive
- of cancer metastasis.
+ (
+\begin_inset CommandInset citation
+LatexCommand cite
+key "deMJ:TheNewEnglandJournalOfMedicine:2002"
+
+\end_inset
+
+) and quantatized features from breast cancer images (
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Beck:SciTranslMed:2011"
+
+\end_inset
+
+) are predictive of cancer metastasis.
  Though this 
 \begin_inset Quotes eld
 \end_inset
@@ -116,8 +129,14 @@ ips.
  SPECIFIC).
  Moreover, relationships between features can increase the predictive power
  of the dataset.
- In (Zhang 2011), relationships between gene expression data and ??? were
- ???.
+ In 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Zhang:Bioinformatics:2011"
+
+\end_inset
+
+, relationships between gene expression data and ??? were ???.
 \end_layout
 
 \begin_layout Section
@@ -150,73 +169,394 @@ ity of the data.
 \end_layout
 
 \begin_layout Standard
+also relationships between different data types
+\end_layout
+
+\begin_layout Subsection
+Matrix Decomposition
+\end_layout
+
+\begin_layout Standard
 To model the relationship between latent variables and measurable features,
  we can assume that each feature is a linear combination of some number
  of latent variables.
  Mathematically, the features measured for each patient can be written as
  a vector 
-\begin_inset Formula $\mathbf{x}.$
+\begin_inset Formula $\mathbf{x}$
 \end_inset
 
- All 
+ , where
+\begin_inset Formula $\mathbf{X}=[x_{1}x_{2}...x_{n}]^{T}$
+\end_inset
+
+ is an 
+\begin_inset Formula $m\times n$
+\end_inset
+
+ matrix with 
+\begin_inset Formula $n$
+\end_inset
+
+ features and 
+\begin_inset Formula $m$
+\end_inset
+
+ patients.
+ In order to uncover the latent factors, we can decompose 
+\begin_inset Formula $X$
+\end_inset
+
+ into two factors 
+\begin_inset Formula $W$
+\end_inset
+
+ and 
+\begin_inset Formula $H$
+\end_inset
+
+ such that 
+\begin_inset Formula $X\approx WH$
+\end_inset
+
+.
+ In this factorization, 
+\begin_inset Formula $W$
+\end_inset
+
+ is 
+\begin_inset Formula $m\times k$
+\end_inset
+
+ matrix whose component vectors span the column space of X, where entries
+ of H provide vector weights.
+ In other words, X consists of a linear combination of the column vectors
+ of W with weights from H.
+ W provides the 
+\begin_inset Formula $k$
+\end_inset
+
+ 
+\begin_inset Quotes eld
+\end_inset
+
+sources
+\begin_inset Quotes erd
+\end_inset
+
+ or latent variables and H describes how they linearly combine to produce
+ the features in X.
+ WH is an approximation of X, and the quality of the approximation is determined
+ by partially by the choice of 
+\begin_inset Formula $k$
+\end_inset
+
+.
+ The dimension 
+\begin_inset Formula $k$
+\end_inset
+
+ is often chosen heuristically, and different values of 
+\begin_inset Formula $k$
+\end_inset
+
+ prove useful in different problem domains.
 \end_layout
 
 \begin_layout Standard
-Image data -> prognosis prediction
+Matrix factorization is not unique, so an important question is how to decompose
+ X into H and W.
+ One principled way to perform such a factorization is to find component
+ vectors that are mutually orthogonal.
+ This is called Singular Value Decomposition (SVD), and constructs a unique
+ factorization 
+\begin_inset Formula $X=USV^{-1}$
+\end_inset
+
+, where U corresponds to W and the latter product corresponds to H (IS THIS
+ TRUE? IS THERE NON-UNIQUE ORTHOGONAL MATRIX BI-FACTORIZATION?).
+ This approach is mathematically robust and well-understood.
+ A lower-rank approximation of X can be constructed using the first k columns
+ of U, S and V-1.
+ From the perspective of uncovering latient sources, however, SVD presents
+ several problems.
+ First, it may well be the case that latent sources are not actually orthogonal.
+ In this case, the U matrix would not correspond to any domain-specific
+ functional process but would be a mere mathematical convenience (CITE Josh's
+ thing that he showed in class).
+ In addition, SVD does not impose a constraint on the sign of values of
+ H.
+ A combination of positive and negative coeffients create both additive
+ and subtractive components of each feature, making it very difficult to
+ interpret how latent sources combine to create features.
+ Lastly, SVD produces results which are dense (few 0s in the components
+ of W and H).
+ This implies that every latent source has an effect on every feature present
+ in X, an implication which is likely not true in many applications.
+ Approaches for addressing mixed signs, orthogonality and density are addressed
+ below.
+\end_layout
+
+\begin_layout Subsection
+Non-Negative Matrix Factorization (NMF)
 \end_layout
 
 \begin_layout Standard
-Gene expression microarray data -> prognosis prediction
+One approach to creating easily interpretable latent sources is to introduce
+ the additional requirement that the data have values greater than or equal
+ to zero and perform matrix decomposition in such a way that values of H
+ and W are exclusively nonnegative.
+ This means that the underlying components of X combine in a purely additive
+ way to produce X, which gives a more intuitive decomposition of the data
+ matrix.
+ Moreover, in situations where data is naturally nonnegative (such as image
+ data or gene expression(?)), negative components may not be readily interpretab
+le.
+ 
 \end_layout
 
 \begin_layout Standard
-Way to combine those? Either to uncover connections between gene expression
- (genotypes) and breast cancer image features (phenotypes)?
+Biometric data often originates with mixed signs.
+ When faced with a 
+\begin_inset Formula $m\times n$
+\end_inset
+
+ matrix X with mixed-sign entries, a common technique for imposing nonnegativity
+ is to construct a new 
+\begin_inset Formula $m\times2n$
+\end_inset
+
+ matrix X'=[max(X,0) max(-X,0)].
+ In other words, the left half of X' consists of the originally positive
+ values in X with the negative values replaces by 0.
+ The right half of X consists of the absolute value of originally negative
+ values of X, with 0's replacing corresponding positive values.
+ This is the approached used in the methods below.
+\end_layout
+
+\begin_layout Standard
+Placing an orthogonality constraint on the vectors of the basis matrix W
+ forces components to be uncorrelated.
+ While this is useful from a data compression standpoint and has other convenien
+t mathematical properties, it may well be the case that distinct underlying
+ sources have overlapping manifestations in feature space.
+ In the approaches used in this paper, the orthogonality constraint is dropped.
+\end_layout
+
+\begin_layout Subsection
+Sparse Decomposition
+\end_layout
+
+\begin_layout Standard
+(SEE KIM AND PARK 2007) A matrix is called sparse when the majority of its
+ elements are 0.
+ In cases where a sparse H can be found (W TOO OR JUST H?), the product
+ WH can be seen as an approximation of X in which each feature of X is composed
+ of a small number of columns of W.
+ This is useful, as it highlights which latent components are most responsible
+ for each feature.
+ 
+\end_layout
+
+\begin_layout Standard
+Note that with sparse data, even through the orthogonality constraint is
+ relaxed, columns have a high probability of being orthogonal.
+ 
+\end_layout
+
+\begin_layout Subsection
+Matrix Decomposition as Optimization (JOSH??!)
+\end_layout
+
+\begin_layout Standard
+Finding an approximation WH of the nxm matrix X can be construed as an optimizat
+ion problem:
+\begin_inset Formula 
+\[
+\min_{W,H}f(W,H)=\frac{1}{2}||X-WH||_{F}^{2}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $||\cdot||_{F}$
+\end_inset
+
+is the Frobenius norm, 
+\begin_inset Formula $W\epsilon\mathbb{R}^{n\times k}$
+\end_inset
+
+ and 
+\begin_inset Formula $H\epsilon\mathbb{R}^{k\times m}$
+\end_inset
+
+.
+ Non-negativity can be imposed as an additional constraint on W and H.
+ Sparsity is controlled by adding a term penalizing the size of the L0 norm
+ of W and/or H.
+ In practice the L1 norm is often used as an approximation of the L0 norm,
+ as the L1 has more convenient mathematical properties (see section ???).
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Convex Optimization
+\end_layout
+
+\begin_layout Standard
+how it applies to this problem
+\end_layout
+
+\begin_layout Subsubsection
+Legrange Multipliers
+\end_layout
+
+\begin_layout Subsubsection
+Multiplicative Updates (THOMAS?)
+\end_layout
+
+\begin_layout Standard
+show how to re-write equation as multiplicative update
 \end_layout
 
 \begin_layout Part
+Experiments
+\end_layout
+
+\begin_layout Standard
+Goals: 
+\end_layout
+
+\begin_layout Standard
+1.
+ use decomposition to predict metastasis (cool, but can really do this with
+ other nonlinear methods).
+ 
+\end_layout
+
+\begin_layout Standard
+2.
+ Uncover relationships between features.
+ This is similar to finding underlying 
+\begin_inset Quotes eld
+\end_inset
+
+latent
+\begin_inset Quotes erd
+\end_inset
+
+ sources that combine to create the features, i.e.
+ 
+\begin_inset Quotes eld
+\end_inset
+
+co-clustering
+\begin_inset Quotes erd
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+3.
+ If you have two different types of data, figure out how they relate to
+ each other.
+ This overlaps with part (2) somewhat, but it depends on how you formulate
+ the problem.
+\end_layout
+
+\begin_layout Standard
+Can do both of these things this in both a supervised (using labels) and
+ unsupervised).
+\end_layout
+
+\begin_layout Section
 Supervised Approach
 \end_layout
 
 \begin_layout Standard
-Singular value decomposition (SVD) is a common approach to uncoveringA common
- approach to 
+-find relationships between two datasets
 \end_layout
 
 \begin_layout Standard
-tri-matrix factorization
+find underlying sources of features as they relate to some label (patient
+ outcome) (like LSI)
 \end_layout
 
-\begin_layout Part
+\begin_layout Standard
+constrain this using label as one of the factors
+\end_layout
+
+\begin_layout Standard
+-non-negative, sparse
+\end_layout
+
+\begin_layout Subsection
+Non-negative Matrix Tri-factorization
+\end_layout
+
+\begin_layout Subsection
+Problem Formulation (incl multiplicative updates)
+\end_layout
+
+\begin_layout Subsection
+Results	
+\end_layout
+
+\begin_layout Section
 Unsupervised Approach
+\end_layout
+
+\begin_layout Standard
+find latent features that predict patient outcome
+\end_layout
+
+\begin_layout Standard
+optional: find relationship between two datasets
+\end_layout
+
+\begin_layout Standard
+-non-negative, sparse
+\end_layout
+
+\begin_layout Subsection
+Bifactorization with additional constraints
+\end_layout
+
+\begin_layout Subsection
+Comodules??
 \end_layout
 
 \begin_layout Standard
 Zhang 2011
 \end_layout
 
-\begin_layout Part
+\begin_layout Section
 Clustering
 \end_layout
 
-\begin_layout Standard
-shared nearest neighbor
+\begin_layout Subsection
+Shared Nearest Neighbor Similarity (THOMAS)
+\end_layout
+
+\begin_layout Subsection
+Spectral Clustering (JOSH)
+\end_layout
+
+\begin_layout Subsection
+Feature Selection???
 \end_layout
 
 \begin_layout Standard
-spectral clustering
-\end_layout
-
-\begin_layout Standard
-problem of feature selection
+Look at clusters and compute entropy vs ALL measures
 \end_layout
 
 \begin_layout Part
 Discussion
-\end_layout
-
-\begin_layout Part
-Conclusion
 \end_layout
 
 \begin_layout Section
@@ -402,6 +742,17 @@ S_{ij}\leftarrow S_{ij}\frac{(F^{T}XG)_{ij}}{(F^{T}FSG^{T}G)_{ij}+\lambda_{S}||S
 \[
 G_{ij}\leftarrow G_{ij}\frac{(X^{T}FS)_{ij}}{(GS^{T}F^{T}FS)_{ij}+\lambda_{G}||G||_{1}}
 \]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "linear algebra project"
+options "plain"
 
 \end_inset
 
