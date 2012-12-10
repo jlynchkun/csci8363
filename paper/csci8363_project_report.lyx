@@ -371,9 +371,9 @@ Matrix Decomposition as Optimization (JOSH??!)
 Finding an approximation WH of the nxm matrix X can be construed as an optimizat
 ion problem:
 \begin_inset Formula 
-\[
+\begin{equation}
 \min_{W,H}f(W,H)=\frac{1}{2}||X-WH||_{F}^{2}
-\]
+\end{equation}
 
 \end_inset
 
@@ -407,7 +407,19 @@ Convex Optimization
 \end_layout
 
 \begin_layout Standard
-how it applies to this problem
+how it applies to this problem.
+ The general problem of factoring a matrix into a product of two or more
+ matrices is under-specified even with additional constraints such as non-negati
+vity.
+ In fact, requiring a non-negative factorization results in a more difficult
+ problem than a simple unconstrained decomposition such as SVD (because...).
+ Closed-form solutions to constrained matrix factorization problems are
+ not known, so for the most part these problems are formulated as optimization
+ problems and solved iteratively.
+ Solving an optimization problem such as (1) (replace (1) with more general
+ formulation, renumber (1) as (2)?) efficiently with guarantees of convergence
+ and with known error bounds is in general difficult if not impossible.
+ 
 \end_layout
 
 \begin_layout Subsubsection
