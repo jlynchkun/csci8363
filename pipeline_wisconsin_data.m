@@ -18,7 +18,6 @@ df.X2_self_associations = B;
 figure
 imagesc(B)
 title('Wisconsin X2 self associations')
-df.K = 2;
 df.dataname = 'Wisconsin_data_dual_factorization';
 df.parameters.gamma1=20;
 df.parameters.gamma2=10;
@@ -33,6 +32,7 @@ df.labels.values = unique(df.labels.numeric)'
 df.labels.names = {'malignant', 'benign'}
 
 % break the wisconsin data into separate parts
+clustering.skip = true;
 clustering.X1 = []
 clustering.X1.data = wisconsin(:, 1:10);
 clustering.X1.name = 'Wisconsin X1';
@@ -49,7 +49,14 @@ display(['wisconsin subject count: ' num2str(subject_count)])
 display(['wisconsin feature count: ' num2str(feature_count)])
 display(['wisconsin labels: ' num2str(clustering.labels.values)])
 
+tf.skip = false;
+tf.labels.numeric = wisconsin(:, end);
+tf.X1.data = zscore(wisconsin(:, 1:10));
+tf.X1.name = 'Wisconsin X1';
+tf.X2.data = zscore(wisconsin(:, 11:20));
+tf.X2.name = 'Wisconsin X2';
+
 clustering.cluster_count = 2;
-pipeline(clustering, df);
+pipeline(clustering, df, tf);
 
 end

@@ -17,7 +17,6 @@ function [clusters, cluster_entropy, subject_count_per_cluster] = clustering(X1,
 %part1 = Gene_expression_data(I,:);
 %part2 = Image_data(I,:);
 
-
 %combine into data matrix
 X = [max(0, X1.data) max(0, -X1.data) max(0, X2.data) max(0, -X2.data)];
 size(X)

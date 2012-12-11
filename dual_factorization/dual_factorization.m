@@ -4,7 +4,8 @@
 % ppiMatrixTF -> X2_self_associations
 % survival -> labels
 % original argument list: function [results] = dual_factorization(GeneName, Gene_expression_data, Image_data,survival, gene_name_ge, ppiMatrixTF, K, dataname)
-function [results] = dual_factorization(X1, X2, X2_self_associations, labels, parameters, K, dataname)
+% X1 and X2 should be normalized
+function [results] = dual_factorization(X1, X2, X2_self_associations, labels, parameters, dataname)
 %% Use matrix factorization to learn W in such a way that the rows of W 
 %correspond to subjects and the columns of W correspond to k "discovered" 
 %latent explanatory vectors
@@ -47,7 +48,7 @@ end
 %Create B - correlation matrix between Gene_expression_data and Image_data
 %THIS SHOULD BE SIMILAR TO MULTIPLYING H1'*H2 - CHECK TO SEE IF IT IS
 %QUESTION - SHOULD WE JUST DO THIS LIKE Zhang DOES?
-disp('Calculating gene-image correlation matrix...')
+disp(['Calculating ' X1.name '-' X2.name ' correlation matrix...'])
 correlations = corrcoef([X1.data, X2.data]);
 B = correlations(end-size(X1.data, 2)+1:end,1:size(X2.data, 2)); %B is just the lower quarter of this correlation matrix - WEIRD DISTRIBUTION?
 B = abs([B B; B B]); %double to make the same shape as new X's
@@ -55,8 +56,31 @@ B(B<.7)=0; %make sparse - DO THIS???
 size(B)
 
 %make all positive
-nn_X1 = [max(X1.data,0) max(-X1.data,0)]; %IMAGE DATA
-nn_X2 = [max(X2.data,0) max(-X2.data,0)]; %GENETIC DATA
+nn_X1 = [max(X1.data,0) max(-X1.data,0)];
+nn_X2 = [max(X2.data,0) max(-X2.data,0)];
+
+figure
+subplot(2,2,1)
+imagesc(nn_X1)
+title({'dual factorization', X1.name})
+subplot(2,2,2)
+hist(nn_X1(:), 100)
+title({'dual factorization', X1.name})
+
+subplot(2,2,3)
+imagesc(nn_X2)
+title({'dual factorization', X2.name})
+subplot(2,2,4)
+hist(nn_X2(:), 100)
+title({'dual factorization', X2.name})
+
+figure
+subplot(1,2,1)
+nn_X1_k = svd_singular_value_plot(nn_X1, ['dual factorization ' X1.name]);
+subplot(1,2,2)
+nn_X2_k = svd_singular_value_plot(nn_X2, ['dual factorization ' X2.name]);
+
+K = max(nn_X1_k, nn_X2_k);
 
 %this is gene-gene association matrix (4 of these b/c we're doubling the X data to make positive/negative different)
 A =[X2_self_associations X2_self_associations;
@@ -107,29 +131,29 @@ figure
 %case 1 - omit B, so lambda2 = 0, lambda3 = 0
 subplot(2,3,1)
 [W1_1,H1_1,H2_1] = multiplicative_update(nn_X1,nn_X2,W,H1,H2,A,B,lambda1,0,0,gamma1,gamma2,K);
-title('no B')
+title({'dual factorization', X1.name, X2.name, 'no B'})
 
 %case 2 - keep B, default from Zhang paper, don't learn
 %B so lambda3 = 0
 subplot(2,3,2)
 [W1_2,H1_2,H2_2] = multiplicative_update(nn_X1,nn_X2,W,H1,H2,A,B,lambda1,lambda2,0,gamma1,gamma2,K);
-title('no learning')
+title({'dual factorization', X1.name, X2.name, 'no learning'})
 
 %case 3 - learn B, so lambda3 != 0 
 subplot(2,3,3)
 [W1_3,H1_3,H2_3] = multiplicative_update(nn_X1,nn_X2,W,H1,H2,A,B,lambda1,lambda2,lambda3,gamma1,gamma2,K);
-title('learn B')
+title({'dual factorization', X1.name, X2.name, 'learn B'})
 
 %case 4 - only image data
 maxiter = 50;
 subplot(2,3,4)
 [W1_image, H1_image] = non_negative_matrix_factorization(nn_X1, W, H1, maxiter);
-title({X1.name, 'non-negative matrix factorization'})
+title({X1.name, 'NNMF'})
 
 %case 5 - only genetic data
 subplot(2,3,5)
 [W1_gene, H1_gene] = non_negative_matrix_factorization(nn_X2, W, H2, maxiter);
-title({X2.name, 'non-negative matrix factorization'})
+title({X2.name, 'NNMF'})
 
 %% SIGNIFICANCE OF RESULT
 %Do logrank test (Mantel-Cox test) statistics

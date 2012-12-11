@@ -69,7 +69,13 @@ for label_i = 1:numel(metastasis_labels.values)
   display([num2str(subject_count_for_label_i) ' subjects have label "' metastasis_labels.names{label_i} '"'])
 end
 
-df.skip = true;
+Image_data_zeros = Image_data == 0;
+Image_data(Image_data_zeros) = Image_data(Image_data_zeros) + eps;
+
+Gene_expression_data_zeros = Gene_expression_data == 0;
+Gene_expression_data(Gene_expression_data_zeros) = Gene_expression_data(Gene_expression_data_zeros) + eps;
+
+df.skip = false;
 df.labels = survival_labels;
 df.X1 = [];
 df.X1.data = zscore(Image_data(sorted_survival_label_indices, :));
@@ -78,7 +84,6 @@ df.X2 = [];
 df.X2.data = zscore(Gene_expression_data(sorted_survival_label_indices, :));
 df.X2.name = 'Gene expression data';
 df.X2_self_associations = gene_network;
-df.K = 5;
 df.dataname = 'gene_image_dual_factorization';
 df.parameters.gamma1=20;
 df.parameters.gamma2=10;
@@ -87,6 +92,7 @@ df.parameters.lambda2=.01;
 df.parameters.lambda3=.0001;
 df.parameters.iterations = 1;
 
+clustering.skip = false;
 clustering.labels = metastasis_labels;
 [~, sorted_metastasis_label_indices] = sort(metastasis_labels.numeric);
 clustering.X1 = [];
@@ -104,8 +110,16 @@ subplot(1,2,2)
 imagesc(clustering.X2.data)
 title({clustering.X2.name, 'sorted'})
 
+tf.skip = false;
+tf.labels = metastasis_labels;
+tf.X1.data = zscore(Gene_expression_data);
+tf.X1.name = 'gene expression data';
+tf.X2.data = zscore(Image_data);
+tf.X2.name = 'image data';
+
 %pipeline(clustering, df,  clustering.X1, clustering.X2, metastasis_labels, parameters)
-pipeline(clustering, df)
+tf.results = pipeline(clustering, df, tf)
+save('tri_fact_results.mat', tf);
 
 
 end
