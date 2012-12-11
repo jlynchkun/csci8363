@@ -29,8 +29,11 @@ end
 %find nearest neighbors
 for i=1:size(X,1)-1
     for j=i+1:size(X,1)
-        temp = length(intersect(ranks(i,2:k+1),ranks(j,2:k+1)));
+        %if any(ranks(i,2:k+1)==j) && any(ranks(j,2:k+1)==i)
+        shared_knn_ij = intersect(ranks(i,2:k+1),ranks(j,2:k+1));
+        temp = length(shared_knn_ij);
         A(i,j) = temp;
         A(j,i) = temp;
+        %end
     end
 end
