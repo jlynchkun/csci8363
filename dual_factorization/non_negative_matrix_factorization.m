@@ -44,5 +44,8 @@ for it_number = 1:iterations
     H = H .* (W' * V_over_WH);
     
     err = [err norm(V - W*H, 2)];
-    
+    plot(err)
+    pause(.1) %to get the plot to show
+
+
 end

@@ -19,27 +19,40 @@ function [clusters, cluster_entropy, subject_count_per_cluster] = clustering(X1,
 
 
 %combine into data matrix
-X = [X1.data X2.data];
-
+X = [max(0, X1.data) max(0, -X1.data) max(0, X2.data) max(0, -X2.data)];
+size(X)
+%X = [X1.data X2.data]; this does not cluster well
 
 %%snn
 disp('creating adjacency matrix')
 [A ranks distances] = snn(X,30);
 figure
+subplot(1,2,1)
 imagesc(ranks)
 colorbar
 title({'snn', X1.name, X2.name})
+subplot(1,2,2)
+bar(sum(A) / 2)
 
 %%cluster
 disp('clustering')
 %calculate laplacian
 L = diag(sum(A))-A;
-[eigenvectors eigenvalues] = eig(A);
+[eigenvectors eigenvalues] = eig(L);
+figure
+subplot(1,3,1)
+plot(eigenvectors(:,1))
+subplot(1,3,2)
+plot(eigenvectors(:,2))
+subplot(1,3,3)
+bar(diag(eigenvalues))
 %number of clusters
 k = target_cluster_count;
-eigenvectors_part = eigenvectors(:,(1:k));
+% skip the first eigenvector
+eigenvectors_part = eigenvectors(:,(2:(k+1)));
 
-clusters = kmeans_pp(eigenvectors_part',k)';
+%clusters = kmeans_pp(eigenvectors_part',k)';
+clusters = kmeans(eigenvectors_part,k);
 cluster_labels = unique(clusters)
 cluster_label_count = numel(cluster_labels);
 clinical_labels = labels.values
