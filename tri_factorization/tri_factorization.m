@@ -158,6 +158,7 @@ while (obj_old - obj > 1e-6) && length(obj_traj) < parameters.max_iteration_coun
     S = (S + Q).*upd_factor;
     
    upd_factor = ((X-Z)'*F*S)./(G*S'*F'*F*S + lambG*sum(sum(G)) + epsilon);
+%	upd_factor = ((X-Z)'*F*S + lambINTERACT*G*interaction_matrix)./(G*S'*F'*F*S + lambG*sum(sum(G)) + epsilon);
    Q = kappa*(upd_factor > 1 & G < kappa_tol);
    if sum(sum(Q)) > 0 disp(sprintf('inadmissible zeros in G (iter = %d)',length(obj_traj))), end
    G = (G + Q).*upd_factor;
