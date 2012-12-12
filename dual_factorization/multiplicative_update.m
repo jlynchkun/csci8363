@@ -19,7 +19,7 @@ error_ratio = 0.5;
 error = [];
 num_iterations = 0;
 %while errordiff > 1000 %TODO: need a better (but princpled) ending point
-while (error_ratio < 0.9999 && error_ratio > 0.1) || num_iterations<5% is this principled?
+while (error_ratio < 0.9999 && error_ratio > 0.1) || num_iterations<100% is this principled?
     num_iterations = num_iterations + 1;
     %this update is directly from Zhang's code, plus 
     W = W.*([H1 H2]*[X1 X2]')'./(W*([H1 H2]*[H1 H2]'+r1*eye(K))+eps);    %Update rule-1;  
@@ -32,7 +32,7 @@ while (error_ratio < 0.9999 && error_ratio > 0.1) || num_iterations<5% is this p
     error = [error norm(X1-W*H1,'fro')^2 + norm(X2-W*H2,'fro')^2];
 
     plot(error)
-    pause(.1) %to get the plot to show
+    drawnow() %pause(.1) %to get the plot to show
 
     try
         errordiff = error(end-1)-error(end);

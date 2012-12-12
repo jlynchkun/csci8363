@@ -72,7 +72,12 @@ labels_sorted = labels.numeric(I);
 W0 = [labels_sorted > 0 labels_sorted < 0];
 %survival = survival(I,:);
 nn_X1 = nn_X1(I,:);
-nn_X2 = nn_X2(I,:);
+if isempty(nn_X2)
+  % do not sort
+else
+  nn_X2 = nn_X2(I,:);
+end
+
 figure
 subplot(2,2,1)
 imagesc(nn_X1)
@@ -114,7 +119,7 @@ k1 = 2; %columns of F
 %how many clusters? let's say 50
 G = zeros(k2,n);
 tic
-[idx c] = kmeans(X',k2,'Replicates',10);
+[idx c] = kmeans(X',k2,'Replicates',3);
 toc
 [temp indices] = sortrows(idx);
 
@@ -161,7 +166,7 @@ while (obj_old - obj > 1e-6) && length(obj_traj) < parameters.max_iteration_coun
     T = X - F*S*G';
     Z = min(X, sign(T).*max(abs(T) - lambO,0));
     
-    obj_old = obj;
+    obj_old = obj
     obj = 0.5*(norm(X - F*S*G' - Z,'fro')^2 + lambF*sum(sum(F))^2 + ...
         lambS*sum(sum(S))^2 + lambG*sum(sum(G))^2) + lambO*sum(sum(abs(Z)));
     obj_traj = [obj_traj obj];

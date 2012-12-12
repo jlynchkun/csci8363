@@ -38,6 +38,9 @@ else
   clustering(clustering_data.X1, clustering_data.X2, clustering_data.labels, clustering_data.cluster_count);
 end
 
+tri.F = [];
+tri.S = [];
+tri.G = [];
 if tf_data.skip == true
   display('skipping tri factorization')
 else

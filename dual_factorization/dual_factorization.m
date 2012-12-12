@@ -80,7 +80,12 @@ nn_X1_k = svd_singular_value_plot(nn_X1, ['dual factorization ' X1.name]);
 subplot(1,2,2)
 nn_X2_k = svd_singular_value_plot(nn_X2, ['dual factorization ' X2.name]);
 
-K = max(nn_X1_k, nn_X2_k);
+if isempty(parameters.K)
+  K = max(nn_X1_k, nn_X2_k);
+else
+  K = parameters.K;
+end
+display(['using K = ' num2str(K)])
 
 %this is gene-gene association matrix (4 of these b/c we're doubling the X data to make positive/negative different)
 A =[X2_self_associations X2_self_associations;
@@ -131,7 +136,7 @@ figure
 %case 1 - omit B, so lambda2 = 0, lambda3 = 0
 subplot(2,3,1)
 [W1_1,H1_1,H2_1] = multiplicative_update(nn_X1,nn_X2,W,H1,H2,A,B,lambda1,0,0,gamma1,gamma2,K);
-title({'dual factorization', X1.name, X2.name, 'no B'})
+title({['dual factorization K = ' num2str(K)], X1.name, X2.name, 'no B'})
 
 %case 2 - keep B, default from Zhang paper, don't learn
 %B so lambda3 = 0
