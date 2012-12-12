@@ -41,7 +41,7 @@ end
 if tf_data.skip == true
   display('skipping tri factorization')
 else
-  [tri.F tri.S tri.G] = tri_factorization(tf_data.X1, tf_data.X2, tf_data.labels);
+  [tri.F tri.S tri.G] = tri_factorization(tf_data.X1, tf_data.X2, tf_data.labels, tf_data.parameters);
 end
 
 end

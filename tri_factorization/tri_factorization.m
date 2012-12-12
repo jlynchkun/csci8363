@@ -1,5 +1,5 @@
 % X1 and X2 should be normalized
-function [F S G] = tri_factorization(X1, X2, labels)
+function [F S G] = tri_factorization(X1, X2, labels, parameters)
 %function [return1 return2] = main(Gene_expression_data,Image_data,survival,Clinical_numeric)
 %% Use tri-matrix factorization to uncover latent relationships between
 % genes and image data.
@@ -132,13 +132,15 @@ G = G';
 obj = 1e9;
 obj_old = 1e10;
 %F = rand(m,k1);
-[F d1]= norm_cols(F+0,2); %NORMALIZE F - makes columns sum to 1
+F=F+0;
+[~, d1]= norm_cols(F+0,2); %NORMALIZE F - makes columns sum to 1
 S = rand(k1,k2);
+S = diag(d1)*S;
 %G = rand(n,k2);
 Z = zeros(m,n);
 obj_traj = [];  % collect sequence of objective values
 figure
-while (obj_old - obj > 1e-6)
+while (obj_old - obj > 1e-6) && length(obj_traj) < parameters.max_iteration_count
     length(obj_traj)
 %    upd_factor = ((X-Z)*G*S')./(F*S*G'*G*S' + lambF*sum(sum(F)) + epsilon);
 %    Q = kappa*(upd_factor > 1 & F < kappa_tol);
@@ -164,28 +166,38 @@ while (obj_old - obj > 1e-6)
         lambS*sum(sum(S))^2 + lambG*sum(sum(G))^2) + lambO*sum(sum(abs(Z)));
     obj_traj = [obj_traj obj];
     plot(obj_traj)
-    pause(.1)
+    drawnow %pause(.1)
 end
+title({'tri factorization', [X1.name ' ' X2.name], sprintf('Total # of iteration = %d',length(obj_traj))})
+
 disp(sprintf('Total # of iteration = %d',length(obj_traj)));
 
 % normalize
 [F,d1] = norm_cols(F,1);
 [G,d2] = norm_cols(G,1); %normalizing by columns of G (rows of G') at the end gives group membership
+%nGt = norm_cols(G', 1);
+%G = nGt';
 S = diag(d1)*S*diag(d2);
 
 figure
 subplot(1,3,1)
 imagesc(F)
-title({'tri factorization F', [X1.name ' and ' X2.name]})
+title({'tri factorization F', 'columns normalized', [X1.name ' and ' X2.name]})
 colorbar
 subplot(1,3,2)
 imagesc(S)
 title({'tri factorization S', [X1.name ' and ' X2.name]})
 colorbar
 subplot(1,3,3)
-imagesc(G')
-title({'tri factorization G''', [X1.name ' and ' X2.name]})
+imagesc(G)
+title({'tri factorization G', [X1.name ' and ' X2.name]})
 colorbar
 
+figure
+SG = S*G';
+imagesc(SG)
+title({'tri factorization SG''', [X1.name ' and ' X2.name]})
+colorbar
+save('SG.mat', 'SG')
 
 end

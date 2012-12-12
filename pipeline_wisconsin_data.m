@@ -1,14 +1,17 @@
-function pipeline_wisconsin_data()
+function pipeline_wisconsin_data(noise_feature_count)
 % loads an array called 'wisconsin'
 load('.\data\wisconsin breast cancer\wisconsin.mat')
+
+%cell1_data = 
+[subject_count ~] = size(wisconsin);
 
 % break the wisconsin data into separate parts
 df.skip = true;
 df.X1 = []
-df.X1.data = wisconsin(:, 1:10);
+df.X1.data = zscore(wisconsin(:, 1:10));
 df.X1.name = 'Wisconsin X1';
-df.X2.data = wisconsin(:, 11:20);
-df.X2.name = 'Wisconsin X2';
+df.X2.data = zscore([wisconsin(:, 11:20) randn(subject_count, noise_feature_count)]);
+df.X2.name = ['Wisconsin X2 with ' num2str(noise_feature_count) ' noise features'];
 df.labels = [];
 df.labels.numeric = wisconsin(:, end);
 correlations = corrcoef(df.X2.data);
@@ -32,12 +35,12 @@ df.labels.values = unique(df.labels.numeric)'
 df.labels.names = {'malignant', 'benign'}
 
 % break the wisconsin data into separate parts
-clustering.skip = true;
+clustering.skip = false;
 clustering.X1 = []
-clustering.X1.data = wisconsin(:, 1:10);
-clustering.X1.name = 'Wisconsin X1';
-clustering.X2.data = wisconsin(:, 11:20);
-clustering.X2.name = 'Wisconsin X2';
+clustering.X1.data = df.X1.data;
+clustering.X1.name = df.X1.name;
+clustering.X2.data = df.X2.data;
+clustering.X2.name = df.X2.name;
 clustering.labels = [];
 clustering.labels.numeric = wisconsin(:, end);
 
@@ -51,10 +54,11 @@ display(['wisconsin labels: ' num2str(clustering.labels.values)])
 
 tf.skip = false;
 tf.labels.numeric = wisconsin(:, end);
-tf.X1.data = zscore(wisconsin(:, 1:10));
-tf.X1.name = 'Wisconsin X1';
-tf.X2.data = zscore(wisconsin(:, 11:20));
-tf.X2.name = 'Wisconsin X2';
+tf.X1.data = df.X1.data;
+tf.X1.name = df.X1.name;
+tf.X2.data = df.X2.data;
+tf.X2.name = df.X2.name;
+tf.parameters.max_iteration_count = 1000;
 
 clustering.cluster_count = 2;
 pipeline(clustering, df, tf);
