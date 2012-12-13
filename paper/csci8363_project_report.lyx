@@ -25,7 +25,7 @@
 \bibtex_command default
 \index_command default
 \paperfontsize default
-\spacing single
+\spacing other 1.1000000000000001
 \use_hyperref false
 \papersize default
 \use_geometry true
@@ -1100,6 +1100,7 @@ reference "fig:Tri-factorization-of-Wisconsin"
 
 \begin_layout Standard
 \begin_inset Float figure
+placement h
 wide false
 sideways false
 status open
@@ -1150,11 +1151,22 @@ reference "fig:wisconsin-SG"
 
 \end_inset
 
-
+.
+ It is readily apparent that values corresponding to actual cells typically
+ show much stronger contrast between one class and another than the random
+ data.
+ It appears that values corresponding to positive feature values (or, the
+ high-end of values once features are standardized) are are predictive of
+ the first class, whereas lower/negative values tend to be predictive of
+ the second class.
+ Of course, since there are only two classes, any extreme value is by default
+ predictive of membership in both classes.
+ 
 \end_layout
 
 \begin_layout Standard
 \begin_inset Float figure
+placement H
 wide false
 sideways false
 status open
@@ -1178,7 +1190,7 @@ SG^T from the factorization of the modified Wisconsin Diagnostic Breast
  Features 21-30 and 41-50 are positive and negative features from cell 2.
  Features 31-40 and 51-60 are positive and negative random features drawn
  from a normal distribution with mean 1 and standard deviation 0.
- 
+ Note that columns are not normalized in this case.
 \end_layout
 
 \end_inset
@@ -1195,6 +1207,104 @@ name "fig:wisconsin-SG"
 
 \end_inset
 
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:SG-ratios"
+
+\end_inset
+
+ displays ratios of the first to the second row as well as the converse.
+ Large values in both cases correspond to the highest power of features
+ to differentiate between patient classes.
+ Several aspects of this figure are worth noting.
+ First, entries corresponding to noise features show consistently low ratios
+ (close to 1).
+ Ratios between corresponding positive and negative features from Cell 2
+ are both high (in entries 21-30 and 41-50), which suggests that higher-than-ave
+rage values predict one class and lower-than-average of the same feature
+ predict the other class.
+ Finally, features from Cell 2 (entries 21-30 and 41-50) appear to be generally
+ stronger predictors than features from Cell 1 (entries 1-20).
+\end_layout
+
+\begin_layout Standard
+In order to validate the applicability of features with high ratios in Figure
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:SG-ratios"
+
+\end_inset
+
+, we compare the top values from the top and bottom ratios to the features
+ with highest information gain with respect to class labels.
+ The top features from Row 1/Row 2 are features 23, 24, 21, 28 and 4, in
+ that order.
+ These correspond to features 14, 11, 13, 4 and 18 in the mixed-sign X'=[X1
+ X2] matrix of cell features.
+ The top features in Row 2 / Row 1 are numbers 43, 41, 48, 47 and 44, which
+ correspond to features 13, 11, 18, 17 and 14 in X'.
+ Calculating the information gain with respect to patient class, the top
+ six features are 13, 14, 11, 18, 4 and 17, all of which are in the top
+ feature ratios from Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:SG-ratios"
+
+\end_inset
+
+.
+ Thus, non-negative matrix factorization with a class-label matrix F produces
+ a SG^T matrix that can readily detect which features are relevant to class
+ labels.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/SG-ratios.png
+	width 5in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Ratios between rows 1 and 2 of SG^T resulting from tri-matrix factorization.
+\end_layout
+
+\end_inset
+
+.
+ 
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:SG-ratios"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
 
 \end_layout
 
@@ -1202,8 +1312,57 @@ name "fig:wisconsin-SG"
 Feature Interaction
 \end_layout
 
-\begin_layout Subsection
-Results	
+\begin_layout Standard
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/wisconsin_tri_fact_X_correlation_matrix.png
+	width 3in
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figures/wisconsin_tri_fact_Gt_correlation_matrix.png
+	width 3in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+(some spots in the RIGHT matrix that aren't in the left)
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:X-and-G-correlations"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -1235,11 +1394,91 @@ Zhang 2011
 \end_layout
 
 \begin_layout Section
-Clustering
+Clustering (JOSH WRITE INTRO?)
 \end_layout
 
 \begin_layout Subsection
-Shared Nearest Neighbor Similarity (THOMAS)
+Shared Nearest Neighbor Similarity
+\end_layout
+
+\begin_layout Standard
+Some clustering algorithms operate in feature-space, whereas others require
+ a graph-based representation of the data in the form of an adjacency matrix.
+ Consider each observation as a node in a graph.
+ An adjacency matrix A then consists of entries A_i_j thatcorrespond to
+ some measure of 
+\begin_inset Quotes eld
+\end_inset
+
+similarity
+\begin_inset Quotes erd
+\end_inset
+
+ between observations/nodes i and j in the graph.
+ In order to construct A, we must use a method that creates a similarity
+ measure between observations using their location in feature-space.
+ In low-dimensional space, Euclidean distance is often used as a similarity
+ measure.
+ As the number of dimensions grows, however, all points become 
+\begin_inset Quotes eld
+\end_inset
+
+closer
+\begin_inset Quotes erd
+\end_inset
+
+ and all pairwise distance become more alike and correspondingly less informatio
+n-bearing regarding pairwise observation similarity.
+ 
+\end_layout
+
+\begin_layout Standard
+One method for evaluating the similarity of points is to look at the collection
+ of points surrounding each in feature space.
+ The idea is that if two points have a similar feature 
+\begin_inset Quotes eld
+\end_inset
+
+neighborhood,
+\begin_inset Quotes erd
+\end_inset
+
+ they will then be similar to each other.
+ Using several nearest neighbors makes the Euclidean distance metric more
+ robust to high dimensionality.
+ The adjacency matrix is then comprised of the number of 
+\begin_inset Quotes eld
+\end_inset
+
+neareset neighbors
+\begin_inset Quotes erd
+\end_inset
+
+ two features have in common.
+ The benefit of the SNN method is that it is relative, that is, it constructs
+ a definition of similarity that is relatively robust in the face of high
+ dimensionality and variations in density throughout the feature space.
+ 
+\end_layout
+
+\begin_layout Standard
+In order to construct a shared nearest neighbor adjacency matrix for subjects,
+ pairwise Euclidean distance is first computed using standardizes features.
+ For each subject, distances to other subjects are ranked and the closest
+ N? subjects to that subject are identified.
+ Once each subject has a set of N? 
+\begin_inset Quotes eld
+\end_inset
+
+nearest neighbors,
+\begin_inset Quotes erd
+\end_inset
+
+ the SNN similarity measure between two subjects i and j, A_i_j, is calculated
+ as the cardinality of the pairwise interseections between two subjects'
+ nearest neighbor sets.
+ N? is user-specified and controlls the sparsity of the adjacency matrix
+ and was chosen to be 30 in our calculations.
 \end_layout
 
 \begin_layout Subsection
