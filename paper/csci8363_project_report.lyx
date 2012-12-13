@@ -64,11 +64,7 @@ CSci 8363 Final Project Paper
 \end_layout
 
 \begin_layout Author
-Thomas Christie
-\end_layout
-
-\begin_layout Author
-Joshua Lynch
+Thomas Christie, Joshua Lynch
 \end_layout
 
 \begin_layout Part
@@ -802,7 +798,115 @@ Shared Nearest Neighbor Similarity (THOMAS)
 \end_layout
 
 \begin_layout Subsection
-Spectral Clustering (JOSH)
+Spectral Clustering
+\end_layout
+
+\begin_layout Standard
+Clustering is a very popular unsupervised learning technique for finding
+ related groups in large data sets.
+ Classical clustering methods include heirarchical clustering and k-means
+ clustering.
+ Heirarchical clustering assigns group labels based on some distance measure
+ between observations, grouping nearby observations together.
+ The k-means method is similar in that it uses a distance measure between
+ observations, but rather than using all pairwise distances between observations
+ this method tries to optimally locate some number, k, of cluster centers
+ and assign each observation to the nearest cluster center.
+ Because these methods are fundamentally based on a distance measurement
+ they may not be good choices for high-dimensional data, where distance
+ between observations often approaches a constant.
+ 
+\end_layout
+
+\begin_layout Standard
+Spectral clustering methods are able to operate on a more general notion
+ of similarity between observations, although choosing an appropriate similarity
+ measure is important to arriving at reasonable results.
+ The basic method is to treat the data set as a graph with observations
+ as vertices and similarity between observations as edge weights, calculate
+ the corresponding adjacency matrix and the related graph Laplacian matrix
+ 
+\begin_inset Formula $L$
+\end_inset
+
+ and cluster a subset of eigenvectors of 
+\begin_inset Formula $L$
+\end_inset
+
+.
+ Once a similarity measure 
+\begin_inset Formula $\phi$
+\end_inset
+
+ is chosen the corresponding adjacency matrix is calculated where each element
+ 
+\begin_inset Formula $A_{ij}$
+\end_inset
+
+ is the similarity between observations 
+\begin_inset Formula $i$
+\end_inset
+
+ and 
+\begin_inset Formula $j$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+A_{ij} & =\phi(i,j)\label{eq:adjacency-matrix}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Next a graph Laplacian is calculated using the adjacency matrix 
+\begin_inset Formula $A$
+\end_inset
+
+ and the diagonal matrix of row sums of 
+\begin_inset Formula $A$
+\end_inset
+
+, called 
+\begin_inset Formula $D$
+\end_inset
+
+ here.
+ Here another choice must be made between three graph Laplacians:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+L_{U} & =D-A\\
+L_{sym} & =D^{-1/2}L_{U}^{-1/2}\\
+L_{rw} & =D^{-1}L_{U}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+These graph Laplacian matrices are called, respectively, 'unnormalized',
+ 'normalized symmetric', and 'normalized random walk'.
+ The tutorial [Luxburg] suggests using the distribution of degrees in the
+ adjacency matrix as a deciding factor.
+ If the distribution of degrees is narrow then the three graph Laplacians
+ are likely to give similar clustering results.
+ If the distribution of degrees is broad the normalized graph Laplacians
+ may be better choices.
+ Futhermore the normalized random walk graph Laplacian may be the better
+ choice.
+ [Luxburg] gives several supporting arguments for this choice.
 \end_layout
 
 \begin_layout Subsection
