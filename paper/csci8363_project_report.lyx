@@ -25,9 +25,10 @@
 \bibtex_command default
 \index_command default
 \paperfontsize default
+\spacing single
 \use_hyperref false
 \papersize default
-\use_geometry false
+\use_geometry true
 \use_amsmath 1
 \use_esint 1
 \use_mhchem 1
@@ -42,6 +43,10 @@
 \shortcut idx
 \color #008000
 \end_index
+\leftmargin 1in
+\topmargin 1in
+\rightmargin 1in
+\bottommargin 1in
 \secnumdepth 3
 \tocdepth 3
 \paragraph_separation indent
@@ -563,6 +568,52 @@ times4m matrix X'.
  A visualization of the matrices can be seen in Figure ???.
 \end_layout
 
+\begin_layout Standard
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/tri-factorization.png
+	width 5in
+	rotateOrigin centerTop
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Non-negative tri-factorization shematic.
+ X corresponds to the data matrix, F to enforced labels, and S and G are
+ learned matrices.
+ M1 and M2 correspond to the data from different sources that are concatenated
+ to create X.
+ N is the number of subjects, and k is the number of latent features in
+ G.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
 \begin_layout Subsection
 Problem Formulation (incl multiplicative updates)
 \end_layout
@@ -627,7 +678,7 @@ reference "eq:tri-minimization"
  can be written 
 \begin_inset Formula 
 \begin{equation}
-\mathcal{F}(S,G)=\frac{1}{2}(||X-FSG^{T}||_{F}^{2}+\lambda_{S}\sum e_{1\times k}SS^{T}e_{k\times1}^{T}+\lambda_{G}\sum e_{1\times k}GG^{T}e_{k\times1}^{T})
+\mathcal{F}(S,G)=\frac{1}{2}(||X-FSG^{T}||_{F}^{2}+\lambda_{S}\sum e_{1\times2}SS^{T}e_{2\times1}^{T}+\lambda_{G}\sum e_{1\times k}GG^{T}e_{k\times1}^{T})
 \end{equation}
 
 \end_inset
@@ -710,7 +761,7 @@ mathcal{L} with respect to S and G are:
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\frac{\partial\mathcal{L}}{\partial S}=-F^{T}XG+F^{T}FSG^{T}G+\lambda_{S}e_{k\times k}S+\Phi
+\frac{\partial\mathcal{L}}{\partial S}=-F^{T}XG+F^{T}FSG^{T}G+\lambda_{S}e_{2\times2}S+\Phi
 \]
 
 \end_inset
@@ -750,11 +801,258 @@ psi_i_j G_i_j = 0, we get the following equations for S_i_j and G_i_j:
 \end_layout
 
 \begin_layout Standard
-(-F^TXG)
+\begin_inset Formula 
+\[
+(-F^{T}XG)_{i}{}_{j}S_{i}{}_{j}+(F^{T}SG^{T}G+\lambda_{S}e_{2\times2}S)_{i}{}_{j}S_{i}{}_{j}=0
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+(-X^{T}FS)_{i}{}_{j}G_{i}{}_{j}+(GS^{T}F^{T}FS+\lambda_{G}e_{k\times k}G)_{i}{}_{j}G_{i}{}_{j}=0
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Moving the first term of each to the right side of the equal sign and dividing
+ by the first part of the second term gives the following update rules,
+ which are used iteratively:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+S_{i}{}_{j}\leftarrow S_{i}{}_{j}\frac{(F^{T}XG)_{i}{}_{j}}{(F^{T}SG^{T}G+\lambda_{S}e_{2\times2}S)_{i}{}_{j}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+G_{i}{}_{j}\leftarrow G_{i}{}_{j}\frac{X^{T}FS}{(GS^{T}F^{T}FS+\lambda_{G}e_{k\times k}G)_{i}{}_{j}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If the values are initialized as non-negative, the update rules are guaranteed
+ to be non-increasing and are only stationary if S and G are at a stationary
+ point (see Zhang 2011 supplementary material for a proof).
+ In practice, a small epsilon is added to the denominator of each update
+ rule to preclude devision by zero.
+ Additionally, F is column-normalized and G is row-normalized at each iteration
+ so that S absorbs the scaling from both matrices.
+\end_layout
+
+\begin_layout Standard
+As the update rules are multiplicative and each new value of S and G is
+ a function of past values, S and G must first be initialized.
+ The matrix F contains patient labels and can be thought of as an indicator
+ matrix for clustering patients.
+ Correspondingly, the matrix G can be thought of as clustering features,
+ which correspond to columns of X.
+ With this in mind, we initialize G using k-means on columns of X, where
+ the number of clusters used is the number of columns (latent features)
+ in G.
+ The resulting matrix is an n
+\backslash
+times k indicator matrix of feature clusters in which each column has a
+ single 1 representing cluster membership and all other entries are 0.
+ The initial G is set to this matrix.
+ S is a scaling matrix and is initialized to random numbers between 0 and
+ 1.
 \end_layout
 
 \begin_layout Subsection
 Feature Selection
+\end_layout
+
+\begin_layout Standard
+As mentioned above, rows of F indicate an enforced clustering on subjects
+ corresponding to clinical patient labels, in which each row contains a
+ zero and nonzero entry (not 1 because of column-wise scaling).
+ Group membership can be determined by assigning a subject to the column-label
+ with corresponding highest value in the subject's row in F.
+ Since F is predetermined and fixed, this merely represents a change in
+ interpretation from label to cluster membership.
+ 
+\end_layout
+
+\begin_layout Standard
+Once S and G are learned, we can consider the 2
+\backslash
+times m product SG^T, where m is the total number of non-negative features.
+ This can be thought of as an indicator matrix similar to F, except that
+ each feature is assigned to a feature cluster.
+ Unlike the random initialization of G, in which features were clustered
+ without taking into account patient labels, the learned SG^T represents
+ feature cluster membership as they relate to the patient labels.
+ In other words, each (normalized) column of SG^T represents a posterior
+ probability of that feature being relevant to classifying a patient in
+ one label or the other.
+ 
+\end_layout
+
+\begin_layout Standard
+When considered as probabilities, it is reasonable to state that the higher
+ a probability corresponding to one label is, the stronger the corresponding
+ feature will be in predicting class membership.
+ On the other hand, for feature in which both probabilities are similar
+ (both roughly 0.5), the predictive value of that feature is relatively small.
+\end_layout
+
+\begin_layout Standard
+In order to test this, we constructed a dataset using the Wisconsin Diagnostic
+ Breast Cancer dataset (CITE), which includes 30 real-valued image features
+ (10 features each from 3 cells) for 569 subjects.
+ We used features from two cells, making 20 features total.
+ Features were standardized, and for comparision purposes we added 10 additional
+ random features with entries drawn from a normal distribution.
+ After doubling the matrix size to make every entry positive (as described
+ above), the final size of the data matrix was 569 by 60.
+ Subjects were labeled as either benign or malignant, indicating the status
+ of subjets' cancer cells from which image features were derived.
+\end_layout
+
+\begin_layout Standard
+As indicated above, F was created by normalizing a binary indicator matrix
+ for feature labels.
+ S was initialized randomly, and G was initialized by choosing the k-means
+ clustering result with the lowest SSE over 10 runs.
+ k was chosen to be 29, which corresponds to the number of singular values
+ of the data matrix corresponding to 90% of the variance of the data matrix.
+\end_layout
+
+\begin_layout Standard
+The results of the tri-factorization are shown in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Tri-factorization-of-Wisconsin"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/tri-factorization-wisconsin-results.png
+	width 5in
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Tri-factorization of modified Wisconsin Diagnostic Breast Cancer dataset
+ X into F, S and G, respectively.
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Tri-factorization-of-Wisconsin"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Class labels in F are readily apparent.
+ As desired, G is sparse and S approximately so, with only a few values
+ being relatively very high.
+ It is not immediately apparent how the features of W correspond to the
+ labels in F, however.
+ Multiplying S and G^T gives a much clearer picture, shown in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:wisconsin-SG"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/tri-factorization-wisconsin-results-SG.png
+	width 5in
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+SG^T from the factorization of the modified Wisconsin Diagnostic Breast
+ Cancer dataset.
+ Columns 1-20 correspond to 10 positive and 10 negative features from cell
+ 1.
+ Features 21-30 and 41-50 are positive and negative features from cell 2.
+ Features 31-40 and 51-60 are positive and negative random features drawn
+ from a normal distribution with mean 1 and standard deviation 0.
+ 
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:wisconsin-SG"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Feature Interaction
 \end_layout
 
 \begin_layout Subsection
