@@ -133,6 +133,13 @@ key "Zhang:Bioinformatics:2011"
 \end_inset
 
 , relationships between gene expression data and ??? were ???.
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Beck:SciTranslMed:2011,Zhang:Bioinformatics:2011"
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Section
@@ -430,56 +437,41 @@ Multiplicative Updates (THOMAS?)
 show how to re-write equation as multiplicative update
 \end_layout
 
+\begin_layout Subsection
+Data Preparation
+\end_layout
+
+\begin_layout Standard
+doubling, z-scoring
+\end_layout
+
 \begin_layout Part
 Experiments
 \end_layout
 
 \begin_layout Standard
-Goals: 
+The goal of this project is to evaluate the use of non-negative matrix factoriza
+tion as a tool for uncovering structure in large datasets.
+ With this in mind, we have three goals:
 \end_layout
 
-\begin_layout Standard
-1.
- use decomposition to predict metastasis (cool, but can really do this with
- other nonlinear methods).
+\begin_layout Enumerate
+Given a dataset with patients, corresponding features, and labels, use non-negat
+ive matrix factorization to uncover features, latent and actual, most relevant
+ to patient lables.
+\end_layout
+
+\begin_layout Enumerate
+Given the same dataset and two different types of features, determine whether
+ a common underlying structure (or common basis, in mathematical terms)
+ in those features relates to patient survival.
  
 \end_layout
 
-\begin_layout Standard
-2.
- Uncover relationships between features.
- This is similar to finding underlying 
-\begin_inset Quotes eld
-\end_inset
-
-latent
-\begin_inset Quotes erd
-\end_inset
-
- sources that combine to create the features, i.e.
- 
-\begin_inset Quotes eld
-\end_inset
-
-co-clustering
-\begin_inset Quotes erd
-\end_inset
-
-.
- 
-\end_layout
-
-\begin_layout Standard
-3.
- If you have two different types of data, figure out how they relate to
- each other.
- This overlaps with part (2) somewhat, but it depends on how you formulate
- the problem.
-\end_layout
-
-\begin_layout Standard
-Can do both of these things this in both a supervised (using labels) and
- unsupervised).
+\begin_layout Enumerate
+Perform spectral clustering on the dataset both in a naive fashion (using
+ all features) and using the matrix factorization-based feature selection
+ developed below.
 \end_layout
 
 \begin_layout Section
@@ -487,28 +479,282 @@ Supervised Approach
 \end_layout
 
 \begin_layout Standard
--find relationships between two datasets
+In this section, we use non-negative matrix factorization to uncover latent
+ and actual features related to 
 \end_layout
 
 \begin_layout Standard
-find underlying sources of features as they relate to some label (patient
- outcome) (like LSI)
-\end_layout
-
-\begin_layout Standard
-constrain this using label as one of the factors
-\end_layout
-
-\begin_layout Standard
--non-negative, sparse
+(OH!)
 \end_layout
 
 \begin_layout Subsection
 Non-negative Matrix Tri-factorization
 \end_layout
 
+\begin_layout Standard
+In traditional SVD, a matrix X is factored into three matrices 
+\begin_inset Formula $X=USV^{T}$
+\end_inset
+
+ in such a way that the columns of U and V are orthonormal and are typically
+ composed of mixed-sign entries.
+ Columns of U are a basis for the column space of X, and are combinations
+ of values that can be thought of as 'latent features' composed of combinations
+ of the original columns in such that they point in the direction of greatest
+ variance, next greatest, and so on for each column of U.
+ 
+\end_layout
+
+\begin_layout Standard
+In an analogous way, we would like to perform a non-negative matrix tri-factoriz
+ation that uncovers latent features that account for the greatest variation
+ in our data.
+ If X is composed of two concatenated feature sets, these latent features
+ will be linear combinations of the original features, thereby providing
+ insight into combinations of features that combine to predict variability
+ in the patient labels.
+\end_layout
+
+\begin_layout Standard
+In order to maintain consistency with other non-negative matrix factorization
+ literature, we will use the matrix labels F, S and G to represent the three
+ factors of X.
+ Each row of X corresponds to a subject, and each column corresponds to
+ a feature.
+ Since we are attempting to uncover features and feature combinations as
+ they are relevant to patient labels (and not to overall variability among
+ patients), we will fix the matrix F and use it to encode patient labels.
+ Unlike SVD, non-negative matrix factorization is non-unique, and because
+ we are drastically constraining the values of F we are actually computing
+ S and G^T in such a way that FSG^T most closely approximates X, rather
+ than factors it exactly.
+ Form this perspective, the factorization is turned into a minimization
+ problem, namely computing non-negative S and G in a way that minimizes
+ 
+\begin_inset Formula $||X-FSG^{T}||_{F}$
+\end_inset
+
+, where 
+\begin_inset Formula $||\cdot||_{F}$
+\end_inset
+
+is the Frobenius norm, or rooted sum of squared elements.
+ 
+\end_layout
+
+\begin_layout Standard
+Let X_1 and X_2 be the two subject by feature matrices with common subjects
+ and different feature sets, and let L be a vector of binary labels for
+ subjects.
+ We then create an n
+\backslash
+times2m matrix X = [X_1 X_2] as a concatenated subject by feature matrix.
+ Constructing a non-negative version of X using the method described above,
+ we double the columns of X and obtain the n
+\backslash
+times4m matrix X'.
+ Let F be a 2-column matrix such that entries in the first column of F in
+ rows where L is 1, and entries in the second column of F are 1 where L
+ is 0.
+ S is a matrix with 2 rows and k columns, where k is the number of latent
+ feature vectors to be discovered.
+ Finally, G is a 4m by k matrix such that eacy row corresponds to a non-negative
+ feature and each column corresponds to a latent feature to be discovered.
+ A visualization of the matrices can be seen in Figure ???.
+\end_layout
+
 \begin_layout Subsection
 Problem Formulation (incl multiplicative updates)
+\end_layout
+
+\begin_layout Standard
+Keeping in mind that we desire sparse S and G, the problem described above
+ can be written as the following:
+\end_layout
+
+\begin_layout Standard
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\begin_inset Formula 
+\begin{equation}
+\min_{S\geq0,G\geq0}\frac{1}{2}(||X-FSG^{T}||_{F}^{2}+\lambda_{S}\sum_{j}||s_{j}||_{1}^{2}+\lambda_{S}\sum_{j'}||g_{j'}||_{1}^{2})\label{eq:tri-minimization}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where both X and F are fixed.
+ The two additional 1-norm terms serve to enforce sparsity on S and G, and
+ represent a sum of the absolute values of each entry of each column, all
+ summed and then the result squared.
+ Since entries in S and G are non-negative, the terms represent the sum
+ of all elements of S and G, respectively.
+ Sparsity is ideally computed using the so-called 0-norm, which is the count
+ of non-zero elements of a matrix.
+ The 1-norm is a commonly used relaxation of the 0-norm, which is the closest
+ norm to the 0-norm that is also convex, and can therefore be optimized
+ using convex optimization methods.
+\end_layout
+
+\begin_layout Standard
+Following a similar formulation in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Zhang:Bioinformatics:2011"
+
+\end_inset
+
+, The objective function corresponding to 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:tri-minimization"
+
+\end_inset
+
+ can be written 
+\begin_inset Formula 
+\begin{equation}
+\mathcal{F}(S,G)=\frac{1}{2}(||X-FSG^{T}||_{F}^{2}+\lambda_{S}\sum e_{1\times k}SS^{T}e_{k\times1}^{T}+\lambda_{G}\sum e_{1\times k}GG^{T}e_{k\times1}^{T})
+\end{equation}
+
+\end_inset
+
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+ with the constraints 
+\begin_inset Formula $G\geq0$
+\end_inset
+
+ and 
+\begin_inset Formula $S\geq0$
+\end_inset
+
+.
+ The latter two terms again represent the sum of entries S and G squared,
+ and e is a vector of 1s.
+\end_layout
+
+\begin_layout Standard
+Formula ?? contains two variables and is therefore not convex in both, but
+ only in each individually.
+ To achieve convexity and optimize ???, we fix either S or G, calculate
+ the other, and iterate until a convergence criteria is met.
+ In order to construct an method of calculating S and G independently, we
+ first construct the Legrange 
+\begin_inset Formula $\mathcal{L}$
+\end_inset
+
+.
+ Let 
+\backslash
+phi_i_j and 
+\backslash
+psi_i_j be the Legrange multipliers for the constraints S
+\backslash
+geq 0 and G
+\backslash
+geq 0, respectively.
+ Then 
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+mathcal{L} (S,G) = 
+\backslash
+mathcal{F} + Tr(
+\backslash
+Phi S^T) + Tr(
+\backslash
+Psi G^T)
+\end_layout
+
+\begin_layout Standard
+where 
+\backslash
+Phi = [
+\backslash
+phi_i_j] and 
+\backslash
+Psi = [
+\backslash
+psi_i_j].
+ The partial derivatives of 
+\backslash
+mathcal{L} with respect to S and G are:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\partial\mathcal{L}}{\partial S}=-F^{T}XG+F^{T}FSG^{T}G+\lambda_{S}e_{k\times k}S+\Phi
+\]
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\begin_inset Formula 
+\[
+\frac{\partial\mathcal{L}}{\partial G}=-X^{T}FS+GS^{T}F^{T}FS+\lambda_{G}e_{k\times k}G+\Psi
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Based on the KKT conditions 
+\backslash
+phi_i_j S_i_j = 0 and 
+\backslash
+psi_i_j G_i_j = 0, we get the following equations for S_i_j and G_i_j:
+\end_layout
+
+\begin_layout Standard
+(-F^TXG)
+\end_layout
+
+\begin_layout Subsection
+Feature Selection
 \end_layout
 
 \begin_layout Subsection
@@ -867,7 +1113,7 @@ G_{ij}\leftarrow G_{ij}\frac{(X^{T}FS)_{ij}}{(GS^{T}F^{T}FS)_{ij}+\lambda_{G}||G
 \begin_layout Standard
 \begin_inset CommandInset bibtex
 LatexCommand bibtex
-bibfiles "linear algebra project"
+bibfiles "Sente References"
 options "plain"
 
 \end_inset
