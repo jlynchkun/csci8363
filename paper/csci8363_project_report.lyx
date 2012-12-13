@@ -638,11 +638,11 @@ Next a graph Laplacian is calculated using the adjacency matrix
 
 \begin_layout Standard
 \begin_inset Formula 
-\begin{align*}
-L_{U} & =D-A\\
-L_{sym} & =D^{-1/2}L_{U}^{-1/2}\\
-L_{rw} & =D^{-1}L_{U}
-\end{align*}
+\begin{align}
+L_{U} & =D-A\label{eq:unnormalized-graph-laplacian}\\
+L_{sym} & =D^{-1/2}L_{U}D^{-1/2}\label{eq:normalized-graph-laplacian}\\
+L_{rw} & =D^{-1}L_{U}\label{eq:random-walk-graph-laplacian}
+\end{align}
 
 \end_inset
 
