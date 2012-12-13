@@ -371,11 +371,18 @@ Matrix Decomposition as Optimization (JOSH??!)
 \end_layout
 
 \begin_layout Standard
-Finding an approximation WH of the nxm matrix X can be construed as an optimizat
-ion problem:
+Factoring a n-by-m matrix 
+\begin_inset Formula $X$
+\end_inset
+
+ as a product 
+\begin_inset Formula $WH$
+\end_inset
+
+ can be formulated as an optimization problem:
 \begin_inset Formula 
 \begin{equation}
-\min_{W,H}f(W,H)=\frac{1}{2}||X-WH||_{F}^{2}
+\min_{W,H}f(W,H)=\frac{1}{2}||X-WH||_{F}^{2}\label{eq:bifactorization-optimization}
 \end{equation}
 
 \end_inset
@@ -388,7 +395,7 @@ where
 \begin_inset Formula $||\cdot||_{F}$
 \end_inset
 
-is the Frobenius norm, 
+ is the Frobenius norm, 
 \begin_inset Formula $W\epsilon\mathbb{R}^{n\times k}$
 \end_inset
 
@@ -397,11 +404,27 @@ is the Frobenius norm,
 \end_inset
 
 .
- Non-negativity can be imposed as an additional constraint on W and H.
- Sparsity is controlled by adding a term penalizing the size of the L0 norm
- of W and/or H.
+ Non-negativity can be imposed as an additional constraint on 
+\begin_inset Formula $W$
+\end_inset
+
+ and 
+\begin_inset Formula $H$
+\end_inset
+
+.
+ Sparsity can be controlled by adding a term penalizing the size of the
+ L0 norm of 
+\begin_inset Formula $W$
+\end_inset
+
+ and/or 
+\begin_inset Formula $H$
+\end_inset
+
+.
  In practice the L1 norm is often used as an approximation of the L0 norm,
- as the L1 has more convenient mathematical properties (see section ???).
+ as using the L1 norm gives a convex optimiation problem.
  
 \end_layout
 
@@ -417,16 +440,45 @@ vity.
  In fact, requiring a non-negative factorization results in a more difficult
  problem than a simple unconstrained decomposition such as SVD (because...).
  Closed-form solutions to constrained matrix factorization problems are
- not known, so for the most part these problems are formulated as optimization
- problems and solved iteratively.
- Solving an optimization problem such as (1) (replace (1) with more general
- formulation, renumber (1) as (2)?) efficiently with guarantees of convergence
- and with known error bounds is in general difficult if not impossible.
- 
+ in general not known, so for the most part these problems are formulated
+ as optimization problems and solved iteratively.
+ Solving an optimization problem such as 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:bifactorization-optimization"
+
+\end_inset
+
+ efficiently with guarantees of convergence and with known error bounds
+ is in general difficult if not impossible.
+ If the problem can be converted to a convex optimization it may become
+ tractable.
+ Several techniques may be used including 'relaxation' to a convex norm
+ (substituting a convex norm for a non-convex norm), and alternately optimizing
+ one matrix while holding the others constant.
 \end_layout
 
 \begin_layout Subsubsection
-Legrange Multipliers
+Lagrange Multipliers
+\end_layout
+
+\begin_layout Standard
+A common approach to incorporating equality and inequality constraints with
+ an optimization problem such as 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:bifactorization-optimization"
+
+\end_inset
+
+ is to reformulate the problem with additional variables, one for each constrain
+t.
+ This new formulation is the Lagrangian dual problem and the new variables
+ are analogous to Lagrange multipliers.
+ For convex optimization problems the solution to the Lagrange dual problem
+ may be the exact solution to the original, or primal, problem.
+ The dual solution is at least a lower bound on the solution to the primal
+ problem.
 \end_layout
 
 \begin_layout Subsubsection
@@ -443,6 +495,77 @@ Data Preparation
 
 \begin_layout Standard
 doubling, z-scoring
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Comment
+status open
+
+\begin_layout Plain Layout
+gene expression subject count: 248 
+\end_layout
+
+\begin_layout Plain Layout
+gene expression feature count: 3550 
+\end_layout
+
+\begin_layout Plain Layout
+image data subject count: 248 
+\end_layout
+
+\begin_layout Plain Layout
+image data feature count: 6642 
+\end_layout
+
+\begin_layout Plain Layout
+86 subjects have label "metastasis" 
+\end_layout
+
+\begin_layout Plain Layout
+162 subjects have label "non-metastasis" 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Complete data sets of gene expression information and cell image feature
+ information were acquired from [] and [].
+\end_layout
+
+\begin_layout Standard
+The complete gene expression data set contained 24,481 features for 248
+ subjects.
+ This data was preprocessed to remove expression information related to
+ genes for which no name was provided.
+ Also, gene expression features with low value were removed, as were gene
+ expression features with low variance.
+ The final gene expression data set contained 3,550 features.
+ Finally the features were normalized to have zero mean and unit variance.
+\end_layout
+
+\begin_layout Standard
+The complete image feature data set contained 6,642 features for the same
+ 248 subjects.
+ No preprocessing was necessary for this data set.
+ All 6,642 features were used.
+ As with the gene expression data, the cell image features were normalized
+ to zero mean and unit variance.
+\end_layout
+
+\begin_layout Standard
+The gene expression and cell image data both contained negative feature
+ values.
+ In order to use multiplicative updates every entry in the initial matrix
+ must be positive.
+ In order to replace the negative values with positive ones each data matrix
+ was doubled along the columns.
+ Positive values were retained and negative values set to zero in one half
+ of the doubled matrix.
+ In the other half positive values were set to zero and negative values
+ had their sign reversed.
 \end_layout
 
 \begin_layout Part
@@ -829,7 +952,7 @@ Spectral clustering methods are able to operate on a more general notion
 \begin_inset Formula $L$
 \end_inset
 
- and cluster a subset of eigenvectors of 
+, and cluster a subset of eigenvectors of 
 \begin_inset Formula $L$
 \end_inset
 
@@ -879,7 +1002,7 @@ Next a graph Laplacian is calculated using the adjacency matrix
 \end_inset
 
  here.
- Here another choice must be made between three graph Laplacians:
+ At this point another choice must be made between three graph Laplacians:
 \end_layout
 
 \begin_layout Standard
@@ -898,15 +1021,57 @@ L_{rw} & =D^{-1}L_{U}\label{eq:random-walk-graph-laplacian}
 \begin_layout Standard
 These graph Laplacian matrices are called, respectively, 'unnormalized',
  'normalized symmetric', and 'normalized random walk'.
- The tutorial [Luxburg] suggests using the distribution of degrees in the
- adjacency matrix as a deciding factor.
+ The tutorial 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "von2007tutorial"
+
+\end_inset
+
+ suggests using the distribution of degrees in the adjacency matrix as a
+ deciding factor.
  If the distribution of degrees is narrow then the three graph Laplacians
  are likely to give similar clustering results.
  If the distribution of degrees is broad the normalized graph Laplacians
  may be better choices.
  Futhermore the normalized random walk graph Laplacian may be the better
  choice.
- [Luxburg] gives several supporting arguments for this choice.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "von2007tutorial"
+
+\end_inset
+
+ gives several supporting arguments for this choice.
+\end_layout
+
+\begin_layout Standard
+Finally compute the 
+\begin_inset Formula $k$
+\end_inset
+
+ smallest eigenvalues 
+\begin_inset Formula $v_{n}$
+\end_inset
+
+ and corresponding eigenvectors 
+\begin_inset Formula $u_{n}$
+\end_inset
+
+ of the chosed graph Laplacian, construct a matrix 
+\begin_inset Formula $C$
+\end_inset
+
+ with columns 
+\begin_inset Formula $u_{n}$
+\end_inset
+
+, and cluster the rows of 
+\begin_inset Formula $C$
+\end_inset
+
+ (using a method such as k-means) to assign cluster labels.
 \end_layout
 
 \begin_layout Subsection
@@ -935,7 +1100,7 @@ The formulation of the Network-Regularized Multiple NMF objective function:
 F(W,H_{1},H_{2}) & =||X_{1}-WH_{1}||_{F}^{2}+||X_{2}-WH_{2}||_{F}^{2}\\
  & -\lambda_{1}Tr(H_{2}AH_{2}^{T})-\lambda_{2}Tr(H_{1}BH_{2}^{T})\\
  & +\gamma_{1}||W||_{F}^{2}+\gamma_{2}(\sum_{j}||h_{j}||_{1}^{2}+\sum_{j'}||h_{j'}||_{1}^{2})\\
- & +\lambda_{3}||H_{1}^{T}H_{2}-B||
+ & +\lambda_{3}||H_{1}^{T}H_{2}-B||_{F}^{2}
 \end{align*}
 
 \end_inset
@@ -1016,7 +1181,7 @@ F(W,H_{1},H_{2}) & ={\displaystyle \sum_{I=1,2}}||X_{I}-WH_{I}||_{F}^{2}\\
 \end_layout
 
 \begin_layout Standard
-Multiplicative updates
+Multiplicative updates for bi-factorization:
 \end_layout
 
 \begin_layout Standard
