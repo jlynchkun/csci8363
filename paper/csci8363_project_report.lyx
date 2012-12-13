@@ -537,7 +537,14 @@ image data feature count: 6642
 
 \begin_layout Standard
 Complete data sets of gene expression information and cell image feature
- information were acquired from [] and [].
+ information were acquired from 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "deMJ:TheNewEnglandJournalOfMedicine:2002,Beck:SciTranslMed:2011"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -563,14 +570,31 @@ The complete image feature data set contained 6,642 features for the same
 \begin_layout Standard
 The gene expression and cell image data both contained negative feature
  values.
- In order to use multiplicative updates every entry in the initial matrix
- must be positive.
+ In order to use multiplicative updates every entry in the matrix to be
+ factored must be positive.
  In order to replace the negative values with positive ones each data matrix
  was doubled along the columns.
  Positive values were retained and negative values set to zero in one half
  of the doubled matrix.
  In the other half positive values were set to zero and negative values
  had their sign reversed.
+ For example:
+\begin_inset Formula 
+\begin{align*}
+\left[\begin{array}{ccc}
+1 & -2 & -1\\
+2 & 5 & 3\\
+2 & -4 & 4
+\end{array}\right] & \rightarrow\left[\begin{array}{cccccc}
+1 & 0 & 0 & 0 & 2 & 1\\
+2 & 5 & 3 & 0 & 0 & 0\\
+2 & 0 & 4 & 0 & 4 & 0
+\end{array}\right]
+\end{align*}
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Part
@@ -1243,6 +1267,10 @@ Clustering is a very popular unsupervised learning technique for finding
 Spectral clustering methods are able to operate on a more general notion
  of similarity between observations, although choosing an appropriate similarity
  measure is important to arriving at reasonable results.
+ This allows for selection of similarity measures that may be more appropriate
+ than euclidean distance or some related distance.
+ Additionally, spectral clustering methods have simlple implementations
+ that take advantage of general-purpose linear algebraic operations.
  The basic method is to treat the data set as a graph with observations
  as vertices and similarity between observations as edge weights, calculate
  the corresponding adjacency matrix and the related graph Laplacian matrix
@@ -1345,7 +1373,7 @@ key "von2007tutorial"
 \end_layout
 
 \begin_layout Standard
-Finally compute the 
+Finally, compute the 
 \begin_inset Formula $k$
 \end_inset
 
@@ -1370,10 +1398,39 @@ Finally compute the
 \end_inset
 
  (using a method such as k-means) to assign cluster labels.
+ Since each row corresponds to an observation the row clusters of 
+\begin_inset Formula $C$
+\end_inset
+
+ assign labels to the observations.
 \end_layout
 
 \begin_layout Subsection
 Feature Selection???
+\end_layout
+
+\begin_layout Standard
+Spectral clustering is used here as a method for comparison with the classificat
+ions derived from matrix bifactorization, where subjects were classified
+ according to individual columns of 
+\begin_inset Formula $W$
+\end_inset
+
+.
+ This is method of classification is already quite similar to spectral clusterin
+g, with
+\begin_inset Formula $W$
+\end_inset
+
+ taking the place of the matrix of eigenvalues of a graph Laplacian.
+\end_layout
+
+\begin_layout Standard
+The Wisconsin breast cancer data set has relatively small dimensionality
+ and is well-separated in the cell 2 data, as can be seen in a plot of the
+ first two singular vectors [figure reference].
+ Spectral clustering classifies this data with an error rate of 0.09 without
+ 
 \end_layout
 
 \begin_layout Standard
