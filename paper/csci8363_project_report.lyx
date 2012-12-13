@@ -1113,7 +1113,7 @@ G_{ij}\leftarrow G_{ij}\frac{(X^{T}FS)_{ij}}{(GS^{T}F^{T}FS)_{ij}+\lambda_{G}||G
 \begin_layout Standard
 \begin_inset CommandInset bibtex
 LatexCommand bibtex
-bibfiles "linear algebra project"
+bibfiles "Sente References"
 options "plain"
 
 \end_inset
