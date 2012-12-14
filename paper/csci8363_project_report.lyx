@@ -125,26 +125,40 @@ data-driven
  First, data is not deemed useless apriori due to the verdict of domain
  experts, and this can lead to the discovery of previously unexplored relationsh
 ips.
- In (IMAGE STUDY), image features were discovered that predicted patient
- outcome better than features traditionally used by physicians (BE MORE
- SPECIFIC).
- Moreover, relationships between features can increase the predictive power
- of the dataset.
  In 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Beck:SciTranslMed:2011"
+
+\end_inset
+
+, image features were discovered that predicted patient outcome better than
+ features traditionally used by physicians.
+ Moreover, an active research is being conducted to develop methods of combining
+ data from different sources (see e.g.
+ 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "Zhang:Bioinformatics:2011"
 
 \end_inset
 
-, relationships between gene expression data and ??? were ???.
-\begin_inset CommandInset citation
-LatexCommand cite
-key "Beck:SciTranslMed:2011,Zhang:Bioinformatics:2011"
+ for an integration of gene expression and micro-RNA data).
+\end_layout
 
-\end_inset
-
-
+\begin_layout Standard
+In this investigation, we use a linear algebra approach to uncover structure
+ in biometric data and its relationship to patient prognosis and outcome.
+ In what follows, we introduce a method based on non-negative matrix factorizati
+on for selecting features relevant to patient labels and thereby reducing
+ the dimensionality of patient data.
+ We then use non-negative matrix bifactorization to uncover structure underlying
+ patient data that can successfully separate patients into groups of high-
+ and low-survival outcome.
+ Lastly, we use spectral clustering to investigate the ability of features
+ to successfully separate patients into meaningful groups and demonstrate
+ the utility of feature selection.
+ 
 \end_layout
 
 \begin_layout Section
@@ -324,15 +338,25 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-SVD
+Matrix factorization attempts to find a collection of vectors that can be
+ linearly combined to create measured feature vectors.
+ The discovered vectors can be considered 
+\begin_inset Quotes eld
+\end_inset
+
+latent source features
+\begin_inset Quotes erd
+\end_inset
+
+ that combine to explain feature combinations manifest in the data.
+ An optional orthogonality constraint can be placed on source vectors.
+ Additionally, a lower number of source vectors can be used to produce an
+ approximation of the feature matrix, effectively reducing the dimensionalty
+ of the data.
 \end_layout
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Plain Layout
 
 \end_layout
 
@@ -342,8 +366,8 @@ SVD
 \end_layout
 
 \begin_layout Standard
-Matrix factorization is not unique, so an important question is how to decompose
- 
+Matrix factorization is not inherently unique, so an important question
+ is how to decompose 
 \begin_inset Formula $X$
 \end_inset
 
@@ -375,7 +399,7 @@ Matrix factorization is not unique, so an important question is how to decompose
 \begin_inset Formula $H$
 \end_inset
 
- (IS THIS TRUE? IS THERE NON-UNIQUE ORTHOGONAL MATRIX BI-FACTORIZATION?).
+.
  This approach is mathematically robust and well-understood.
  A lower-rank approximation of 
 \begin_inset Formula $X$
@@ -406,8 +430,7 @@ Matrix factorization is not unique, so an important question is how to decompose
 \end_inset
 
  matrix would not correspond to any domain-specific functional process but
- would be a mere mathematical convenience (CITE Josh's thing that he showed
- in class).
+ would be a mere mathematical convenience.
  In addition, SVD does not impose a constraint on the sign of values of
  
 \begin_inset Formula $H$
@@ -463,15 +486,15 @@ One approach to creating easily interpretable latent sources is to introduce
 
 , which gives a more intuitive decomposition of the data matrix.
  Moreover, in situations where data is naturally nonnegative (such as image
- data or gene expression(?)), negative components may not be readily interpretab
-le.
+ data), negative components may not be readily interpretable.
  
 \end_layout
 
 \begin_layout Standard
-Biometric data often originates with mixed signs.
+Biometric data often originates with mixed signs, either inherently or due
+ to common data transforms.
  When faced with a 
-\begin_inset Formula $m\times n$
+\begin_inset Formula $n\times m$
 \end_inset
 
  matrix 
@@ -480,7 +503,7 @@ Biometric data often originates with mixed signs.
 
  with mixed-sign entries, a common technique for imposing nonnegativity
  is to construct a new 
-\begin_inset Formula $m\times2n$
+\begin_inset Formula $n\times2m$
 \end_inset
 
  matrix 
@@ -506,7 +529,23 @@ Biometric data often originates with mixed signs.
 \end_inset
 
 , with 0's replacing corresponding positive values.
- This is the approached used in the methods below.
+ For example:
+\begin_inset Formula 
+\begin{align*}
+\left[\begin{array}{ccc}
+1 & -2 & -1\\
+2 & 5 & 3\\
+2 & -4 & 4
+\end{array}\right] & \rightarrow\left[\begin{array}{cccccc}
+1 & 0 & 0 & 0 & 2 & 1\\
+2 & 5 & 3 & 0 & 0 & 0\\
+2 & 0 & 4 & 0 & 4 & 0
+\end{array}\right]
+\end{align*}
+
+\end_inset
+
+This is the approached used in the methods below.
 \end_layout
 
 \begin_layout Standard
@@ -526,13 +565,12 @@ Sparse Decomposition
 \end_layout
 
 \begin_layout Standard
-(SEE KIM AND PARK 2007) A matrix is called sparse when the majority of its
- elements are 0.
+A matrix is called sparse when the majority of its elements are 0.
  In cases where a sparse 
 \begin_inset Formula $H$
 \end_inset
 
- can be found (W TOO OR JUST H?), the product 
+ can be found, the product 
 \begin_inset Formula $WH$
 \end_inset
 
@@ -551,21 +589,25 @@ Sparse Decomposition
 .
  This is useful, as it highlights which latent components are most responsible
  for each feature.
- 
-\end_layout
+ Note that with sparse data, even through the orthogonality constraint is
+ relaxed, columns have a high probability of being orthogonal (for a more
+ detailed explanation see 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Kim:Bioinformatics:2007"
 
-\begin_layout Standard
-Note that with sparse data, even through the orthogonality constraint is
- relaxed, columns have a high probability of being orthogonal.
+\end_inset
+
+).
  
 \end_layout
 
 \begin_layout Subsection
-Matrix Decomposition as Optimization (JOSH??!)
+Matrix Decomposition as Optimization
 \end_layout
 
 \begin_layout Standard
-Factoring a n-by-m matrix 
+Factoring a matrix 
 \begin_inset Formula $X$
 \end_inset
 
@@ -589,7 +631,7 @@ where
 \begin_inset Formula $||\cdot||_{F}$
 \end_inset
 
- is the Frobenius norm, 
+ is the Frobenius norm (rooted sum of squared matrix entries), 
 \begin_inset Formula $W\epsilon\mathbb{R}^{n\times k}$
 \end_inset
 
@@ -598,7 +640,12 @@ where
 \end_inset
 
 .
- Non-negativity can be imposed as an additional constraint on 
+ If 
+\begin_inset Formula $X$
+\end_inset
+
+ is non-negative, non-negativity can be imposed as an additional constraint
+ on 
 \begin_inset Formula $W$
 \end_inset
 
@@ -642,8 +689,7 @@ Convex Optimization
 \end_layout
 
 \begin_layout Standard
-how it applies to this problem.
- The general problem of factoring a matrix into a product of two or more
+The general problem of factoring a matrix into a product of two or more
  matrices is under-specified even with additional constraints such as non-negati
 vity.
  In fact, requiring a non-negative factorization results in a more difficult
@@ -690,25 +736,13 @@ t.
  problem.
 \end_layout
 
-\begin_layout Subsubsection
-Multiplicative Updates (THOMAS?)
-\end_layout
-
-\begin_layout Standard
-show how to re-write equation as multiplicative update
-\end_layout
-
 \begin_layout Subsection
-Data Preparation
-\end_layout
-
-\begin_layout Standard
-doubling, z-scoring
+Data Sources and Preparation
 \end_layout
 
 \begin_layout Standard
 \begin_inset Note Comment
-status open
+status collapsed
 
 \begin_layout Plain Layout
 gene expression subject count: 248 
@@ -740,8 +774,10 @@ image data feature count: 6642
 \end_layout
 
 \begin_layout Standard
-Complete data sets of gene expression information and cell image feature
- information were acquired from 
+Two datasets were used in the investigations below.
+ The first, which we term the Gene-Image dataset, consists of gene expression
+ information and cell image feature information from cancerous cells and
+ were acquired from 
 \begin_inset CommandInset citation
 LatexCommand cite
 key "deMJ:TheNewEnglandJournalOfMedicine:2002,Beck:SciTranslMed:2011"
@@ -749,26 +785,23 @@ key "deMJ:TheNewEnglandJournalOfMedicine:2002,Beck:SciTranslMed:2011"
 \end_inset
 
 .
-\end_layout
-
-\begin_layout Standard
-The complete gene expression data set contained 24,481 features for 248
+ The complete gene expression dataset contained 24,481 features for 248
  subjects.
  This data was preprocessed to remove expression information related to
  genes for which no name was provided.
- Also, gene expression features with low value were removed, as were gene
- expression features with low variance.
- The final gene expression data set contained 3,550 features.
- Finally the features were normalized to have zero mean and unit variance.
+ Also, gene expression features with absolute values lower than the 60th
+ percentile were removed, as were gene expression values with variance lower
+ than the 30th percentile.
+ After preprocessing 3,550 expression features remained, which were then
+ standardized to have zero mean and unit variance.
 \end_layout
 
 \begin_layout Standard
 The complete image feature data set contained 6,642 features for the same
  248 subjects.
- No preprocessing was necessary for this data set.
  All 6,642 features were used.
- As with the gene expression data, the cell image features were normalized
- to zero mean and unit variance.
+ As with the gene expression data, the cell image features were standardized
+ to zero mean and unit variance
 \end_layout
 
 \begin_layout Standard
@@ -777,33 +810,23 @@ The gene expression and cell image data both contained negative feature
  In order to use multiplicative updates every entry in the matrix to be
  factored must be positive.
  In order to replace the negative values with positive ones each data matrix
- was doubled along the columns.
- Positive values were retained and negative values set to zero in one half
- of the doubled matrix.
- In the other half positive values were set to zero and negative values
- had their sign reversed.
- For example:
-\begin_inset Formula 
-\begin{align*}
-\left[\begin{array}{ccc}
-1 & -2 & -1\\
-2 & 5 & 3\\
-2 & -4 & 4
-\end{array}\right] & \rightarrow\left[\begin{array}{cccccc}
-1 & 0 & 0 & 0 & 2 & 1\\
-2 & 5 & 3 & 0 & 0 & 0\\
-2 & 0 & 4 & 0 & 4 & 0
-\end{array}\right]
-\end{align*}
-
-\end_inset
-
-
+ was doubled along the columns following standardization as described above.
+ 
 \end_layout
 
 \begin_layout Standard
-Matrix factorizations are also influenced by scaling effects ??? INCLUDE
- COLUMN-WISE NORMALIZATION EXPLANATION HERE.
+Subjects were also 
+\end_layout
+
+\begin_layout Standard
+The second dataset is called the Wisconsin Diagnostic Breast Cancer dataset
+ (CITE) (the simpler 'Wisconsin Dataset' is used below), collected in the
+ lab of Dr.
+ William H.
+ Wolberg at the University of Wisconsin.
+ The data consists of 10 image features extracted from each of three cells
+ from 569 subjects.
+ 
 \end_layout
 
 \begin_layout Part
@@ -840,12 +863,8 @@ Supervised Approach
 \end_layout
 
 \begin_layout Standard
-In this section, we use non-negative matrix factorization to uncover latent
- and actual features related to 
-\end_layout
-
-\begin_layout Standard
-(OH!)
+In this section, we use non-negative matrix factorization to uncover features
+ and feature combinations related to 
 \end_layout
 
 \begin_layout Subsection
@@ -940,11 +959,15 @@ In order to maintain consistency with other non-negative matrix factorization
 \begin_inset Formula $G^{T}$
 \end_inset
 
- in such a way that FSG^T most closely approximates 
+ in such a way that 
+\begin_inset Formula $FSG^{T}$
+\end_inset
+
+ most closely approximates 
 \begin_inset Formula $X$
 \end_inset
 
-, rather than factors it exactly.
+ rather than factoring it exactly.
  Form this perspective, the factorization is turned into a minimization
  problem, namely computing non-negative 
 \begin_inset Formula $S$
@@ -958,11 +981,7 @@ In order to maintain consistency with other non-negative matrix factorization
 \begin_inset Formula $||X-FSG^{T}||_{F}$
 \end_inset
 
-, where 
-\begin_inset Formula $||\cdot||_{F}$
-\end_inset
-
-is the Frobenius norm, or rooted sum of squared elements.
+.
  
 \end_layout
 
@@ -975,38 +994,17 @@ Let
 \begin_inset Formula $X_{2}$
 \end_inset
 
- be the two subject by feature matrices with common subjects and different
- feature sets, and let 
+ be the two non-negative subject by feature matrices with common subjects
+ and different feature sets, and let 
 \begin_inset Formula $L$
 \end_inset
 
  be a vector of binary labels for subjects.
- We then create an 
-\begin_inset Formula $n\times2m$
-\end_inset
-
- matrix 
+ We then create an matrix 
 \begin_inset Formula $X=[X_{1}X_{2}]$
 \end_inset
 
  as a concatenated subject by feature matrix.
- Constructing a non-negative version of 
-\begin_inset Formula $X$
-\end_inset
-
- using the method described above, we double the columns of 
-\begin_inset Formula $X$
-\end_inset
-
- and obtain the 
-\begin_inset Formula $n\times4m$
-\end_inset
-
- matrix 
-\begin_inset Formula $X'$
-\end_inset
-
-.
  Let 
 \begin_inset Formula $F$
 \end_inset
@@ -1042,15 +1040,15 @@ Let
 
  is the number of latent feature vectors to be discovered.
  Finally, 
+\begin_inset Formula $m$
+\end_inset
+
+ is the total number of concatenated non-negative feature vectors, and 
 \begin_inset Formula $G$
 \end_inset
 
  is a 
-\begin_inset Formula $4m$
-\end_inset
-
- by 
-\begin_inset Formula $k$
+\begin_inset Formula $m\times k$
 \end_inset
 
  matrix such that eacy row corresponds to a non-negative feature and each
@@ -1088,7 +1086,7 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-Non-negative tri-factorization shematic.
+Non-negative tri-factorization shematic using patient labels.
  
 \begin_inset Formula $X$
 \end_inset
@@ -1726,7 +1724,7 @@ status open
 \align center
 \begin_inset Graphics
 	filename figures/tri-factorization-wisconsin-results.png
-	width 5in
+	width 4in
 
 \end_inset
 
@@ -1854,7 +1852,7 @@ status open
 \align center
 \begin_inset Graphics
 	filename figures/tri-factorization-wisconsin-results-SG.png
-	width 5in
+	width 3.5in
 
 \end_inset
 
@@ -1967,7 +1965,7 @@ status open
 \align center
 \begin_inset Graphics
 	filename figures/SG-ratios.png
-	width 5in
+	width 4in
 
 \end_inset
 
@@ -2859,7 +2857,7 @@ status open
 \align center
 \begin_inset Graphics
 	filename figures/gene-image-bi-fact-convergence.png
-	width 5in
+	width 3.5in
 
 \end_inset
 
@@ -3009,7 +3007,7 @@ status open
 \align center
 \begin_inset Graphics
 	filename figures/bi-factorization-results.png
-	width 5in
+	width 4in
 
 \end_inset
 
@@ -3067,21 +3065,6 @@ reference "fig:bi-factorization-results"
  uncovered several columns predictive of patient survival, whereas the median
  number of columns from random data predicting patient survival was much
  lower (0 in the case of the 3 methods using both data types).
-\end_layout
-
-\begin_layout Standard
-FOR THE DISCUSSION These findings are an interesting combination of negative
- and positive findings.
- It is notable that including a gene-image interaction term did not appear
- to change the quality of the results at all.
- This may be a result of the parameter size used, and a parameter sweep
- of 
-\begin_inset Formula $\lambda_{3}$
-\end_inset
-
- would help determine this.
- It appears encouraging that using real data separates Upon further reflection,
- 
 \end_layout
 
 \begin_layout Section
@@ -3363,7 +3346,7 @@ status open
 \align center
 \begin_inset Graphics
 	filename figures/gene-image-SNN-edge-weight-distribution.png
-	width 5ex
+	width 5in
 
 \end_inset
 
@@ -3611,7 +3594,7 @@ Look at clusters and compute entropy vs ALL measures
 
 \begin_layout Standard
 \begin_inset Note Comment
-status open
+status collapsed
 
 \begin_layout Plain Layout
 gene-image data, all features
@@ -3732,7 +3715,7 @@ cluster_entropy =
 
 \begin_layout Standard
 \begin_inset Note Comment
-status open
+status collapsed
 
 \begin_layout Plain Layout
 all features 
@@ -3948,196 +3931,55 @@ cluster_entropy =
 \end_layout
 
 \begin_layout Part
-Discussion
+Discussion and Future Work
+\end_layout
+
+\begin_layout Standard
+tri-factorization
+\end_layout
+
+\begin_layout Standard
+Feature selection is interesting.
+ might want to try to constrain it by including a feature-interaction term.
+\end_layout
+
+\begin_layout Standard
+The findings presented in the bifactorization section are an interesting
+ combination of negative and positive results.
+ It is notable that including a gene-image interaction term did not appear
+ to change the quality of the results at all.
+ This may be a result of the parameter size used, and a parameter sweep
+ of 
+\begin_inset Formula $\lambda_{3}$
+\end_inset
+
+ would help determine this.
+ It appears encouraging that using real data separates patient groups better
+ than randomized data.
+ Upon further reflection, however, we believe that the actual count of features
+ separating patients into groups with different survival outcomes is not
+ relevant without an orthogonality constraint on W.
+ The presence of a single predicting column, combined with several correlated
+ columns, would be enough to artifically raise the count.
+ Performing multiplicative updates with an orthogonality constraint is not
+ difficult (see ???? for an example), so we would include this requirement
+ were we to perform this analysis in the future.
+\end_layout
+
+\begin_layout Standard
+We also need to find a way to do this that doesn't require PRE-knowing survival.
+ Or work backwards to see what features this adds up to - feature combinations?
+\end_layout
+
+\begin_layout Standard
+Clustering worked poorly without feature selection on gene-image data.
+ probability high dimensionality and lack of good features.
+ Tri-factorization -> feature selection then clustering worked much better.
+ 
 \end_layout
 
 \begin_layout Section
 This is the section about math
-\end_layout
-
-\begin_layout Standard
-The formulation of the Network-Regularized Multiple NMF objective function:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{align*}
-F(W,H_{1},H_{2}) & =||X_{1}-WH_{1}||_{F}^{2}+||X_{2}-WH_{2}||_{F}^{2}\\
- & -\lambda_{1}Tr(H_{2}AH_{2}^{T})-\lambda_{2}Tr(H_{1}BH_{2}^{T})\\
- & +\gamma_{1}||W||_{F}^{2}+\gamma_{2}(\sum_{j}||h_{j}||_{1}^{2}+\sum_{j'}||h_{j'}||_{1}^{2})\\
- & +\lambda_{3}||H_{1}^{T}H_{2}-B||_{F}^{2}
-\end{align*}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-The formulation for our problem:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{align*}
-F(H_{1},H_{2}) & =||X_{1}-H_{1}^{T}H_{2}||_{F}^{2}+||X_{2}-H_{1}^{T}H_{2}||
-\end{align*}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-These are the variables we are using.
- 
-\begin_inset Formula $X_{1}$
-\end_inset
-
- is a subjects x (2x) image features.
- 
-\begin_inset Formula $X_{2}$
-\end_inset
-
- is subjects x (2x) gene expression.
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{align*}
-\hat{X_{1}} & =\begin{bmatrix}1 & 1 & -1 & 1\\
-1 & -1 & -1 & -1\\
-1 & -1 & 1 & -1
-\end{bmatrix}
-\end{align*}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{align*}
-X_{1} & =\begin{bmatrix}\begin{bmatrix}1 & 1 & 0 & 1\\
-1 & 0 & 0 & 0\\
-1 & 0 & 1 & 0
-\end{bmatrix} & \begin{bmatrix}0 & 0 & 1 & 0\\
-0 & 1 & 1 & 1\\
-0 & 1 & 0 & 1
-\end{bmatrix}\end{bmatrix}
-\end{align*}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\begin{align*}
-F(W,H_{1},H_{2}) & ={\displaystyle \sum_{I=1,2}}||X_{I}-WH_{I}||_{F}^{2}\\
-\\
-\end{align*}
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-Multiplicative updates for bi-factorization:
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\min_{W\geq0}\sum_{I=1,2}||X_{I}-WH_{I}||_{F}^{2}+\gamma_{1}||W||^{2}
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-w_{ij}\leftarrow w_{ij}\frac{(W_{1}H_{1}^{T}+X_{2}H_{2}^{T})_{ij}}{(WH_{1}H_{1}^{T}+WH_{2}H_{2}^{2}+\frac{\gamma_{1}}{2}W_{ij}}
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-\min_{H_{1},H_{2}\geq0}\sum_{I=1,2}||X_{I}-WH_{I}||_{F}^{2}-\lambda_{1}Tr(H_{2}AH_{2}^{T})-\lambda_{2}Tr(H_{1}BH_{2}^{T})+\gamma_{2}(\sum_{j}||h_{j}||_{1}^{2}+\sum_{j'}||h_{j'}||_{1}^{2})
-\]
-
-\end_inset
-
-
-\begin_inset Formula 
-\[
-h_{ij}^{1}\leftarrow h_{ij}^{1}\frac{(W^{T}X_{1}+\frac{\lambda_{2}}{2}H_{2}B^{T})_{ij}}{[(W^{T}W+\gamma_{2}e_{k\times k})H_{2}]_{ij}}
-\]
-
-\end_inset
-
- 
-\begin_inset Formula 
-\[
-h_{ij}^{2}\leftarrow h_{ij}^{2}\frac{(W^{T}X_{2}+\lambda_{1}H_{2}A+\frac{\lambda_{2}}{2}H_{1}B^{T})_{ij}}{[(W^{T}W+\gamma_{2}e_{k\times k})H_{2}]_{ij}}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-tri-matrix factorization
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-\min_{F\geq0,S\geq0,G\geq0}\frac{1}{2}(||X-FSG^{T}||_{F}^{2}+\lambda_{F}||F||_{1}^{2}+\lambda_{S}||S||_{1}^{2}+\lambda_{G}||G||_{1}^{2})
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-F_{ij}\leftarrow F_{ij}\frac{(XGS^{T})_{ij}}{(FSG^{T}GS^{T})_{ij}+\lambda_{F}||F||_{1}}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-S_{ij}\leftarrow S_{ij}\frac{(F^{T}XG)_{ij}}{(F^{T}FSG^{T}G)_{ij}+\lambda_{S}||S||_{1}}
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Formula 
-\[
-G_{ij}\leftarrow G_{ij}\frac{(X^{T}FS)_{ij}}{(GS^{T}F^{T}FS)_{ij}+\lambda_{G}||G||_{1}}
-\]
-
-\end_inset
-
-
 \end_layout
 
 \begin_layout Standard
