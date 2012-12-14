@@ -2120,10 +2120,6 @@ name "fig:X-and-G-correlations"
 
 \end_layout
 
-\begin_layout Plain Layout
-
-\end_layout
-
 \end_inset
 
 
@@ -2843,8 +2839,14 @@ key "Zhang:Bioinformatics:2011"
  5 methods.
  Multiplicative updates were repeated until the objective function was improved
  by less than 0.01%.
- Figure ??? shows typical trajectories of the objective functions for each
- method.
+ Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:convergence-trajectories"
+
+\end_inset
+
+ shows typical trajectories of the objective functions for each method.
 \end_layout
 
 \begin_layout Standard
@@ -2854,10 +2856,76 @@ sideways false
 status open
 
 \begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/gene-image-bi-fact-convergence.png
+	width 5in
+
+\end_inset
+
+
 \begin_inset Caption
 
 \begin_layout Plain Layout
-Convergence trajectories
+Typical convergence trajectories of the objective function for five bi-factoriza
+tion methods.
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:convergence-trajectories"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+(PASSIVE VOICE?) For each initialization of 
+\begin_inset Formula $W$
+\end_inset
+
+, 
+\begin_inset Formula $H_{I}$
+\end_inset
+
+ and 
+\begin_inset Formula $H_{G}$
+\end_inset
+
+, each of the optimization algorithms was run.
+ Once 
+\begin_inset Formula $W$
+\end_inset
+
+ was computed, subjects were ranked according to corresponding values of
+ each column of W in turn.
+ The top 50 subjects were labeled Group 1 and the bottom 50 subjects were
+ labeled Group 2.
+ The log-rank test was then performed to determine whether the survival
+ outcome of the two groups was significantly different.
+ The number of columns 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Correlation between columns of W.
 \end_layout
 
 \end_inset
@@ -2872,14 +2940,6 @@ Convergence trajectories
 \end_inset
 
 
-\end_layout
-
-\begin_layout Subsection
-Comodules??
-\end_layout
-
-\begin_layout Standard
-Zhang 2011
 \end_layout
 
 \begin_layout Section
@@ -3293,6 +3353,7 @@ status open
 \end_layout
 
 \begin_layout Plain Layout
+\align center
 \begin_inset Graphics
 	filename figures/gene-image-2-singular-vectors.png
 	width 5in
