@@ -3161,7 +3161,7 @@ status open
 \align center
 \begin_inset Graphics
 	filename figures/gene-image-SNN-edge-weight-distribution.png
-	width 5ex
+	width 5in
 
 \end_inset
 
