@@ -759,6 +759,10 @@ The gene expression and cell image data both contained negative feature
 
 \end_layout
 
+\begin_layout Standard
+INCLUDE COLUMN-WISE NORMALIZATION EXPLANATION HERE.
+\end_layout
+
 \begin_layout Part
 Experiments
 \end_layout
@@ -1773,6 +1777,26 @@ reference "fig:wisconsin-SG"
  the second class.
  Of course, since there are only two classes, any extreme value is by default
  predictive of membership in both classes.
+ The expected ratio is equivalent to the proportion of subjects in each
+ group.
+ Since there are roughly 1.8 times as many subjects in the second column
+ of 
+\begin_inset Formula $F$
+\end_inset
+
+ in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Tri-factorization-of-Wisconsin"
+
+\end_inset
+
+ as the first, we expect the ratio for non-predictive noise attributes in
+ the second row of 
+\begin_inset Formula $SG^{T}$
+\end_inset
+
+ to be about 1.8, which is indeed what we see.
  
 \end_layout
 
@@ -2067,19 +2091,590 @@ Unsupervised Approach
 \end_layout
 
 \begin_layout Standard
-find latent features that predict patient outcome
+Accurate patient prognosis is a vital part of medical practice.
+ When a patient is diagnosed with a disease, the expected course of the
+ disease largely determines the choice of treatment.
+ Moreover, studies are now finding that patient genetic information is can
+ be highly predictive of a patient's response to particular medications.
+ Treatments for serious illnesses are often costly and can have permanent
+ and debilitating side-effects.
+ The ability to accurately predict the utility of various treatments on
+ an individual patient is therefore critical for both patient well-being
+ and the appropriate allocation of medical funds.
+\end_layout
+
+\begin_layout Subsection
+Survival analysis
 \end_layout
 
 \begin_layout Standard
-optional: find relationship between two datasets
+Kaplan-Meier survival analysis is a commonly used technique for determining
+ the ability of a measured feature to significantly predict the lifespan
+ of a group of patients.
+ To perform the analysis, matched patients are given a treatment and the
+ number of years the patient survives during treatment is recorded.
+ The goal is to find biometric data that is predictive of survival duration.
+ This discovered metric can then be used to determine whether future patients
+ should be given the treatment in question.
+ In a typical Kaplan-Meier plot, subjects are split into two groups according
+ to the value of a biometric marker.
+ The fraction of each group surviving at every time point is then plotted.
+ The log-rank statistical test is used to determine whether the survival
+ curves differ significantly.
 \end_layout
 
 \begin_layout Standard
--non-negative, sparse
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/kaplan-meier-sample.jpg
+	width 2in
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Example Kaplan-Meier survival curve.
+ (CITE FROM WIKIPEDIA)
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The Gene-Image dataset described in the introduction includes survival times
+ for each patient.
+ Our goal is to use non-negative matrix factorizaton to uncover linear combinati
+ons of features that separate patients into groups with significantly different
+ survival rates.
+ The Gene-Image dataset includes both gene expression and cancer cell image
+ feature data.
+ Gene expression data is presumably linked in an unknown way to phenotype
+ data as expressed in image features.
+ Our underlying assumption is that there exists a common set of basis vectors
+ underlying these two datasets that contains information regarding patient
+ response to cancer and therefore their survival outcome.
+ 
+\end_layout
+
+\begin_layout Standard
+Finally, optimally combining data from multiple sources is an active area
+ of research in the data mining and bioinformatics communities.
+ As part of our approach, we wish to determine whether including a term
+ representing potential gene-image interactions has an effect on the ability
+ of this method to predict patient outcome.
+ 
 \end_layout
 
 \begin_layout Subsection
 Bifactorization with additional constraints
+\end_layout
+
+\begin_layout Standard
+Let 
+\begin_inset Formula $X_{G}$
+\end_inset
+
+ be the non-negative 
+\begin_inset Formula $n\times g$
+\end_inset
+
+ matrix of standardized gene expression data, prepared as explained in the
+ introduction, and let 
+\begin_inset Formula $X_{I}$
+\end_inset
+
+ be the 
+\begin_inset Formula $n\times i$
+\end_inset
+
+ matrix of non-negative, standardized image features.
+ Our goal is to discover an approximate common basis for 
+\begin_inset Formula $X_{G}$
+\end_inset
+
+ and 
+\begin_inset Formula $X_{I}$
+\end_inset
+
+, and use the basis vectors to separate patients into groups.
+ Once separated, we wish perform Kaplan-Meier survival analysis to determine
+ whether the groups have significantly different survival outcome, and therefore
+ whether the common basis vectors relate to patient outcome.
+ Patient labels are not used in the factorization, and this therefore represents
+ an unsupervised approach to uncovering structure in patient biometric data.
+\end_layout
+
+\begin_layout Standard
+Given 
+\begin_inset Formula $X_{G}$
+\end_inset
+
+ and 
+\begin_inset Formula $X_{I}$
+\end_inset
+
+, we wish to find a common matrix of basis vectors 
+\begin_inset Formula $W$
+\end_inset
+
+ and two coefficient matrices 
+\begin_inset Formula $H_{G}$
+\end_inset
+
+ and 
+\begin_inset Formula $H_{I}$
+\end_inset
+
+ such that 
+\begin_inset Formula $||X_{G}-WH_{G}||_{F}^{2}+||X_{I}-WH_{I}||_{F}^{2}$
+\end_inset
+
+ is minimized.
+ It is convenient to impose further constraints on 
+\begin_inset Formula $W$
+\end_inset
+
+, 
+\begin_inset Formula $H_{G}$
+\end_inset
+
+ and 
+\begin_inset Formula $H_{I}$
+\end_inset
+
+.
+ Namely, we wish to constrain the size of 
+\begin_inset Formula $W$
+\end_inset
+
+ (WHY?), and encourage sparse 
+\begin_inset Formula $H_{G}$
+\end_inset
+
+ and 
+\begin_inset Formula $H_{I}$
+\end_inset
+
+.
+ Sparse coefficient matrices ensure that each data matrix is composed of
+ small linear combination of basis vectors, such that the most important
+ component vectors are emphasized and less significant components are forced
+ to 0.
+ The nature of our data also provides an additional constraint: known gene-gene
+ interactions are included in a matrix 
+\begin_inset Formula $A$
+\end_inset
+
+ (FROM WHERE?) as prior knowledge that serve to force covariance between
+ gene expression values that are known to be interrelated.
+ Finally, hypothetical and unknown gene expression / image feature relationships
+ can be represented by a matrix 
+\begin_inset Formula $B$
+\end_inset
+
+.
+ The complete objective function to be minimzed is given in Equation 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:bi-factorization-objective-function"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+\mathcal{F}(W,H_{G},H_{I}) & =||X_{G}-WH_{G}||_{F}^{2}+||X_{I}-WH_{I}||_{F}^{2}\nonumber \\
+ & -\lambda_{1}Tr(H_{G}AH_{G}^{T})-\lambda_{2}Tr(H_{I}BH_{G}^{T})\nonumber \\
+ & +\gamma_{1}||W||_{F}^{2}+\gamma_{2}(\sum_{j}||h_{j}||_{1}^{2}+\sum_{j'}||h_{j'}||_{1}^{2})\label{eq:bi-factorization-objective-function}\\
+ & +\lambda_{3}||H_{I}^{T}H_{G}-B_{0}||_{F}^{2}\nonumber 
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The first line indicates the factor approximation of 
+\begin_inset Formula $X_{G}$
+\end_inset
+
+ and 
+\begin_inset Formula $X_{I}$
+\end_inset
+
+ to be computed.
+ Terms in the second line represent Gene-Gene interaction and Gene-Image
+ relationships, respectively.
+ They are subtracted as we wish to compute 
+\begin_inset Formula $W$
+\end_inset
+
+, 
+\begin_inset Formula $H_{G}$
+\end_inset
+
+ and 
+\begin_inset Formula $H_{I}$
+\end_inset
+
+ in such a way that these interactions are taken into account.
+ The third line contains a term penalizing the growth of 
+\begin_inset Formula $W$
+\end_inset
+
+, as well as a term encouraging sparse 
+\begin_inset Formula $H_{G}$
+\end_inset
+
+ and 
+\begin_inset Formula $H_{I}$
+\end_inset
+
+.
+ As in the tri-factorization above, 
+\begin_inset Formula $L^{1}$
+\end_inset
+
+-norm approximations are used for what is essentially a 
+\begin_inset Formula $L^{0}$
+\end_inset
+
+-norm optimization, and the sparsity term merely indicates the sum of all
+ elements of each 
+\begin_inset Formula $H$
+\end_inset
+
+, taken together and squared.
+ The last line is an optional term used for 
+\begin_inset Quotes eld
+\end_inset
+
+learning
+\begin_inset Quotes erd
+\end_inset
+
+ the gene-image interaction matrix 
+\begin_inset Formula $B$
+\end_inset
+
+, and its use is described below.
+\end_layout
+
+\begin_layout Standard
+In order to determine the effect of including the gene-image interaction
+ matrix B in the optimization, we calculated 
+\begin_inset Formula $W$
+\end_inset
+
+, 
+\begin_inset Formula $H_{I}$
+\end_inset
+
+ and 
+\begin_inset Formula $H_{G}$
+\end_inset
+
+ under three conditions:
+\end_layout
+
+\begin_layout Enumerate
+Omit the interaction matrix 
+\begin_inset Formula $B$
+\end_inset
+
+ altogether.
+ That is, set 
+\begin_inset Formula $\lambda_{2}=\lambda_{3}=0$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+Set 
+\begin_inset Formula $B$
+\end_inset
+
+ equal to the correlation matrix between columns of 
+\begin_inset Formula $X_{I}$
+\end_inset
+
+ and 
+\begin_inset Formula $X_{G}$
+\end_inset
+
+.
+ Do not update B and set 
+\begin_inset Formula $\lambda_{3}=0$
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Enumerate
+Initialize B_0 as the correlation matrix between columns of 
+\begin_inset Formula $X_{I}$
+\end_inset
+
+ and 
+\begin_inset Formula $X_{G}$
+\end_inset
+
+.
+ During each iteration, set 
+\begin_inset Formula $B=H_{I}^{T}H_{G}$
+\end_inset
+
+, and set 
+\begin_inset Formula $\lambda_{3}>0$
+\end_inset
+
+ in order to keep 
+\begin_inset Formula $B$
+\end_inset
+
+ somewhat constrained by its initial value.
+ This adds an additional constraint on 
+\begin_inset Formula $H_{I}$
+\end_inset
+
+ and 
+\begin_inset Formula $H_{G}$
+\end_inset
+
+, encouraging them to develop coefficients that incorporate correlated gene
+ expression and image features.
+ 
+\end_layout
+
+\begin_layout Standard
+We also wish to determine whether finding a common basis of 
+\begin_inset Formula $X_{G}$
+\end_inset
+
+ and 
+\begin_inset Formula $X_{I}$
+\end_inset
+
+ is a better predictor than simply computing a basis for 
+\begin_inset Formula $X_{G}$
+\end_inset
+
+ or 
+\begin_inset Formula $X_{I}$
+\end_inset
+
+ separately.
+ In order to do this, we also compute a simple bi-factorization to minimize
+ 
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+
+\begin_inset Formula $\mathcal{F}(W,H)=||X-WH||_{F}^{2}$
+\end_inset
+
+ for 
+\begin_inset Formula $X=X_{I}$
+\end_inset
+
+ and 
+\begin_inset Formula $X=X_{G}$
+\end_inset
+
+ separately.
+\end_layout
+
+\begin_layout Standard
+As in the tri-factorization above, 
+\begin_inset Formula $\mathcal{F}$
+\end_inset
+
+ is not a convex function.
+ In order to force convexity we fix two of 
+\begin_inset Formula $W$
+\end_inset
+
+, 
+\begin_inset Formula $H_{I}$
+\end_inset
+
+ and 
+\begin_inset Formula $H_{G}$
+\end_inset
+
+, compute the remaining variable, and repeat, updating each in turn.
+ Determining the appropriate multiplicative update rules for 
+\begin_inset Formula $W$
+\end_inset
+
+,
+\begin_inset Formula $H_{I}$
+\end_inset
+
+ and 
+\begin_inset Formula $H_{G}$
+\end_inset
+
+ proceeeds as follows, following the supplementary matrial in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Zhang:Bioinformatics:2011"
+
+\end_inset
+
+.
+ First, the objective function 
+\backslash
+mathcal F can be rewritten as the following (FROBENIUS NOROM PROPERTY):
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\mathcal{F} & =Tr(X_{G}X_{G}^{T})-2Tr(X_{G}H_{G}^{T}W^{T})+Tr(WH_{G}H_{G}^{T}W^{T})\\
+ & +Tr(X_{I}X_{I}^{T})-2Tr(X_{I}H_{I}^{T}W^{T})+Tr(WH_{I}H_{I}^{T}W^{T})\\
+ & -\lambda_{1}Tr(H_{G}AH_{G}^{T})-\lambda_{2}Tr(H_{I}BH_{G}^{T})+\gamma_{1}Tr(WW^{T})\\
+ & +\gamma_{2}(e_{1\times k}H_{I}H_{I}^{T}e_{k\times1}^{T}+e_{1\times k}H_{G}H_{G}^{T}e_{k\times1}^{T})
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+To minimize 
+\begin_inset Formula $\mathcal{F}$
+\end_inset
+
+ according to the additional constraints 
+\begin_inset Formula $W\geq0$
+\end_inset
+
+, 
+\begin_inset Formula $H_{I}\geq0$
+\end_inset
+
+ and 
+\begin_inset Formula $H_{G}\geq0$
+\end_inset
+
+ we create the Legrangian 
+\end_layout
+
+\begin_layout Standard
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\begin_inset Formula 
+\[
+\mathcal{L}(W,H_{I},H_{G})=\mathcal{F}+Tr(\Phi W^{T})+Tr(\Psi_{I}H_{I}^{T})+Tr(\Psi_{G}H_{G}^{T})
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $\Phi=[\phi_{ij}]$
+\end_inset
+
+, 
+\begin_inset Formula $\Psi_{I}=[(\psi_{I})_{ij}]$
+\end_inset
+
+ and 
+\begin_inset Formula $\Psi_{G}=[(\psi_{G})_{ij}]$
+\end_inset
+
+ are the Legrange multipliers for the constraints 
+\begin_inset Formula $W_{ij}\geq0$
+\end_inset
+
+,
+\begin_inset Formula $(H_{I})_{ij}\geq0$
+\end_inset
+
+ and 
+\begin_inset Formula $(H_{G})_{ij}\geq0$
+\end_inset
+
+ respectively.
+ The partial derivatives of 
+\backslash
+mathcal L with respect to W, H_I and H_G are:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\partial\mathcal{L}}{\partial W}=-2X_{I}H_{I}^{T}+2WH_{I}H_{I}^{T}-2X_{G}X_{G}^{T}+2WH_{G}H_{G}^{T}+2\gamma_{1}W+\Phi
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\partial\mathcal{L}}{\partial H_{I}}=-2W^{T}X_{I}+2W^{T}WH_{I}-\lambda_{2}H_{G}B^{T}+\gamma_{2}2e_{k\times k}H_{I}+\Psi_{I}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\partial\mathcal{L}}{\partial H_{G}}=-2W^{T}X_{G}+2W^{T}WH_{G}-\lambda_{1}2H_{G}A-\lambda2H_{I}B+\gamma_{2}2e_{k\times k}H_{G}+\Psi_{G}
+\]
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Subsection
