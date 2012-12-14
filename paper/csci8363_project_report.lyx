@@ -3202,11 +3202,52 @@ Finally, compute the
 
 \begin_layout Standard
 The distributions of SNN edge weights was generally broad for both the Wisconsin
- data and the gene-imge data
+ data and the gene-imge data.
+ For this reason the random walk graph Laplacian was used for spectral clusterin
+g in all cases.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/gene-image-SNN-edge-weight-distribution.png
+	width 5ex
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+ha
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
-Feature Selection???
+Feature Selection
 \end_layout
 
 \begin_layout Standard
