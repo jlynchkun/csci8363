@@ -235,10 +235,28 @@ To model the relationship between latent variables and measurable features,
 \begin_inset Formula $m\times k$
 \end_inset
 
- matrix whose component vectors span the column space of X, where entries
- of H provide vector weights.
- In other words, X consists of a linear combination of the column vectors
- of W with weights from H.
+ matrix whose component vectors span the column space of 
+\begin_inset Formula $X$
+\end_inset
+
+, where entries of 
+\begin_inset Formula $H$
+\end_inset
+
+ provide vector weights.
+ In other words, 
+\begin_inset Formula $X$
+\end_inset
+
+ consists of a linear combination of the column vectors of 
+\begin_inset Formula $W$
+\end_inset
+
+ with weights from
+\begin_inset Formula $H$
+\end_inset
+
+.
  W provides the 
 \begin_inset Formula $k$
 \end_inset
@@ -251,10 +269,25 @@ sources
 \begin_inset Quotes erd
 \end_inset
 
- or latent variables and H describes how they linearly combine to produce
- the features in X.
- WH is an approximation of X, and the quality of the approximation is determined
- by partially by the choice of 
+ or latent variables and 
+\begin_inset Formula $H$
+\end_inset
+
+ describes how they linearly combine to produce the features in 
+\begin_inset Formula $X$
+\end_inset
+
+.
+ 
+\begin_inset Formula $WH$
+\end_inset
+
+ is an approximation of 
+\begin_inset Formula $X$
+\end_inset
+
+, and the quality of the approximation is determined by partially by the
+ choice of 
 \begin_inset Formula $k$
 \end_inset
 
@@ -272,34 +305,96 @@ sources
 
 \begin_layout Standard
 Matrix factorization is not unique, so an important question is how to decompose
- X into H and W.
+ 
+\begin_inset Formula $X$
+\end_inset
+
+ into
+\begin_inset Formula $H$
+\end_inset
+
+ and 
+\begin_inset Formula $W$
+\end_inset
+
+.
  One principled way to perform such a factorization is to find component
  vectors that are mutually orthogonal.
  This is called Singular Value Decomposition (SVD), and constructs a unique
  factorization 
-\begin_inset Formula $X=USV^{-1}$
+\begin_inset Formula $X=USV^{T}$
 \end_inset
 
-, where U corresponds to W and the latter product corresponds to H (IS THIS
- TRUE? IS THERE NON-UNIQUE ORTHOGONAL MATRIX BI-FACTORIZATION?).
+, where 
+\begin_inset Formula $U$
+\end_inset
+
+ corresponds to 
+\begin_inset Formula $W$
+\end_inset
+
+ and the latter product corresponds to 
+\begin_inset Formula $H$
+\end_inset
+
+ (IS THIS TRUE? IS THERE NON-UNIQUE ORTHOGONAL MATRIX BI-FACTORIZATION?).
  This approach is mathematically robust and well-understood.
- A lower-rank approximation of X can be constructed using the first k columns
- of U, S and V-1.
+ A lower-rank approximation of 
+\begin_inset Formula $X$
+\end_inset
+
+ can be constructed using the first 
+\begin_inset Formula $k$
+\end_inset
+
+ columns of 
+\begin_inset Formula $U$
+\end_inset
+
+, 
+\begin_inset Formula $S$
+\end_inset
+
+ and 
+\begin_inset Formula $V^{T}$
+\end_inset
+
+.
  From the perspective of uncovering latient sources, however, SVD presents
  several problems.
  First, it may well be the case that latent sources are not actually orthogonal.
- In this case, the U matrix would not correspond to any domain-specific
- functional process but would be a mere mathematical convenience (CITE Josh's
- thing that he showed in class).
+ In this case, the 
+\begin_inset Formula $U$
+\end_inset
+
+ matrix would not correspond to any domain-specific functional process but
+ would be a mere mathematical convenience (CITE Josh's thing that he showed
+ in class).
  In addition, SVD does not impose a constraint on the sign of values of
- H.
+ 
+\begin_inset Formula $H$
+\end_inset
+
+.
  A combination of positive and negative coeffients create both additive
  and subtractive components of each feature, making it very difficult to
  interpret how latent sources combine to create features.
  Lastly, SVD produces results which are dense (few 0s in the components
- of W and H).
+ of 
+\begin_inset Formula $W$
+\end_inset
+
+ and 
+\begin_inset Formula $H$
+\end_inset
+
+).
  This implies that every latent source has an effect on every feature present
- in X, an implication which is likely not true in many applications.
+ in 
+\begin_inset Formula $X$
+\end_inset
+
+, an implication which is likely not true in many applications.
  Approaches for addressing mixed signs, orthogonality and density are addressed
  below.
 \end_layout
@@ -311,11 +406,24 @@ Non-Negative Matrix Factorization (NMF)
 \begin_layout Standard
 One approach to creating easily interpretable latent sources is to introduce
  the additional requirement that the data have values greater than or equal
- to zero and perform matrix decomposition in such a way that values of H
- and W are exclusively nonnegative.
- This means that the underlying components of X combine in a purely additive
- way to produce X, which gives a more intuitive decomposition of the data
- matrix.
+ to zero and perform matrix decomposition in such a way that values of 
+\begin_inset Formula $H$
+\end_inset
+
+ and 
+\begin_inset Formula $W$
+\end_inset
+
+ are exclusively nonnegative.
+ This means that the underlying components of 
+\begin_inset Formula $X$
+\end_inset
+
+ combine in a purely additive way to produce 
+\begin_inset Formula $X$
+\end_inset
+
+, which gives a more intuitive decomposition of the data matrix.
  Moreover, in situations where data is naturally nonnegative (such as image
  data or gene expression(?)), negative components may not be readily interpretab
 le.
@@ -328,21 +436,46 @@ Biometric data often originates with mixed signs.
 \begin_inset Formula $m\times n$
 \end_inset
 
- matrix X with mixed-sign entries, a common technique for imposing nonnegativity
+ matrix 
+\begin_inset Formula $X$
+\end_inset
+
+ with mixed-sign entries, a common technique for imposing nonnegativity
  is to construct a new 
 \begin_inset Formula $m\times2n$
 \end_inset
 
- matrix X'=[max(X,0) max(-X,0)].
- In other words, the left half of X' consists of the originally positive
- values in X with the negative values replaces by 0.
- The right half of X consists of the absolute value of originally negative
- values of X, with 0's replacing corresponding positive values.
+ matrix 
+\begin_inset Formula $X'=[\max(X,0)\max(-X,0)]$
+\end_inset
+
+.
+ In other words, the left half of 
+\begin_inset Formula $X'$
+\end_inset
+
+ consists of the originally positive values in 
+\begin_inset Formula $X$
+\end_inset
+
+ with the negative values replaces by 0.
+ The right half of 
+\begin_inset Formula $X$
+\end_inset
+
+ consists of the absolute value of originally negative values of
+\begin_inset Formula $X$
+\end_inset
+
+, with 0's replacing corresponding positive values.
  This is the approached used in the methods below.
 \end_layout
 
 \begin_layout Standard
-Placing an orthogonality constraint on the vectors of the basis matrix W
+Placing an orthogonality constraint on the vectors of the basis matrix 
+\begin_inset Formula $W$
+\end_inset
+
  forces components to be uncorrelated.
  While this is useful from a data compression standpoint and has other convenien
 t mathematical properties, it may well be the case that distinct underlying
@@ -357,9 +490,27 @@ Sparse Decomposition
 \begin_layout Standard
 (SEE KIM AND PARK 2007) A matrix is called sparse when the majority of its
  elements are 0.
- In cases where a sparse H can be found (W TOO OR JUST H?), the product
- WH can be seen as an approximation of X in which each feature of X is composed
- of a small number of columns of W.
+ In cases where a sparse 
+\begin_inset Formula $H$
+\end_inset
+
+ can be found (W TOO OR JUST H?), the product 
+\begin_inset Formula $WH$
+\end_inset
+
+ can be seen as an approximation of 
+\begin_inset Formula $X$
+\end_inset
+
+ in which each feature of 
+\begin_inset Formula $X$
+\end_inset
+
+ is composed of a small number of columns of 
+\begin_inset Formula $W$
+\end_inset
+
+.
  This is useful, as it highlights which latent components are most responsible
  for each feature.
  
@@ -428,8 +579,19 @@ where
 \end_inset
 
 .
- In practice the L1 norm is often used as an approximation of the L0 norm,
- as using the L1 norm gives a convex optimiation problem.
+ In practice the 
+\begin_inset Formula $L^{1}$
+\end_inset
+
+ norm is often used as an approximation of the 
+\begin_inset Formula $L^{0}$
+\end_inset
+
+ norm, as using the 
+\begin_inset Formula $L^{1}$
+\end_inset
+
+ norm gives a convex optimiation problem.
  
 \end_layout
 
@@ -648,12 +810,31 @@ In traditional SVD, a matrix X is factored into three matrices
 \begin_inset Formula $X=USV^{T}$
 \end_inset
 
- in such a way that the columns of U and V are orthonormal and are typically
- composed of mixed-sign entries.
- Columns of U are a basis for the column space of X, and are combinations
- of values that can be thought of as 'latent features' composed of combinations
- of the original columns in such that they point in the direction of greatest
- variance, next greatest, and so on for each column of U.
+ in such a way that the columns of 
+\begin_inset Formula $U$
+\end_inset
+
+ and 
+\begin_inset Formula $V$
+\end_inset
+
+ are orthonormal and are typically composed of mixed-sign entries.
+ Columns of 
+\begin_inset Formula $U$
+\end_inset
+
+ are a basis for the column space of 
+\begin_inset Formula $X$
+\end_inset
+
+, and are combinations of values that can be thought of as 'latent features'
+ composed of combinations of the original columns in such that they point
+ in the direction of greatest variance, next greatest, and so on for each
+ column of 
+\begin_inset Formula $U$
+\end_inset
+
+.
  
 \end_layout
 
@@ -661,28 +842,72 @@ In traditional SVD, a matrix X is factored into three matrices
 In an analogous way, we would like to perform a non-negative matrix tri-factoriz
 ation that uncovers latent features that account for the greatest variation
  in our data.
- If X is composed of two concatenated feature sets, these latent features
- will be linear combinations of the original features, thereby providing
- insight into combinations of features that combine to predict variability
- in the patient labels.
+ If 
+\begin_inset Formula $X$
+\end_inset
+
+ is composed of two concatenated feature sets, these latent features will
+ be linear combinations of the original features, thereby providing insight
+ into combinations of features that combine to predict variability in the
+ patient labels.
 \end_layout
 
 \begin_layout Standard
 In order to maintain consistency with other non-negative matrix factorization
- literature, we will use the matrix labels F, S and G to represent the three
- factors of X.
- Each row of X corresponds to a subject, and each column corresponds to
- a feature.
+ literature, we will use the matrix labels 
+\begin_inset Formula $F$
+\end_inset
+
+, 
+\begin_inset Formula $S$
+\end_inset
+
+ and 
+\begin_inset Formula $G$
+\end_inset
+
+ to represent the three factors of 
+\begin_inset Formula $X$
+\end_inset
+
+.
+ Each row of 
+\begin_inset Formula $X$
+\end_inset
+
+ corresponds to a subject, and each column corresponds to a feature.
  Since we are attempting to uncover features and feature combinations as
  they are relevant to patient labels (and not to overall variability among
- patients), we will fix the matrix F and use it to encode patient labels.
+ patients), we will fix the matrix 
+\begin_inset Formula $F$
+\end_inset
+
+ and use it to encode patient labels.
  Unlike SVD, non-negative matrix factorization is non-unique, and because
  we are drastically constraining the values of F we are actually computing
- S and G^T in such a way that FSG^T most closely approximates X, rather
- than factors it exactly.
- Form this perspective, the factorization is turned into a minimization
- problem, namely computing non-negative S and G in a way that minimizes
  
+\begin_inset Formula $S$
+\end_inset
+
+ and 
+\begin_inset Formula $G^{T}$
+\end_inset
+
+ in such a way that FSG^T most closely approximates 
+\begin_inset Formula $X$
+\end_inset
+
+, rather than factors it exactly.
+ Form this perspective, the factorization is turned into a minimization
+ problem, namely computing non-negative 
+\begin_inset Formula $S$
+\end_inset
+
+ and 
+\begin_inset Formula $G$
+\end_inset
+
+ in a way that minimizes 
 \begin_inset Formula $||X-FSG^{T}||_{F}$
 \end_inset
 
@@ -695,24 +920,102 @@ is the Frobenius norm, or rooted sum of squared elements.
 \end_layout
 
 \begin_layout Standard
-Let X_1 and X_2 be the two subject by feature matrices with common subjects
- and different feature sets, and let L be a vector of binary labels for
- subjects.
- We then create an n
-\backslash
-times2m matrix X = [X_1 X_2] as a concatenated subject by feature matrix.
- Constructing a non-negative version of X using the method described above,
- we double the columns of X and obtain the n
-\backslash
-times4m matrix X'.
- Let F be a 2-column matrix such that entries in the first column of F in
- rows where L is 1, and entries in the second column of F are 1 where L
+Let 
+\begin_inset Formula $X_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $X_{2}$
+\end_inset
+
+ be the two subject by feature matrices with common subjects and different
+ feature sets, and let 
+\begin_inset Formula $L$
+\end_inset
+
+ be a vector of binary labels for subjects.
+ We then create an 
+\begin_inset Formula $n\times2m$
+\end_inset
+
+ matrix 
+\begin_inset Formula $X=[X_{1}X_{2}]$
+\end_inset
+
+ as a concatenated subject by feature matrix.
+ Constructing a non-negative version of 
+\begin_inset Formula $X$
+\end_inset
+
+ using the method described above, we double the columns of 
+\begin_inset Formula $X$
+\end_inset
+
+ and obtain the 
+\begin_inset Formula $n\times4m$
+\end_inset
+
+ matrix 
+\begin_inset Formula $X'$
+\end_inset
+
+.
+ Let 
+\begin_inset Formula $F$
+\end_inset
+
+ be a 2-column matrix such that entries in the first column of 
+\begin_inset Formula $F$
+\end_inset
+
+ in rows where 
+\begin_inset Formula $L$
+\end_inset
+
+ is 1, and entries in the second column of 
+\begin_inset Formula $F$
+\end_inset
+
+ are 1 where 
+\begin_inset Formula $L$
+\end_inset
+
  is 0.
- S is a matrix with 2 rows and k columns, where k is the number of latent
- feature vectors to be discovered.
- Finally, G is a 4m by k matrix such that eacy row corresponds to a non-negative
- feature and each column corresponds to a latent feature to be discovered.
- A visualization of the matrices can be seen in Figure ???.
+ 
+\begin_inset Formula $S$
+\end_inset
+
+ is a matrix with 2 rows and 
+\begin_inset Formula $k$
+\end_inset
+
+ columns, where 
+\begin_inset Formula $k$
+\end_inset
+
+ is the number of latent feature vectors to be discovered.
+ Finally, 
+\begin_inset Formula $G$
+\end_inset
+
+ is a 
+\begin_inset Formula $4m$
+\end_inset
+
+ by 
+\begin_inset Formula $k$
+\end_inset
+
+ matrix such that eacy row corresponds to a non-negative feature and each
+ column corresponds to a latent feature to be discovered.
+ A visualization of the matrices can be seen in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:tri-matirx-visualization"
+
+\end_inset
+
+.
 \end_layout
 
 \begin_layout Standard
@@ -739,12 +1042,50 @@ status open
 
 \begin_layout Plain Layout
 Non-negative tri-factorization shematic.
- X corresponds to the data matrix, F to enforced labels, and S and G are
- learned matrices.
- M1 and M2 correspond to the data from different sources that are concatenated
- to create X.
- N is the number of subjects, and k is the number of latent features in
- G.
+ 
+\begin_inset Formula $X$
+\end_inset
+
+ corresponds to the data matrix, 
+\begin_inset Formula $F$
+\end_inset
+
+ to enforced labels, and 
+\begin_inset Formula $S$
+\end_inset
+
+ and 
+\begin_inset Formula $G$
+\end_inset
+
+ are learned matrices.
+ 
+\begin_inset Formula $M1$
+\end_inset
+
+ and 
+\begin_inset Formula $M2$
+\end_inset
+
+ correspond to the data from different sources that are concatenated to
+ create 
+\begin_inset Formula $X$
+\end_inset
+
+.
+ 
+\begin_inset Formula $N$
+\end_inset
+
+ is the number of subjects, and 
+\begin_inset Formula $k$
+\end_inset
+
+ is the number of latent features in 
+\begin_inset Formula $G$
+\end_inset
+
+.
 \end_layout
 
 \end_inset
@@ -753,6 +1094,12 @@ Non-negative tri-factorization shematic.
 \end_layout
 
 \begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:tri-matirx-visualization"
+
+\end_inset
+
 
 \end_layout
 
@@ -766,8 +1113,15 @@ Problem Formulation (incl multiplicative updates)
 \end_layout
 
 \begin_layout Standard
-Keeping in mind that we desire sparse S and G, the problem described above
- can be written as the following:
+Keeping in mind that we desire sparse 
+\begin_inset Formula $S$
+\end_inset
+
+ and 
+\begin_inset Formula $G$
+\end_inset
+
+, the problem described above can be written as the following:
 \end_layout
 
 \begin_layout Standard
@@ -794,12 +1148,42 @@ Keeping in mind that we desire sparse S and G, the problem described above
 \end_layout
 
 \begin_layout Standard
-where both X and F are fixed.
- The two additional 1-norm terms serve to enforce sparsity on S and G, and
- represent a sum of the absolute values of each entry of each column, all
- summed and then the result squared.
- Since entries in S and G are non-negative, the terms represent the sum
- of all elements of S and G, respectively.
+where both 
+\begin_inset Formula $X$
+\end_inset
+
+ and 
+\begin_inset Formula $F$
+\end_inset
+
+ are fixed.
+ The two additional 1-norm terms serve to enforce sparsity on 
+\begin_inset Formula $S$
+\end_inset
+
+ and 
+\begin_inset Formula $G$
+\end_inset
+
+, and represent a sum of the absolute values of each entry of each column,
+ all summed and then the result squared.
+ Since entries in 
+\begin_inset Formula $S$
+\end_inset
+
+ and 
+\begin_inset Formula $G$
+\end_inset
+
+ are non-negative, the terms represent the sum of all elements of 
+\begin_inset Formula $S$
+\end_inset
+
+ and 
+\begin_inset Formula $G$
+\end_inset
+
+, respectively.
  Sparsity is ideally computed using the so-called 0-norm, which is the count
  of non-zero elements of a matrix.
  The 1-norm is a commonly used relaxation of the 0-norm, which is the closest
@@ -825,7 +1209,7 @@ reference "eq:tri-minimization"
  can be written 
 \begin_inset Formula 
 \begin{equation}
-\mathcal{F}(S,G)=\frac{1}{2}(||X-FSG^{T}||_{F}^{2}+\lambda_{S}\sum e_{1\times2}SS^{T}e_{2\times1}^{T}+\lambda_{G}\sum e_{1\times k}GG^{T}e_{k\times1}^{T})
+\mathcal{F}(S,G)=\frac{1}{2}(||X-FSG^{T}||_{F}^{2}+\lambda_{S}\sum e_{1\times2}SS^{T}e_{2\times1}^{T}+\lambda_{G}\sum e_{1\times k}GG^{T}e_{k\times1}^{T})\label{eq:trimatrix-objective-function}
 \end{equation}
 
 \end_inset
@@ -851,58 +1235,108 @@ reference "eq:tri-minimization"
 \end_inset
 
 .
- The latter two terms again represent the sum of entries S and G squared,
- and e is a vector of 1s.
+ The latter two terms again represent the sum of entries 
+\begin_inset Formula $S$
+\end_inset
+
+ and 
+\begin_inset Formula $G$
+\end_inset
+
+ squared, and 
+\begin_inset Formula $e$
+\end_inset
+
+ is a vector of 1s.
 \end_layout
 
 \begin_layout Standard
-Formula ?? contains two variables and is therefore not convex in both, but
- only in each individually.
- To achieve convexity and optimize ???, we fix either S or G, calculate
- the other, and iterate until a convergence criteria is met.
- In order to construct an method of calculating S and G independently, we
- first construct the Legrange 
+Equation 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:trimatrix-objective-function"
+
+\end_inset
+
+ contains two variables and is therefore not convex in both, but only in
+ each individually.
+ To achieve convexity and minimize the objective function, we fix either
+ 
+\begin_inset Formula $S$
+\end_inset
+
+ or 
+\begin_inset Formula $G$
+\end_inset
+
+, calculate the other, and iterate until a convergence criteria is met.
+ In order to construct an method of calculating 
+\begin_inset Formula $S$
+\end_inset
+
+ and 
+\begin_inset Formula $G$
+\end_inset
+
+ independently, we first construct the Legrange 
 \begin_inset Formula $\mathcal{L}$
 \end_inset
 
 .
  Let 
-\backslash
-phi_i_j and 
-\backslash
-psi_i_j be the Legrange multipliers for the constraints S
-\backslash
-geq 0 and G
-\backslash
-geq 0, respectively.
+\begin_inset Formula $\phi_{i}{}_{j}$
+\end_inset
+
+ and 
+\begin_inset Formula $\psi_{i}{}_{j}$
+\end_inset
+
+ be the Legrange multipliers for the constraints 
+\begin_inset Formula $S\geq0$
+\end_inset
+
+ and 
+\begin_inset Formula $G\geq0$
+\end_inset
+
+, respectively.
  Then 
 \end_layout
 
 \begin_layout Standard
+\begin_inset Formula 
+\[
+\mathcal{L}(S,G)=\mathcal{F}+Tr(\Phi S^{T})+Tr(\Psi G^{T})
+\]
 
-\backslash
-mathcal{L} (S,G) = 
-\backslash
-mathcal{F} + Tr(
-\backslash
-Phi S^T) + Tr(
-\backslash
-Psi G^T)
+\end_inset
+
+
 \end_layout
 
 \begin_layout Standard
 where 
-\backslash
-Phi = [
-\backslash
-phi_i_j] and 
-\backslash
-Psi = [
-\backslash
-psi_i_j].
+\begin_inset Formula $\Phi=[\phi_{i}{}_{j}]$
+\end_inset
+
+ and 
+\begin_inset Formula $\Psi=[\psi_{i}{}_{j}]$
+\end_inset
+
+.
  The partial derivatives of 
-\backslash
-mathcal{L} with respect to S and G are:
+\begin_inset Formula $\mathcal{L}$
+\end_inset
+
+ with respect to 
+\begin_inset Formula $S$
+\end_inset
+
+ and 
+\begin_inset Formula $G$
+\end_inset
+
+ are:
 \end_layout
 
 \begin_layout Standard
@@ -941,10 +1375,22 @@ mathcal{L} with respect to S and G are:
 
 \begin_layout Standard
 Based on the KKT conditions 
-\backslash
-phi_i_j S_i_j = 0 and 
-\backslash
-psi_i_j G_i_j = 0, we get the following equations for S_i_j and G_i_j:
+\begin_inset Formula $\phi_{i}{}_{j}S_{i}{}_{j}=0$
+\end_inset
+
+ and 
+\begin_inset Formula $\psi_{i}{}_{j}G_{i}{}_{j}=0$
+\end_inset
+
+, we get the following equations for 
+\begin_inset Formula $S_{i}{}_{j}$
+\end_inset
+
+ and 
+\begin_inset Formula $G_{i}{}_{j}$
+\end_inset
+
+:
 \end_layout
 
 \begin_layout Standard
@@ -999,30 +1445,100 @@ G_{i}{}_{j}\leftarrow G_{i}{}_{j}\frac{X^{T}FS}{(GS^{T}F^{T}FS+\lambda_{G}e_{k\t
 
 \begin_layout Standard
 If the values are initialized as non-negative, the update rules are guaranteed
- to be non-increasing and are only stationary if S and G are at a stationary
- point (see Zhang 2011 supplementary material for a proof).
+ to be non-increasing and are only stationary if 
+\begin_inset Formula $S$
+\end_inset
+
+ and 
+\begin_inset Formula $G$
+\end_inset
+
+ are at a stationary point (see 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Zhang:Bioinformatics:2011"
+
+\end_inset
+
+ supplementary material for a proof).
  In practice, a small epsilon is added to the denominator of each update
  rule to preclude devision by zero.
- Additionally, F is column-normalized and G is row-normalized at each iteration
- so that S absorbs the scaling from both matrices.
+ Additionally, 
+\begin_inset Formula $F$
+\end_inset
+
+ is column-normalized and 
+\begin_inset Formula $G$
+\end_inset
+
+ is row-normalized at each iteration so that S absorbs the scaling from
+ both matrices.
 \end_layout
 
 \begin_layout Standard
-As the update rules are multiplicative and each new value of S and G is
- a function of past values, S and G must first be initialized.
- The matrix F contains patient labels and can be thought of as an indicator
- matrix for clustering patients.
- Correspondingly, the matrix G can be thought of as clustering features,
- which correspond to columns of X.
- With this in mind, we initialize G using k-means on columns of X, where
- the number of clusters used is the number of columns (latent features)
- in G.
- The resulting matrix is an n
-\backslash
-times k indicator matrix of feature clusters in which each column has a
- single 1 representing cluster membership and all other entries are 0.
- The initial G is set to this matrix.
- S is a scaling matrix and is initialized to random numbers between 0 and
+As the update rules are multiplicative and each new value of 
+\begin_inset Formula $S$
+\end_inset
+
+ and 
+\begin_inset Formula $G$
+\end_inset
+
+ is a function of past values, 
+\begin_inset Formula $S$
+\end_inset
+
+ and 
+\begin_inset Formula $G$
+\end_inset
+
+ must first be initialized.
+ The matrix
+\begin_inset Formula $F$
+\end_inset
+
+ contains patient labels and can be thought of as an indicator matrix for
+ clustering patients.
+ Correspondingly, the matrix 
+\begin_inset Formula $G$
+\end_inset
+
+ can be thought of as clustering features, which correspond to columns of
+ 
+\begin_inset Formula $X$
+\end_inset
+
+.
+ With this in mind, we initialize 
+\begin_inset Formula $G$
+\end_inset
+
+ using k-means on columns of 
+\begin_inset Formula $X$
+\end_inset
+
+, where the number of clusters used is the number of columns (latent features)
+ in 
+\begin_inset Formula $G$
+\end_inset
+
+.
+ The resulting matrix is an 
+\begin_inset Formula $n\times k$
+\end_inset
+
+ indicator matrix of feature clusters in which each column has a single
+ 1 representing cluster membership and all other entries are 0.
+ The initial 
+\begin_inset Formula $G$
+\end_inset
+
+ is set to this matrix.
+ 
+\begin_inset Formula $S$
+\end_inset
+
+ is a scaling matrix and is initialized to random numbers between 0 and
  1.
 \end_layout
 
@@ -1031,28 +1547,67 @@ Feature Selection
 \end_layout
 
 \begin_layout Standard
-As mentioned above, rows of F indicate an enforced clustering on subjects
- corresponding to clinical patient labels, in which each row contains a
- zero and nonzero entry (not 1 because of column-wise scaling).
+As mentioned above, rows of 
+\begin_inset Formula $F$
+\end_inset
+
+ indicate an enforced clustering on subjects corresponding to clinical patient
+ labels, in which each row contains a zero and nonzero entry (not 1 because
+ of column-wise scaling).
  Group membership can be determined by assigning a subject to the column-label
- with corresponding highest value in the subject's row in F.
- Since F is predetermined and fixed, this merely represents a change in
- interpretation from label to cluster membership.
+ with corresponding highest value in the subject's row in 
+\begin_inset Formula $F$
+\end_inset
+
+.
+ Since 
+\begin_inset Formula $F$
+\end_inset
+
+ is predetermined and fixed, this merely represents a change in interpretation
+ from label to cluster membership.
  
 \end_layout
 
 \begin_layout Standard
-Once S and G are learned, we can consider the 2
-\backslash
-times m product SG^T, where m is the total number of non-negative features.
- This can be thought of as an indicator matrix similar to F, except that
- each feature is assigned to a feature cluster.
- Unlike the random initialization of G, in which features were clustered
- without taking into account patient labels, the learned SG^T represents
- feature cluster membership as they relate to the patient labels.
- In other words, each (normalized) column of SG^T represents a posterior
- probability of that feature being relevant to classifying a patient in
- one label or the other.
+Once 
+\begin_inset Formula $S$
+\end_inset
+
+ and 
+\begin_inset Formula $G$
+\end_inset
+
+ are learned, we can consider the 
+\begin_inset Formula $2\times m$
+\end_inset
+
+ product 
+\begin_inset Formula $SG^{T}$
+\end_inset
+
+, where m is the total number of non-negative features.
+ This can be thought of as an indicator matrix similar to 
+\begin_inset Formula $F$
+\end_inset
+
+, except that each feature is assigned to a feature cluster.
+ Unlike the random initialization of 
+\begin_inset Formula $G$
+\end_inset
+
+, in which features were clustered without taking into account patient labels,
+ the learned 
+\begin_inset Formula $SG^{T}$
+\end_inset
+
+ represents feature cluster membership as they relate to the patient labels.
+ In other words, each (normalized) column of
+\begin_inset Formula $SG^{T}$
+\end_inset
+
+ represents a posterior probability of that feature being relevant to classifyin
+g a patient in one label or the other.
  
 \end_layout
 
@@ -1078,11 +1633,26 @@ In order to test this, we constructed a dataset using the Wisconsin Diagnostic
 \end_layout
 
 \begin_layout Standard
-As indicated above, F was created by normalizing a binary indicator matrix
- for feature labels.
- S was initialized randomly, and G was initialized by choosing the k-means
- clustering result with the lowest SSE over 10 runs.
- k was chosen to be 29, which corresponds to the number of singular values
+As indicated above, 
+\begin_inset Formula $F$
+\end_inset
+
+ was created by normalizing a binary indicator matrix for feature labels.
+ 
+\begin_inset Formula $S$
+\end_inset
+
+ was initialized randomly, and 
+\begin_inset Formula $G$
+\end_inset
+
+ was initialized by choosing the k-means clustering result with the lowest
+ SSE over 10 runs.
+ 
+\begin_inset Formula $k$
+\end_inset
+
+ was chosen to be 29, which corresponds to the number of singular values
  of the data matrix corresponding to 90% of the variance of the data matrix.
 \end_layout
 
@@ -1118,7 +1688,23 @@ status open
 
 \begin_layout Plain Layout
 Tri-factorization of modified Wisconsin Diagnostic Breast Cancer dataset
- X into F, S and G, respectively.
+ 
+\begin_inset Formula $X$
+\end_inset
+
+ into 
+\begin_inset Formula $F$
+\end_inset
+
+,
+\begin_inset Formula $S$
+\end_inset
+
+ and 
+\begin_inset Formula $G$
+\end_inset
+
+, respectively.
 \begin_inset CommandInset label
 LatexCommand label
 name "fig:Tri-factorization-of-Wisconsin"
@@ -1139,12 +1725,38 @@ name "fig:Tri-factorization-of-Wisconsin"
 \end_layout
 
 \begin_layout Standard
-Class labels in F are readily apparent.
- As desired, G is sparse and S approximately so, with only a few values
- being relatively very high.
- It is not immediately apparent how the features of W correspond to the
- labels in F, however.
- Multiplying S and G^T gives a much clearer picture, shown in Figure 
+Class labels in 
+\begin_inset Formula $F$
+\end_inset
+
+ are readily apparent.
+ As desired, 
+\begin_inset Formula $G$
+\end_inset
+
+ is sparse and 
+\begin_inset Formula $S$
+\end_inset
+
+ approximately so, with only a few values being relatively very high.
+ It is not immediately apparent how the features of 
+\begin_inset Formula $W$
+\end_inset
+
+ correspond to the labels in 
+\begin_inset Formula $F$
+\end_inset
+
+, however.
+ Multiplying 
+\begin_inset Formula $S$
+\end_inset
+
+ and 
+\begin_inset Formula $G^{T}$
+\end_inset
+
+ gives a much clearer picture, shown in Figure 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:wisconsin-SG"
@@ -1183,8 +1795,11 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-SG^T from the factorization of the modified Wisconsin Diagnostic Breast
- Cancer dataset.
+\begin_inset Formula $SG^{T}$
+\end_inset
+
+from the factorization of the modified Wisconsin Diagnostic Breast Cancer
+ dataset.
  Columns 1-20 correspond to 10 positive and 10 negative features from cell
  1.
  Features 21-30 and 41-50 are positive and negative features from cell 2.
@@ -1241,10 +1856,17 @@ reference "fig:SG-ratios"
  with highest information gain with respect to class labels.
  The top features from Row 1/Row 2 are features 23, 24, 21, 28 and 4, in
  that order.
- These correspond to features 14, 11, 13, 4 and 18 in the mixed-sign X'=[X1
- X2] matrix of cell features.
+ These correspond to features 14, 11, 13, 4 and 18 in the mixed-sign 
+\begin_inset Formula $X'=[X1X2]$
+\end_inset
+
+ matrix of cell features.
  The top features in Row 2 / Row 1 are numbers 43, 41, 48, 47 and 44, which
- correspond to features 13, 11, 18, 17 and 14 in X'.
+ correspond to features 13, 11, 18, 17 and 14 in 
+\begin_inset Formula $X'$
+\end_inset
+
+.
  Calculating the information gain with respect to patient class, the top
  six features are 13, 14, 11, 18, 4 and 17, all of which are in the top
  feature ratios from Figure 
@@ -1255,9 +1877,15 @@ reference "fig:SG-ratios"
 \end_inset
 
 .
- Thus, non-negative matrix factorization with a class-label matrix F produces
- a SG^T matrix that can readily detect which features are relevant to class
- labels.
+ Thus, non-negative matrix factorization with a class-label matrix 
+\begin_inset Formula $F$
+\end_inset
+
+ produces a 
+\begin_inset Formula $SG^{T}$
+\end_inset
+
+ matrix that can readily detect which features are relevant to class labels.
  
 \end_layout
 
