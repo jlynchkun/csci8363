@@ -2943,6 +2943,11 @@ Finally, compute the
  assign labels to the observations.
 \end_layout
 
+\begin_layout Standard
+The distributions of SNN edge weights was generally broad for both the Wisconsin
+ data and the gene-imge data
+\end_layout
+
 \begin_layout Subsection
 Feature Selection???
 \end_layout
@@ -2961,6 +2966,36 @@ g, with
 \end_inset
 
  taking the place of the matrix of eigenvalues of a graph Laplacian.
+ The benefit of feature selection is evaluated with total cluster entropy,
+ defined as
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+H_{total} & =\sum_{i}\frac{|C_{i}|}{N}H_{C_{i}}\\
+H_{C} & =-\sum\frac{|C_{i}^{j}|}{|C_{i}|}\log(\frac{|C_{i}^{j}|}{|C_{i}|})
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $N$
+\end_inset
+
+ is the number of observations, 
+\begin_inset Formula $i$
+\end_inset
+
+ indexes the clusters, and 
+\begin_inset Formula $j$
+\end_inset
+
+ indexes the known subject labels.
 \end_layout
 
 \begin_layout Standard
@@ -2975,9 +3010,10 @@ reference "fig:wisconsin-top-2-singular-vectors"
 
 .
  Spectral clustering classifies this data with total cluster entropy 0.4430
- (error rate of 0.09) without feature selection.
- Selecting the best features, spectral clustering classifies this data with
- total cluster entropy 0.2553.
+ (error rate of 0.11) without feature selection.
+ Selecting the best features as determined by matrix trifactorization, spectral
+ clustering classifies this data with total cluster entropy 0.2553 (error
+ rate 0.09).
 \end_layout
 
 \begin_layout Standard
@@ -3058,10 +3094,17 @@ status open
 \end_layout
 
 \begin_layout Plain Layout
+\begin_inset Graphics
+	filename figures/gene-image-2-singular-vectors.png
+	width 5in
+
+\end_inset
+
+
 \begin_inset Caption
 
 \begin_layout Plain Layout
-ha
+gene-image data top 2 singular vectors, all features
 \end_layout
 
 \end_inset
@@ -3098,7 +3141,8 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-ha
+gene-image data top 2 singular vectors, selected features (image features
+ were not in the top 100)
 \end_layout
 
 \end_inset
