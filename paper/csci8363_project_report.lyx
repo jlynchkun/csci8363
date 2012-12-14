@@ -3131,13 +3131,491 @@ g, with
 \begin_layout Standard
 The Wisconsin breast cancer data set has relatively small dimensionality
  and is well-separated in the cell 2 data, as can be seen in a plot of the
- first two singular vectors [figure reference].
- Spectral clustering classifies this data with an error rate of 0.09 without
- 
+ first two singular vectors 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:wisconsin-top-2-singular-vectors"
+
+\end_inset
+
+.
+ Spectral clustering classifies this data with total cluster entropy 0.4430
+ (error rate of 0.09) without feature selection.
+ Selecting the best features, spectral clustering classifies this data with
+ total cluster entropy 0.2553.
 \end_layout
 
 \begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename figures/wisconsin-2-singular-vectors.png
+	width 5in
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Wisconsin data top 2 singular vectors
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:wisconsin-top-2-singular-vectors"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename figures/wisconsin-selected-features-2-singular-vectors.png
+	width 5in
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Wisconsin data top 2 singular vectors, selected features
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+ha
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Graphics
+	filename figures/gene-image-selected-features-2-singular-vectors.png
+	width 5in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+ha
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
 Look at clusters and compute entropy vs ALL measures
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Comment
+status open
+
+\begin_layout Plain Layout
+gene-image data, all features
+\end_layout
+
+\begin_layout Plain Layout
+15 subjects have cluster label 1 and clinical label -1 
+\end_layout
+
+\begin_layout Plain Layout
+40 subjects have cluster label 1 and clinical label 1
+\end_layout
+
+\begin_layout Plain Layout
+6 subjects have cluster label 2 and clinical label -1 
+\end_layout
+
+\begin_layout Plain Layout
+10 subjects have cluster label 2 and clinical label 1 
+\end_layout
+
+\begin_layout Plain Layout
+4 subjects have cluster label 3 and clinical label -1 
+\end_layout
+
+\begin_layout Plain Layout
+6 subjects have cluster label 3 and clinical label 1 
+\end_layout
+
+\begin_layout Plain Layout
+61 subjects have cluster label 4 and clinical label -1 
+\end_layout
+
+\begin_layout Plain Layout
+106 subjects have cluster label 4 and clinical label 1
+\end_layout
+
+\begin_layout Plain Layout
+total_entropy =
+\end_layout
+
+\begin_layout Plain Layout
+0.9259
+\end_layout
+
+\begin_layout Plain Layout
+cluster entropy: 
+\end_layout
+
+\begin_layout Plain Layout
+cluster_entropy =
+\end_layout
+
+\begin_layout Plain Layout
+0.8454 0.9544 0.9710 0.9470 
+\end_layout
+
+\begin_layout Plain Layout
+gene-image data, top 100 features
+\end_layout
+
+\begin_layout Plain Layout
+9 subjects have cluster label 1 and clinical label -1 
+\end_layout
+
+\begin_layout Plain Layout
+14 subjects have cluster label 1 and clinical label 1 
+\end_layout
+
+\begin_layout Plain Layout
+4 subjects have cluster label 2 and clinical label -1
+\end_layout
+
+\begin_layout Plain Layout
+46 subjects have cluster label 2 and clinical label 1 
+\end_layout
+
+\begin_layout Plain Layout
+29 subjects have cluster label 3 and clinical label -1 
+\end_layout
+
+\begin_layout Plain Layout
+22 subjects have cluster label 3 and clinical label 1 
+\end_layout
+
+\begin_layout Plain Layout
+44 subjects have cluster label 4 and clinical label -1 
+\end_layout
+
+\begin_layout Plain Layout
+80 subjects have cluster label 4 and clinical label 1
+\end_layout
+
+\begin_layout Plain Layout
+total_entropy =
+\end_layout
+
+\begin_layout Plain Layout
+0.8426
+\end_layout
+
+\begin_layout Plain Layout
+cluster entropy: 
+\end_layout
+
+\begin_layout Plain Layout
+cluster_entropy =
+\end_layout
+
+\begin_layout Plain Layout
+0.9656 0.4022 0.9864 0.9383 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Comment
+status open
+
+\begin_layout Plain Layout
+all features 
+\end_layout
+
+\begin_layout Plain Layout
+Wisconsin clustering results, 10 noise features, 8 clusters
+\end_layout
+
+\begin_layout Plain Layout
+92 subjects have cluster label 1 and clinical label -1 
+\end_layout
+
+\begin_layout Plain Layout
+28 subjects have cluster label 1 and clinical label 1 
+\end_layout
+
+\begin_layout Plain Layout
+3 subjects have cluster label 2 and clinical label -1 
+\end_layout
+
+\begin_layout Plain Layout
+45 subjects have cluster label 2 and clinical label 1 
+\end_layout
+
+\begin_layout Plain Layout
+118 subjects have cluster label 3 and clinical label -1 
+\end_layout
+
+\begin_layout Plain Layout
+19 subjects have cluster label 3 and clinical label 1 
+\end_layout
+
+\begin_layout Plain Layout
+0 subjects have cluster label 4 and clinical label -1 
+\end_layout
+
+\begin_layout Plain Layout
+30 subjects have cluster label 4 and clinical label 1 
+\end_layout
+
+\begin_layout Plain Layout
+98 subjects have cluster label 5 and clinical label -1 
+\end_layout
+
+\begin_layout Plain Layout
+11 subjects have cluster label 5 and clinical label 1 
+\end_layout
+
+\begin_layout Plain Layout
+0 subjects have cluster label 6 and clinical label -1 
+\end_layout
+
+\begin_layout Plain Layout
+76 subjects have cluster label 6 and clinical label 1 
+\end_layout
+
+\begin_layout Plain Layout
+12 subjects have cluster label 7 and clinical label -1 
+\end_layout
+
+\begin_layout Plain Layout
+3 subjects have cluster label 7 and clinical label 1 
+\end_layout
+
+\begin_layout Plain Layout
+34 subjects have cluster label 8 and clinical label -1 
+\end_layout
+
+\begin_layout Plain Layout
+0 subjects have cluster label 8 and clinical label 1
+\end_layout
+
+\begin_layout Plain Layout
+total_entropy =
+\end_layout
+
+\begin_layout Plain Layout
+0.4430
+\end_layout
+
+\begin_layout Plain Layout
+cluster entropy: 
+\end_layout
+
+\begin_layout Plain Layout
+cluster_entropy =
+\end_layout
+
+\begin_layout Plain Layout
+0.7838 
+\end_layout
+
+\begin_layout Plain Layout
+0.3373 
+\end_layout
+
+\begin_layout Plain Layout
+0.5808 
+\end_layout
+
+\begin_layout Plain Layout
+0 
+\end_layout
+
+\begin_layout Plain Layout
+0.4719 
+\end_layout
+
+\begin_layout Plain Layout
+0 
+\end_layout
+
+\begin_layout Plain Layout
+0.7219 
+\end_layout
+
+\begin_layout Plain Layout
+0 
+\end_layout
+
+\begin_layout Plain Layout
+selected features 
+\end_layout
+
+\begin_layout Plain Layout
+Wisconsin clustering results, 10 noise features, 8 clusters
+\end_layout
+
+\begin_layout Plain Layout
+55 subjects have cluster label 1 and clinical label -1 
+\end_layout
+
+\begin_layout Plain Layout
+1 subjects have cluster label 1 and clinical label 1 
+\end_layout
+
+\begin_layout Plain Layout
+0 subjects have cluster label 2 and clinical label -1 
+\end_layout
+
+\begin_layout Plain Layout
+84 subjects have cluster label 2 and clinical label 1 
+\end_layout
+
+\begin_layout Plain Layout
+38 subjects have cluster label 3 and clinical label -1 
+\end_layout
+
+\begin_layout Plain Layout
+44 subjects have cluster label 3 and clinical label 1 
+\end_layout
+
+\begin_layout Plain Layout
+73 subjects have cluster label 4 and clinical label -1
+\end_layout
+
+\begin_layout Plain Layout
+0 subjects have cluster label 4 and clinical label 1 
+\end_layout
+
+\begin_layout Plain Layout
+0 subjects have cluster label 5 and clinical label -1 
+\end_layout
+
+\begin_layout Plain Layout
+37 subjects have cluster label 5 and clinical label 1 
+\end_layout
+
+\begin_layout Plain Layout
+7 subjects have cluster label 6 and clinical label -1 
+\end_layout
+
+\begin_layout Plain Layout
+42 subjects have cluster label 6 and clinical label 1 
+\end_layout
+
+\begin_layout Plain Layout
+53 subjects have cluster label 7 and clinical label -1 
+\end_layout
+
+\begin_layout Plain Layout
+2 subjects have cluster label 7 and clinical label 1 
+\end_layout
+
+\begin_layout Plain Layout
+131 subjects have cluster label 8 and clinical label -1 
+\end_layout
+
+\begin_layout Plain Layout
+2 subjects have cluster label 8 and clinical label 1
+\end_layout
+
+\begin_layout Plain Layout
+total_entropy = 0.2553
+\end_layout
+
+\begin_layout Plain Layout
+cluster entropy: 
+\end_layout
+
+\begin_layout Plain Layout
+cluster_entropy =
+\end_layout
+
+\begin_layout Plain Layout
+0.1292 0 0.9961 0 0 0.5917 0.2254 0.1126
+\end_layout
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Part
