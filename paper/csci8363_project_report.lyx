@@ -304,6 +304,44 @@ sources
 \end_layout
 
 \begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/svd.png
+	width 4in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+SVD
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 Matrix factorization is not unique, so an important question is how to decompose
  
 \begin_inset Formula $X$
@@ -570,7 +608,11 @@ where
 
 .
  Sparsity can be controlled by adding a term penalizing the size of the
- L0 norm of 
+ 
+\begin_inset Formula $L^{0}$
+\end_inset
+
+ norm of 
 \begin_inset Formula $W$
 \end_inset
 
@@ -760,7 +802,8 @@ The gene expression and cell image data both contained negative feature
 \end_layout
 
 \begin_layout Standard
-INCLUDE COLUMN-WISE NORMALIZATION EXPLANATION HERE.
+Matrix factorizations are also influenced by scaling effects ??? INCLUDE
+ COLUMN-WISE NORMALIZATION EXPLANATION HERE.
 \end_layout
 
 \begin_layout Part
@@ -2674,9 +2717,11 @@ mathcal L with respect to
 
 \begin_layout Standard
 \begin_inset Formula 
-\[
-\frac{\partial\mathcal{L}}{\partial W}=-2X_{I}H_{I}^{T}+2WH_{I}H_{I}^{T}-2X_{G}X_{G}^{T}+2WH_{G}H_{G}^{T}+2\gamma_{1}W+\Phi
-\]
+\begin{align*}
+\frac{\partial\mathcal{L}}{\partial W} & =-2X_{I}H_{I}^{T}+2WH_{I}H_{I}^{T}-2X_{G}X_{G}^{T}+2WH_{G}H_{G}^{T}+2\gamma_{1}W+\Phi\\
+\frac{\partial\mathcal{L}}{\partial H_{I}} & =-2W^{T}X_{I}+2W^{T}WH_{I}-\lambda_{2}H_{G}B^{T}+\gamma_{2}2e_{k\times k}H_{I}-\lambda_{3}2H_{G}B^{T}+\lambda_{3}2H_{G}H_{G}^{T}H_{I}+\Psi_{I}\\
+\frac{\partial\mathcal{L}}{\partial H_{G}} & =-2W^{T}X_{G}+2W^{T}WH_{G}-\lambda_{1}2H_{G}A-\lambda2H_{I}B+\gamma_{2}2e_{k\times k}H_{G}-\lambda_{3}2H_{i}B_{0}+2H_{I}H_{I}^{T}H_{G}+\Psi_{G}
+\end{align*}
 
 \end_inset
 
@@ -2684,96 +2729,28 @@ mathcal L with respect to
 \end_layout
 
 \begin_layout Standard
-\begin_inset Formula 
-\[
-\frac{\partial\mathcal{L}}{\partial H_{I}}=-2W^{T}X_{I}+2W^{T}WH_{I}-\lambda_{2}H_{G}B^{T}+\gamma_{2}2e_{k\times k}H_{I}-\lambda_{3}2H_{G}B^{T}+\lambda_{3}2H_{G}H_{G}^{T}H_{I}+\Psi_{I}
-\]
-
+Using the KKT condition 
+\begin_inset Formula $\phi_{i}{}_{j}W_{i}{}_{j}=0$
 \end_inset
 
+, 
+\begin_inset Formula $(\psi_{I})_{i}{}_{j}(H_{I})_{i}{}_{j}=0$
+\end_inset
 
+ and 
+\begin_inset Formula $(\psi_{G})_{i}{}_{j}(H_{G})_{i}{}_{j}=0$
+\end_inset
+
+, we can set each partial derivative to 0 and write
 \end_layout
 
 \begin_layout Standard
 \begin_inset Formula 
-\[
-\frac{\partial\mathcal{L}}{\partial H_{G}}=-2W^{T}X_{G}+2W^{T}WH_{G}-\lambda_{1}2H_{G}A-\lambda2H_{I}B+\gamma_{2}2e_{k\times k}H_{G}-\lambda_{3}2H_{i}B_{0}+2H_{I}H_{I}^{T}H_{G}+\Psi_{G}
-\]
-
-\end_inset
-
-Using the KKT conditions 
-\backslash
-phi_i_j W_i_j = 0, (
-\backslash
-psi_I)_i_j (H_I)_i_j=0 and (
-\backslash
-psi_G)_i_j (H_G)_i_j=0, we can set each partial derivative to 0 and write
-\end_layout
-
-\begin_layout Standard
-
-\family roman
-\series medium
-\shape up
-\size normal
-\emph off
-\bar no
-\strikeout off
-\uuline off
-\uwave off
-\noun off
-\color none
-\begin_inset Formula 
-\[
-(-2X_{I}H_{I}^{T}-2X_{G}X_{G}^{T})_{i}{}_{j}W_{i}{}_{j}+(2WH_{I}H_{I}^{T}+2WH_{G}H_{G}^{T}+2\gamma_{1}W)_{i}{}_{j}W_{i}{}_{j}=0
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-
-\family roman
-\series medium
-\shape up
-\size normal
-\emph off
-\bar no
-\strikeout off
-\uuline off
-\uwave off
-\noun off
-\color none
-\begin_inset Formula 
-\[
-(-2W^{T}X_{I}-\lambda_{2}H_{G}B^{T}-\lambda_{3}2H_{G}B^{T})_{i}{}_{j}(H_{I})_{i}{}_{j}+(2W^{T}WH_{I}+\gamma_{2}2e_{k\times k}H_{I}+\lambda_{3}2H_{G}H_{G}^{T}H_{I})_{i}{}_{j}(H_{I})_{i}{}_{j}=0
-\]
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-
-\family roman
-\series medium
-\shape up
-\size normal
-\emph off
-\bar no
-\strikeout off
-\uuline off
-\uwave off
-\noun off
-\color none
-\begin_inset Formula 
-\[
-(-2W^{T}X_{G}-\lambda_{1}2H_{G}A-\lambda2H_{I}B-\lambda_{3}2H_{i}B_{0})_{i}{}_{j}(H_{G})_{i}{}_{j}+(2W^{T}WH_{G}+\gamma_{2}2e_{k\times k}H_{G}+2H_{I}H_{I}^{T}H_{G})_{i}{}_{j}(H_{G})_{i}{}_{j}=0
-\]
+\begin{align*}
+0= & (-2X_{I}H_{I}^{T}-2X_{G}X_{G}^{T})_{i}{}_{j}W_{i}{}_{j}+(2WH_{I}H_{I}^{T}+2WH_{G}H_{G}^{T}+2\gamma_{1}W)_{i}{}_{j}W_{i}{}_{j}\\
+0= & (-2W^{T}X_{I}-\lambda_{2}H_{G}B^{T}-\lambda_{3}2H_{G}B^{T})_{i}{}_{j}(H_{I})_{i}{}_{j}+(2W^{T}WH_{I}+\gamma_{2}2e_{k\times k}H_{I}+\lambda_{3}2H_{G}H_{G}^{T}H_{I})_{i}{}_{j}(H_{I})_{i}{}_{j}\\
+0= & (-2W^{T}X_{G}-\lambda_{1}2H_{G}A-\lambda2H_{I}B-\lambda_{3}2H_{i}B_{0})_{i}{}_{j}(H_{G})_{i}{}_{j}+(2W^{T}WH_{G}+\gamma_{2}2e_{k\times k}H_{G}+2H_{I}H_{I}^{T}H_{G})_{i}{}_{j}(H_{G})_{i}{}_{j}
+\end{align*}
 
 \end_inset
 
@@ -2836,6 +2813,61 @@ W_{i}{}_{j}\leftarrow\frac{(X_{I}H_{I}^{T}+X_{G}X_{G}^{T})_{ij}}{(WH_{I}H_{I}^{T
 \[
 (H_{G})_{ij}\leftarrow\frac{(W^{T}X_{G}+\lambda_{1}H_{G}A+\frac{\lambda_{2}}{2}H_{I}B+\lambda_{3}H_{I}B_{0})_{ij}}{(W^{T}WH_{G}+\gamma_{2}e_{k\times k}H_{G}+\lambda_{3}H_{I}H_{I}^{T}H_{G})_{ij}}
 \]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+As with the trifactorization multiplicative updates, a small epsilon is
+ added to the demoninator of each update to prevent devision by zero.
+ 
+\end_layout
+
+\begin_layout Standard
+Following 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Zhang:Bioinformatics:2011"
+
+\end_inset
+
+, parameters were set to _____.
+ A parameter sweep confirmed that these values give consistently reasonable
+ results.
+ 20 factorizations were performed for each of the 5 conditions detailed
+ above (3 complete bi-factorizations, one image-only and one gene-only).
+ For each optimization, W, H_I and H_G were initialized to random values
+ between 0 and 1, and the same W, H_I and H_G were used for each of the
+ 5 methods.
+ Multiplicative updates were repeated until the objective function was improved
+ by less than 0.01%.
+ Figure ??? shows typical trajectories of the objective functions for each
+ method.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Convergence trajectories
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
 
 \end_inset
 
@@ -3152,6 +3184,7 @@ sideways false
 status open
 
 \begin_layout Plain Layout
+\align center
 \begin_inset Graphics
 	filename figures/wisconsin-2-singular-vectors.png
 	width 5in
@@ -3189,6 +3222,7 @@ sideways false
 status open
 
 \begin_layout Plain Layout
+\align center
 \begin_inset Graphics
 	filename figures/wisconsin-selected-features-2-singular-vectors.png
 	width 5in
@@ -3250,6 +3284,7 @@ sideways false
 status open
 
 \begin_layout Plain Layout
+\align center
 \begin_inset Graphics
 	filename figures/gene-image-selected-features-2-singular-vectors.png
 	width 5in
