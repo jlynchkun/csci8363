@@ -2381,7 +2381,11 @@ learning
 
 \begin_layout Standard
 In order to determine the effect of including the gene-image interaction
- matrix B in the optimization, we calculated 
+ matrix 
+\begin_inset Formula $B$
+\end_inset
+
+ in the optimization, we calculated 
 \begin_inset Formula $W$
 \end_inset
 
@@ -2422,8 +2426,16 @@ Set
 \begin_inset Formula $X_{G}$
 \end_inset
 
+, namely 
+\begin_inset Formula $B=B_{0}$
+\end_inset
+
 .
- Do not update B and set 
+ Do not update 
+\begin_inset Formula $B$
+\end_inset
+
+ and set 
 \begin_inset Formula $\lambda_{3}=0$
 \end_inset
 
@@ -2431,7 +2443,11 @@ Set
 \end_layout
 
 \begin_layout Enumerate
-Initialize B_0 as the correlation matrix between columns of 
+Initialize 
+\begin_inset Formula $B_{0}$
+\end_inset
+
+ as the correlation matrix between columns of 
 \begin_inset Formula $X_{I}$
 \end_inset
 
@@ -2641,7 +2657,19 @@ where
  respectively.
  The partial derivatives of 
 \backslash
-mathcal L with respect to W, H_I and H_G are:
+mathcal L with respect to 
+\begin_inset Formula $W$
+\end_inset
+
+, 
+\begin_inset Formula $H_{I}$
+\end_inset
+
+ and 
+\begin_inset Formula $H_{G}$
+\end_inset
+
+ are:
 \end_layout
 
 \begin_layout Standard
@@ -2658,7 +2686,7 @@ mathcal L with respect to W, H_I and H_G are:
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\frac{\partial\mathcal{L}}{\partial H_{I}}=-2W^{T}X_{I}+2W^{T}WH_{I}-\lambda_{2}H_{G}B^{T}+\gamma_{2}2e_{k\times k}H_{I}+\Psi_{I}
+\frac{\partial\mathcal{L}}{\partial H_{I}}=-2W^{T}X_{I}+2W^{T}WH_{I}-\lambda_{2}H_{G}B^{T}+\gamma_{2}2e_{k\times k}H_{I}-\lambda_{3}2H_{G}B^{T}+\lambda_{3}2H_{G}H_{G}^{T}H_{I}+\Psi_{I}
 \]
 
 \end_inset
@@ -2669,12 +2697,149 @@ mathcal L with respect to W, H_I and H_G are:
 \begin_layout Standard
 \begin_inset Formula 
 \[
-\frac{\partial\mathcal{L}}{\partial H_{G}}=-2W^{T}X_{G}+2W^{T}WH_{G}-\lambda_{1}2H_{G}A-\lambda2H_{I}B+\gamma_{2}2e_{k\times k}H_{G}+\Psi_{G}
+\frac{\partial\mathcal{L}}{\partial H_{G}}=-2W^{T}X_{G}+2W^{T}WH_{G}-\lambda_{1}2H_{G}A-\lambda2H_{I}B+\gamma_{2}2e_{k\times k}H_{G}-\lambda_{3}2H_{i}B_{0}+2H_{I}H_{I}^{T}H_{G}+\Psi_{G}
 \]
 
 \end_inset
 
-.
+Using the KKT conditions 
+\backslash
+phi_i_j W_i_j = 0, (
+\backslash
+psi_I)_i_j (H_I)_i_j=0 and (
+\backslash
+psi_G)_i_j (H_G)_i_j=0, we can set each partial derivative to 0 and write
+\end_layout
+
+\begin_layout Standard
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\begin_inset Formula 
+\[
+(-2X_{I}H_{I}^{T}-2X_{G}X_{G}^{T})_{i}{}_{j}W_{i}{}_{j}+(2WH_{I}H_{I}^{T}+2WH_{G}H_{G}^{T}+2\gamma_{1}W)_{i}{}_{j}W_{i}{}_{j}=0
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\begin_inset Formula 
+\[
+(-2W^{T}X_{I}-\lambda_{2}H_{G}B^{T}-\lambda_{3}2H_{G}B^{T})_{i}{}_{j}(H_{I})_{i}{}_{j}+(2W^{T}WH_{I}+\gamma_{2}2e_{k\times k}H_{I}+\lambda_{3}2H_{G}H_{G}^{T}H_{I})_{i}{}_{j}(H_{I})_{i}{}_{j}=0
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\begin_inset Formula 
+\[
+(-2W^{T}X_{G}-\lambda_{1}2H_{G}A-\lambda2H_{I}B-\lambda_{3}2H_{i}B_{0})_{i}{}_{j}(H_{G})_{i}{}_{j}+(2W^{T}WH_{G}+\gamma_{2}2e_{k\times k}H_{G}+2H_{I}H_{I}^{T}H_{G})_{i}{}_{j}(H_{G})_{i}{}_{j}=0
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Moving the first term of each to the right side of the equation and dividing
+ gives the following update rules:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+W_{i}{}_{j}\leftarrow\frac{(X_{I}H_{I}^{T}+X_{G}X_{G}^{T})_{ij}}{(WH_{I}H_{I}^{T}+WH_{G}H_{G}^{T}+\gamma_{1}W)_{ij}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\begin_inset Formula 
+\[
+(H_{I})_{ij}\leftarrow\frac{(W^{T}X_{I}+\frac{\lambda_{2}}{2}H_{G}B^{T}+\lambda_{3}H_{G}B_{0}^{T})_{ij}}{(W^{T}WH_{I}+\gamma_{2}e_{k\times k}H_{I}+\lambda_{3}H_{G}H_{G}^{T}H_{I})_{ij}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\begin_inset Formula 
+\[
+(H_{G})_{ij}\leftarrow\frac{(W^{T}X_{G}+\lambda_{1}H_{G}A+\frac{\lambda_{2}}{2}H_{I}B+\lambda_{3}H_{I}B_{0})_{ij}}{(W^{T}WH_{G}+\gamma_{2}e_{k\times k}H_{G}+\lambda_{3}H_{I}H_{I}^{T}H_{G})_{ij}}
+\]
+
+\end_inset
+
+
 \end_layout
 
 \begin_layout Subsection
