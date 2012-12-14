@@ -1941,6 +1941,51 @@ Feature Interaction
 \end_layout
 
 \begin_layout Standard
+The matrix 
+\begin_inset Formula $G^{T}$
+\end_inset
+
+ in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Tri-factorization-of-Wisconsin"
+
+\end_inset
+
+ does not readily reveal insights into the relationships between features
+ and classes.
+ Each entry corresponds to a feature's belonging to a latent variable which
+ itself points in a direction of high variation.
+ Pairwise correlations between rows of 
+\begin_inset Formula $G^{T}$
+\end_inset
+
+ reveal which pairs of features have similar presence across latent features,
+ and therefore represent an association between features as they relate
+ to patient labels.
+ Taking correlations between features across subjects in the data matrix
+ 
+\begin_inset Formula $X$
+\end_inset
+
+ reveals unrestricted relationships between features, while taking correlations
+ between features in the 
+\begin_inset Formula $G^{T}$
+\end_inset
+
+ matrix acts to filter the correlations, revealing those feature correlations
+ that most strongly reflect patient labels.
+ These two calculations are compared in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:X-and-G-correlations"
+
+\end_inset
+
+.
+\end_layout
+
+\begin_layout Standard
 \begin_inset Float figure
 placement h
 wide false
@@ -1950,15 +1995,15 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename figures/wisconsin_tri_fact_X_correlation_matrix.png
-	width 3in
+	filename figures/wisconsin-raw-correlations-x1-x2-R.png
+	height 2in
 
 \end_inset
 
 
 \begin_inset Graphics
 	filename figures/wisconsin_tri_fact_Gt_correlation_matrix.png
-	width 3in
+	height 2in
 
 \end_inset
 
@@ -1969,7 +2014,31 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-(some spots in the RIGHT matrix that aren't in the left)
+The left graphic shows correlations between features in the data matrix
+ 
+\begin_inset Formula $X$
+\end_inset
+
+.
+ The right graphic shows correlations in the doubled matrix 
+\begin_inset Formula $G^{T}$
+\end_inset
+
+.
+ Rows and columns of both correspond to image features.
+ Recall that features 1-20 are image features from two cells, and features
+ 21-30 are noise features.
+ The right correlation matrix is much sparser than the left.
+ This is a direct effect of the sparse matrix decomposition, and serves
+ to highlight only those correlations that relate to the subject labels.
+ However, some correlations in noise features can also be seen in the right
+ matrix which are not present in the left.
+ This may be the result of the scaling of 
+\begin_inset Formula $G^{T}$
+\end_inset
+
+.
+ CHECK????
 \end_layout
 
 \end_inset
