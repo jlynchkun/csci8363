@@ -1258,7 +1258,7 @@ reference "fig:SG-ratios"
  Thus, non-negative matrix factorization with a class-label matrix F produces
  a SG^T matrix that can readily detect which features are relevant to class
  labels.
- 
+ )
 \end_layout
 
 \begin_layout Standard
@@ -1397,6 +1397,11 @@ Zhang 2011
 Clustering (JOSH WRITE INTRO?)
 \end_layout
 
+\begin_layout Standard
+what we are doing, why cluster anything? with this data what does clustering
+ mean?
+\end_layout
+
 \begin_layout Subsection
 Shared Nearest Neighbor Similarity
 \end_layout
@@ -1496,9 +1501,11 @@ Clustering is a very popular unsupervised learning technique for finding
  observations, but rather than using all pairwise distances between observations
  this method tries to optimally locate some number, k, of cluster centers
  and assign each observation to the nearest cluster center.
- Because these methods are fundamentally based on a distance measurement
- they may not be good choices for high-dimensional data, where distance
- between observations often approaches a constant.
+ Because these methods are based on a distance measurement they may not
+ be good choices for data with oddly shaped clusters.
+ High-dimensional data is also challenging for the classical clustering
+ methods since variance of distance between observations approaches zero
+ as dimension increases and as the number of observations decreases.
  
 \end_layout
 
