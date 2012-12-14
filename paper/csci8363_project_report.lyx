@@ -561,22 +561,26 @@ Note that with sparse data, even through the orthogonality constraint is
 \end_layout
 
 \begin_layout Subsection
-Matrix Decomposition as Optimization (JOSH??!)
+Matrix Decomposition as Optimization
 \end_layout
 
 \begin_layout Standard
-Factoring a n-by-m matrix 
+Factoring a 
+\begin_inset Formula $nxm$
+\end_inset
+
+ matrix 
 \begin_inset Formula $X$
 \end_inset
 
- as a product 
+ into a product 
 \begin_inset Formula $WH$
 \end_inset
 
  can be formulated as an optimization problem:
 \begin_inset Formula 
 \begin{equation}
-\min_{W,H}f(W,H)=\frac{1}{2}||X-WH||_{F}^{2}\label{eq:bifactorization-optimization}
+\min_{W,H}f(W,H)=\frac{1}{2}||X-WH||^{2}\label{eq:bifactorization-optimization}
 \end{equation}
 
 \end_inset
@@ -586,10 +590,10 @@ Factoring a n-by-m matrix
 
 \begin_layout Standard
 where 
-\begin_inset Formula $||\cdot||_{F}$
+\begin_inset Formula $||\cdot||$
 \end_inset
 
- is the Frobenius norm, 
+ is a convenient matrix norm, 
 \begin_inset Formula $W\epsilon\mathbb{R}^{n\times k}$
 \end_inset
 
@@ -633,7 +637,7 @@ where
 \begin_inset Formula $L^{1}$
 \end_inset
 
- norm gives a convex optimiation problem.
+ norm gives a convex optimiation problem while still enforcing sparsity.
  
 \end_layout
 
@@ -642,8 +646,7 @@ Convex Optimization
 \end_layout
 
 \begin_layout Standard
-how it applies to this problem.
- The general problem of factoring a matrix into a product of two or more
+The general problem of factoring a matrix into a product of two or more
  matrices is under-specified even with additional constraints such as non-negati
 vity.
  In fact, requiring a non-negative factorization results in a more difficult
@@ -672,7 +675,7 @@ Lagrange Multipliers
 \end_layout
 
 \begin_layout Standard
-A common approach to incorporating equality and inequality constraints with
+A common approach to incorporating equality and inequality constraints into
  an optimization problem such as 
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -752,8 +755,7 @@ key "deMJ:TheNewEnglandJournalOfMedicine:2002,Beck:SciTranslMed:2011"
 \end_layout
 
 \begin_layout Standard
-The complete gene expression data set contained 24,481 features for 248
- subjects.
+The complete gene expression data set contains 24,481 features for 248 subjects.
  This data was preprocessed to remove expression information related to
  genes for which no name was provided.
  Also, gene expression features with low value were removed, as were gene
@@ -763,7 +765,7 @@ The complete gene expression data set contained 24,481 features for 248
 \end_layout
 
 \begin_layout Standard
-The complete image feature data set contained 6,642 features for the same
+The complete image feature data set contains 6,642 features for the same
  248 subjects.
  No preprocessing was necessary for this data set.
  All 6,642 features were used.
@@ -773,11 +775,11 @@ The complete image feature data set contained 6,642 features for the same
 
 \begin_layout Standard
 The gene expression and cell image data both contained negative feature
- values.
+ values, even prior to normalization.
  In order to use multiplicative updates every entry in the matrix to be
  factored must be positive.
- In order to replace the negative values with positive ones each data matrix
- was doubled along the columns.
+ Negative matrix entries were replaced with positive entries by doubling
+ each matrix along the columns.
  Positive values were retained and negative values set to zero in one half
  of the doubled matrix.
  In the other half positive values were set to zero and negative values
@@ -2883,12 +2885,33 @@ Zhang 2011
 \end_layout
 
 \begin_layout Section
-Clustering (JOSH WRITE INTRO?)
+Clustering
 \end_layout
 
 \begin_layout Standard
 what we are doing, why cluster anything? with this data what does clustering
- mean?
+ mean
+\end_layout
+
+\begin_layout Standard
+Clustering is a general famliy of unsupervised learning methods for partitioning
+ a data set into groups of similar observations.
+ There are many varieties of clustering algorithms, some more generally
+ applicable than others.
+ We use a relatively modern, generally robust method called spectral clustering
+ to evaluate the results of trifactorization.
+ Classification by spectral clustering on all features of the Wisconsin
+ and gene-image data establishes a useful point of comparison for the classifica
+tion performance of the trifactorization, although we certainly expect trifactor
+ization to perform better because it is a supervised method and has extra
+ information available in the form of the gene-gene interaction network.
+ Additionally, since spectral clustering performance improved using the
+ best features as determined by the trifactorization we have evidence supporting
+ the trifactorization results.
+ However, the results of spectral clustering on both the full gene-image
+ data set were poor.
+ This suggests the trifactorization algorithm is better able to negotiate
+ that data set than our spectral clustering method.
 \end_layout
 
 \begin_layout Subsection
@@ -3000,8 +3023,9 @@ Clustering is a very popular unsupervised learning technique for finding
 
 \begin_layout Standard
 Spectral clustering methods are able to operate on a more general notion
- of similarity between observations, although choosing an appropriate similarity
- measure is important to arriving at reasonable results.
+ of similarity between observations than k-means and hierarchical clustering,
+ although choosing an appropriate similarity measure is important to arriving
+ at reasonable results.
  This allows for selection of similarity measures that may be more appropriate
  than euclidean distance or some related distance.
  Additionally, spectral clustering methods have simlple implementations
@@ -3154,6 +3178,52 @@ sideways false
 status open
 
 \begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/wisconsin-SNN-edge-weight-distribution.png
+	width 5in
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figures/wisconsin-selected-features-SNN-edge-weight-distribution.png
+	width 5in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+edge weight distribution with SNN similarity for Wisconsin data with and
+ without feature selection
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
 
 \end_layout
 
@@ -3169,7 +3239,8 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-ha
+edge weight distribution with SNN similarity for gene and image data with
+ and without feature selection 
 \end_layout
 
 \end_inset
@@ -3178,6 +3249,7 @@ ha
 \end_layout
 
 \begin_layout Plain Layout
+\align center
 \begin_inset Graphics
 	filename figures/gene-image-selected-features-SNN-edge-weight-distribution.png
 	width 5in
@@ -3261,6 +3333,15 @@ reference "fig:wisconsin-top-2-singular-vectors"
 \end_layout
 
 \begin_layout Standard
+The gene-image data set is high-dimensional and has a relatively small number
+ of subjects.
+ Spectral clustering with all features gave poor classification results,
+ total cluster entropy 0.9259 (error rate 0.35).
+ Selecting features based on the corresponding trifactorization improved
+ the results, total cluster entropy 0.8426 (error rate 0.32).
+\end_layout
+
+\begin_layout Standard
 \begin_inset Float figure
 wide false
 sideways false
@@ -3340,6 +3421,7 @@ status open
 \end_layout
 
 \begin_layout Plain Layout
+\align center
 \begin_inset Graphics
 	filename figures/gene-image-2-singular-vectors.png
 	width 5in
@@ -3376,7 +3458,7 @@ status open
 \begin_layout Plain Layout
 \align center
 \begin_inset Graphics
-	filename figures/gene-image-selected-features-2-singular-vectors.png
+	filename figures/gene-no-image-selected-features-2-singular-vectors.png
 	width 5in
 
 \end_inset
