@@ -2908,7 +2908,30 @@ name "fig:convergence-trajectories"
  labeled Group 2.
  The log-rank test was then performed to determine whether the survival
  outcome of the two groups was significantly different.
- The number of columns 
+ The number of columns of W providing a significant separation of group
+ outcomes was then counted.
+\end_layout
+
+\begin_layout Standard
+Though this method is used in the literature for uncovering latent explanatory
+ variables (SEE TAE HYUN TRI-FACTORIZATION), it is worth asking whether
+ the count of columns leading to significant group difference has meaning.
+ Non-negative matrix factorization does not guarantee orthogonal columns
+ in its result.
+ Columns of W may be correlated, in which case counting 2 columns of W that
+ produce significant group differences may amount to tallying two vectors
+ in a similar direction.
+ As can be seen in 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:W-correlations"
+
+\end_inset
+
+, the majority of columns of W are nearly orthogonal.
+ There are notable exceptions, however.
+ In this example, column 24 is highly positively correlated with columns
+ 7 and 20, and there are a number of high negative correlations.
 \end_layout
 
 \begin_layout Standard
@@ -2918,6 +2941,13 @@ sideways false
 status open
 
 \begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/gene-image-bi-fact-W-column-correlation.png
+	width 3.5in
+
+\end_inset
+
 
 \end_layout
 
@@ -2925,7 +2955,77 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-Correlation between columns of W.
+Example correlations between columns of W.
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:W-correlations"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+Due to the lack of an orthogonality constraint, columns of W are not independent
+ and column count cannot be used as a standalone measure of the ability
+ of bi-factorization to uncover features that significantly differentiate
+ patient groups.
+ In order to provide a better basis of comparison, we created a randomized
+ dataset and performed the same five factorization routines.
+ We shuffled feature values across subjects within each feature (i.e.
+ reordered each value in columns of 
+\begin_inset Formula $X_{G}$
+\end_inset
+
+ and 
+\begin_inset Formula $X_{I}$
+\end_inset
+
+) so that distributions of each feature were maintained.
+ Results for both real and randomized data are shown in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:bi-factorization-results"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/bi-factorization-results.png
+	width 5in
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Number of columns of W that significantly differented patients into low-
+ and high-survival groups at an 
+\begin_inset Formula $p=0.05$
+\end_inset
+
+ significance level.
+ Entries 1-3 are the 3 variations of the bifactorizaiton method.
+ Entry 4 uses only gene data, and entry 5 uses only image data.
+ Entries 6-10 are results from the same methods using shuffled data.
 \end_layout
 
 \end_inset
@@ -2934,12 +3034,54 @@ Correlation between columns of W.
 \end_layout
 
 \begin_layout Plain Layout
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:bi-factorization-results"
+
+\end_inset
+
 
 \end_layout
 
 \end_inset
 
 
+\end_layout
+
+\begin_layout Standard
+The results we found were somewhat surprising.
+ There was virtually no difference between variations of the bifactorization
+ method, that is, including a gene-image interaction term did not impact
+ the number of columns of W significantly differentiating patients.
+ However, including both types of data constrained the column count considerably
+, as entries 1-3 have much less variation than entries 4 and 5 (gene-only
+ and image-only, respectively) in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:bi-factorization-results"
+
+\end_inset
+
+.
+ Another interesting result is that factorizations using real data consistently
+ uncovered several columns predictive of patient survival, whereas the median
+ number of columns from random data predicting patient survival was much
+ lower (0 in the case of the 3 methods using both data types).
+\end_layout
+
+\begin_layout Standard
+FOR THE DISCUSSION These findings are an interesting combination of negative
+ and positive findings.
+ It is notable that including a gene-image interaction term did not appear
+ to change the quality of the results at all.
+ This may be a result of the parameter size used, and a parameter sweep
+ of 
+\begin_inset Formula $\lambda_{3}$
+\end_inset
+
+ would help determine this.
+ It appears encouraging that using real data separates Upon further reflection,
+ 
 \end_layout
 
 \begin_layout Section
