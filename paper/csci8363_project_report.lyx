@@ -24,7 +24,7 @@
 \output_sync 0
 \bibtex_command default
 \index_command default
-\paperfontsize default
+\paperfontsize 11
 \spacing other 1.1000000000000001
 \use_hyperref false
 \papersize default
@@ -543,7 +543,7 @@ Biometric data often originates with mixed signs, either inherently or due
 \begin_inset Formula $X$
 \end_inset
 
- consists of the absolute value of originally negative values of
+ consists of the absolute value of originally negative values of 
 \begin_inset Formula $X$
 \end_inset
 
