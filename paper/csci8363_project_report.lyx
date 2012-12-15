@@ -65,11 +65,12 @@
 \begin_body
 
 \begin_layout Title
-CSci 8363 Final Project Paper
+Non-negative matrix factorization for the analysis of genotype and phenotype
+ data and its relation to patient prognosis and outcome
 \end_layout
 
 \begin_layout Author
-Thomas Christie, Joshua Lynch
+Thomas Christie and Joshua Lynch, with guidance from TaeHyun Hwang
 \end_layout
 
 \begin_layout Part
@@ -1779,7 +1780,7 @@ status open
 \align center
 \begin_inset Graphics
 	filename figures/tri-factorization-wisconsin-results.png
-	width 4in
+	width 6in
 
 \end_inset
 
@@ -3032,8 +3033,15 @@ For each initialization of
 
 \begin_layout Standard
 Though this method is used in the literature for uncovering latent explanatory
- variables (SEE CITE TAE HYUN TRI-FACTORIZATION), it is worth asking whether
- the count of columns leading to significant group difference has meaning.
+ variables (see 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Kim:20123RdInternationalWorkshopOnCognitiveInformation:2012"
+
+\end_inset
+
+), it is worth asking whether the count of columns leading to significant
+ group difference has meaning.
  Non-negative matrix factorization does not guarantee orthogonal columns
  in its result.
  Columns of 
@@ -4260,12 +4268,27 @@ Discussion and Future Work
 \end_layout
 
 \begin_layout Standard
-tri-factorization
-\end_layout
+Non-negative trifactorization appeared to be a useful method for supervised
+ feature selection.
+ Given that predictive features are predicted by the ratio of rows of 
+\begin_inset Formula $SG^{T}$
+\end_inset
 
-\begin_layout Standard
-Feature selection is interesting.
- might want to try to constrain it by including a feature-interaction term.
+, bifactorization would be an equivalent, simpler method.
+ The trifactorization method used here (and feature information gain, which
+ gives similar results) only select features as they independently contribute
+ to patient labels.
+ Including a term with known feature interactions into the trifactorization,
+ much as we did in the later bifactorization method, might provide better
+ results.
+ It is well known that information does not always optimally select features
+ for use in classification, for example in situations where only a combination
+ of features is predictive of class, but individual features are not.
+ It would be worthwhile to test whether trifactorization with an additional
+ interaction was useful in such cases.
+ It is possible that rather than providing comparable results to information
+ gain, feature selection might be considerably improved.
+ 
 \end_layout
 
 \begin_layout Standard
@@ -4281,27 +4304,39 @@ The findings presented in the bifactorization section are an interesting
  would help determine this.
  It appears encouraging that using real data separates patient groups better
  than randomized data.
- Upon further reflection, however, we believe that the actual count of features
+ Upon further reflection, however, we believe that the count of features
  separating patients into groups with different survival outcomes is not
- relevant without an orthogonality constraint on W.
- The presence of a single predicting column, combined with several correlated
- columns, would be enough to artifically raise the count.
+ important without an orthogonality constraint on W.
+ The presence of a single predictive column, combined with several additional
+ correlated columns, would be enough to artifically raise the count.
+ In addition, the entry-shuffled matrix used as a control removed the predictive
+ness of the columns of W.
+ However, the result could also be explained by the shuffling simply removing
+ correlations between columns of X and accordingly lowering the count of
+ predictive columns.
  Performing multiplicative updates with an orthogonality constraint is not
- difficult (see ???? for an example), so we would include this requirement
- were we to perform this analysis in the future.
- (ALSO it could be that shuffling simply removed correlation...)
+ difficult (see 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Ding:OrthogonalNonnegativeMatrixTFactorizationsForClustering:2006"
+
+\end_inset
+
+ for examples), so we would include this requirement were we to perform
+ this analysis in the future.
 \end_layout
 
 \begin_layout Standard
-We also need to find a way to do this that doesn't require PRE-knowing survival.
- Or work backwards to see what features this adds up to - feature combinations?
-\end_layout
-
-\begin_layout Standard
-Clustering worked poorly without feature selection on gene-image data.
- probability high dimensionality and lack of good features.
- Tri-factorization -> feature selection then clustering worked much better.
+It would be convenient to have a way to uncover predictive basis vectors
+ that determine survival outcome without knowing the survival rate beforehand.
+ Perhaps using a cross-validation approach, combined with working backwards
+ from basis vectors to combinations of important features, would be one
+ way to build a model of feature predictiveness.
  
+\end_layout
+
+\begin_layout Standard
+
 \end_layout
 
 \begin_layout Standard
