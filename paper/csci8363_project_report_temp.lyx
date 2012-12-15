@@ -1,0 +1,1960 @@
+#LyX 2.0 created this file. For more info see http://www.lyx.org/
+\lyxformat 413
+\begin_document
+\begin_header
+\textclass article
+\use_default_options true
+\maintain_unincluded_children false
+\language english
+\language_package default
+\inputencoding auto
+\fontencoding global
+\font_roman default
+\font_sans default
+\font_typewriter default
+\font_default_family default
+\use_non_tex_fonts false
+\font_sc false
+\font_osf false
+\font_sf_scale 100
+\font_tt_scale 100
+
+\graphics default
+\default_output_format default
+\output_sync 0
+\bibtex_command default
+\index_command default
+\paperfontsize default
+\spacing other 1.1000000000000001
+\use_hyperref false
+\papersize default
+\use_geometry true
+\use_amsmath 1
+\use_esint 1
+\use_mhchem 1
+\use_mathdots 1
+\cite_engine basic
+\use_bibtopic false
+\use_indices false
+\paperorientation portrait
+\suppress_date false
+\use_refstyle 1
+\index Index
+\shortcut idx
+\color #008000
+\end_index
+\leftmargin 1in
+\topmargin 1in
+\rightmargin 1in
+\bottommargin 1in
+\secnumdepth 3
+\tocdepth 3
+\paragraph_separation indent
+\paragraph_indentation default
+\quotes_language english
+\papercolumns 1
+\papersides 1
+\paperpagestyle default
+\tracking_changes false
+\output_changes false
+\html_math_output 0
+\html_css_as_file 0
+\html_be_strict false
+\end_header
+
+\begin_body
+
+\begin_layout Title
+CSci 8363 Final Project Paper
+\end_layout
+
+\begin_layout Author
+Thomas Christie, Joshua Lynch
+\end_layout
+
+\begin_layout Part
+Introduction 
+\end_layout
+
+\begin_layout Section
+Motivation
+\end_layout
+
+\begin_layout Standard
+The availability of detailed bioinformatic data is growing quickly, but
+ reliable methods of relating this wealth of information to patient prognosis
+ and diagnosis are often lacking.
+ In the medical domain, biometric data often consists of an array of features
+ for each patient.
+ These features may be simple measures such as height and weight, or the
+ results of complex analyses such as the presence or absence of certain
+ genetic sequences in a patient's DNA.
+ 
+\end_layout
+
+\begin_layout Standard
+With the recent explosive growth in computing power, it is becoming more
+ common to collect all available data and determine relationships between
+ data values and patient prognosis and outcomes after the fact.
+ For example, recent studies have shown that collected gene expression data
+ (
+\begin_inset CommandInset citation
+LatexCommand cite
+key "deMJ:TheNewEnglandJournalOfMedicine:2002"
+
+\end_inset
+
+) and quantatized features from breast cancer images (
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Beck:SciTranslMed:2011"
+
+\end_inset
+
+) are predictive of cancer metastasis.
+ Though this 
+\begin_inset Quotes eld
+\end_inset
+
+data-driven
+\begin_inset Quotes erd
+\end_inset
+
+ analysis can lead to the production of unnecessarily large amounts of data,
+ there are many bnefits to this approach.
+ First, data is not deemed useless apriori due to the verdict of domain
+ experts, and this can lead to the discovery of previously unexplored relationsh
+ips.
+ In (IMAGE STUDY), image features were discovered that predicted patient
+ outcome better than features traditionally used by physicians (BE MORE
+ SPECIFIC).
+ Moreover, relationships between features can increase the predictive power
+ of the dataset.
+ In 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Zhang:Bioinformatics:2011"
+
+\end_inset
+
+, relationships between gene expression data and ??? were ???.
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Beck:SciTranslMed:2011,Zhang:Bioinformatics:2011"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Mathematical Approach
+\end_layout
+
+\begin_layout Standard
+In the case of biometric data, it can be useful to assume that an underlying
+ 
+\begin_inset Quotes eld
+\end_inset
+
+cause
+\begin_inset Quotes erd
+\end_inset
+
+ is expressed in several of the collected features.
+ For example, the presence of a specific gene can give rise to the synthesis
+ of many proteins (SOURCE?).
+ Similarly, a disease may give rise to a collection of phenotypes.
+ One way to model this relationship is to posit a latent causal or explanatory
+ structure underlying the measurable data (see FIGURE ?).
+ Discovering hidden explanatory features can potentially lead to a simple
+ explanation for various features, as well as drastically reduce the dimensional
+ity of the data.
+ Though the domain is drastically different, a simliar approach is often
+ used to uncover semantic cotent underlying language data (see e.g.
+ SOURCE?).
+ 
+\end_layout
+
+\begin_layout Standard
+also relationships between different data types
+\end_layout
+
+\begin_layout Subsection
+Matrix Decomposition
+\end_layout
+
+\begin_layout Standard
+To model the relationship between latent variables and measurable features,
+ we can assume that each feature is a linear combination of some number
+ of latent variables.
+ Mathematically, the features measured for each patient can be written as
+ a vector 
+\begin_inset Formula $\mathbf{x}$
+\end_inset
+
+ , where
+\begin_inset Formula $\mathbf{X}=[x_{1}x_{2}...x_{n}]^{T}$
+\end_inset
+
+ is an 
+\begin_inset Formula $m\times n$
+\end_inset
+
+ matrix with 
+\begin_inset Formula $n$
+\end_inset
+
+ features and 
+\begin_inset Formula $m$
+\end_inset
+
+ patients.
+ In order to uncover the latent factors, we can decompose 
+\begin_inset Formula $X$
+\end_inset
+
+ into two factors 
+\begin_inset Formula $W$
+\end_inset
+
+ and 
+\begin_inset Formula $H$
+\end_inset
+
+ such that 
+\begin_inset Formula $X\approx WH$
+\end_inset
+
+.
+ In this factorization, 
+\begin_inset Formula $W$
+\end_inset
+
+ is 
+\begin_inset Formula $m\times k$
+\end_inset
+
+ matrix whose component vectors span the column space of 
+\begin_inset Formula $X$
+\end_inset
+
+, where entries of 
+\begin_inset Formula $H$
+\end_inset
+
+ provide vector weights.
+ In other words, 
+\begin_inset Formula $X$
+\end_inset
+
+ consists of a linear combination of the column vectors of 
+\begin_inset Formula $W$
+\end_inset
+
+ with weights from
+\begin_inset Formula $H$
+\end_inset
+
+.
+ W provides the 
+\begin_inset Formula $k$
+\end_inset
+
+ 
+\begin_inset Quotes eld
+\end_inset
+
+sources
+\begin_inset Quotes erd
+\end_inset
+
+ or latent variables and 
+\begin_inset Formula $H$
+\end_inset
+
+ describes how they linearly combine to produce the features in 
+\begin_inset Formula $X$
+\end_inset
+
+.
+ 
+\begin_inset Formula $WH$
+\end_inset
+
+ is an approximation of 
+\begin_inset Formula $X$
+\end_inset
+
+, and the quality of the approximation is determined by partially by the
+ choice of 
+\begin_inset Formula $k$
+\end_inset
+
+.
+ The dimension 
+\begin_inset Formula $k$
+\end_inset
+
+ is often chosen heuristically, and different values of 
+\begin_inset Formula $k$
+\end_inset
+
+ prove useful in different problem domains.
+\end_layout
+
+\begin_layout Standard
+Matrix factorization is not unique, so an important question is how to decompose
+ 
+\begin_inset Formula $X$
+\end_inset
+
+ into
+\begin_inset Formula $H$
+\end_inset
+
+ and 
+\begin_inset Formula $W$
+\end_inset
+
+.
+ One principled way to perform such a factorization is to find component
+ vectors that are mutually orthogonal.
+ This is called Singular Value Decomposition (SVD), and constructs a unique
+ factorization 
+\begin_inset Formula $X=USV^{T}$
+\end_inset
+
+, where 
+\begin_inset Formula $U$
+\end_inset
+
+ corresponds to 
+\begin_inset Formula $W$
+\end_inset
+
+ and the latter product corresponds to 
+\begin_inset Formula $H$
+\end_inset
+
+ (IS THIS TRUE? IS THERE NON-UNIQUE ORTHOGONAL MATRIX BI-FACTORIZATION?).
+ This approach is mathematically robust and well-understood.
+ A lower-rank approximation of 
+\begin_inset Formula $X$
+\end_inset
+
+ can be constructed using the first 
+\begin_inset Formula $k$
+\end_inset
+
+ columns of 
+\begin_inset Formula $U$
+\end_inset
+
+, 
+\begin_inset Formula $S$
+\end_inset
+
+ and 
+\begin_inset Formula $V^{T}$
+\end_inset
+
+.
+ From the perspective of uncovering latient sources, however, SVD presents
+ several problems.
+ First, it may well be the case that latent sources are not actually orthogonal.
+ In this case, the 
+\begin_inset Formula $U$
+\end_inset
+
+ matrix would not correspond to any domain-specific functional process but
+ would be a mere mathematical convenience (CITE Josh's thing that he showed
+ in class).
+ In addition, SVD does not impose a constraint on the sign of values of
+ 
+\begin_inset Formula $H$
+\end_inset
+
+.
+ A combination of positive and negative coeffients create both additive
+ and subtractive components of each feature, making it very difficult to
+ interpret how latent sources combine to create features.
+ Lastly, SVD produces results which are dense (few 0s in the components
+ of 
+\begin_inset Formula $W$
+\end_inset
+
+ and 
+\begin_inset Formula $H$
+\end_inset
+
+).
+ This implies that every latent source has an effect on every feature present
+ in 
+\begin_inset Formula $X$
+\end_inset
+
+, an implication which is likely not true in many applications.
+ Approaches for addressing mixed signs, orthogonality and density are addressed
+ below.
+\end_layout
+
+\begin_layout Subsection
+Non-Negative Matrix Factorization (NMF)
+\end_layout
+
+\begin_layout Standard
+One approach to creating easily interpretable latent sources is to introduce
+ the additional requirement that the data have values greater than or equal
+ to zero and perform matrix decomposition in such a way that values of 
+\begin_inset Formula $H$
+\end_inset
+
+ and 
+\begin_inset Formula $W$
+\end_inset
+
+ are exclusively nonnegative.
+ This means that the underlying components of 
+\begin_inset Formula $X$
+\end_inset
+
+ combine in a purely additive way to produce 
+\begin_inset Formula $X$
+\end_inset
+
+, which gives a more intuitive decomposition of the data matrix.
+ Moreover, in situations where data is naturally nonnegative (such as image
+ data or gene expression(?)), negative components may not be readily interpretab
+le.
+ 
+\end_layout
+
+\begin_layout Standard
+Biometric data often originates with mixed signs.
+ When faced with a 
+\begin_inset Formula $m\times n$
+\end_inset
+
+ matrix 
+\begin_inset Formula $X$
+\end_inset
+
+ with mixed-sign entries, a common technique for imposing nonnegativity
+ is to construct a new 
+\begin_inset Formula $m\times2n$
+\end_inset
+
+ matrix 
+\begin_inset Formula $X'=[\max(X,0)\max(-X,0)]$
+\end_inset
+
+.
+ In other words, the left half of 
+\begin_inset Formula $X'$
+\end_inset
+
+ consists of the originally positive values in 
+\begin_inset Formula $X$
+\end_inset
+
+ with the negative values replaces by 0.
+ The right half of 
+\begin_inset Formula $X$
+\end_inset
+
+ consists of the absolute value of originally negative values of
+\begin_inset Formula $X$
+\end_inset
+
+, with 0's replacing corresponding positive values.
+ This is the approached used in the methods below.
+\end_layout
+
+\begin_layout Standard
+Placing an orthogonality constraint on the vectors of the basis matrix 
+\begin_inset Formula $W$
+\end_inset
+
+ forces components to be uncorrelated.
+ While this is useful from a data compression standpoint and has other convenien
+t mathematical properties, it may well be the case that distinct underlying
+ sources have overlapping manifestations in feature space.
+ In the approaches used in this paper, the orthogonality constraint is dropped.
+\end_layout
+
+\begin_layout Subsection
+Sparse Decomposition
+\end_layout
+
+\begin_layout Standard
+(SEE KIM AND PARK 2007) A matrix is called sparse when the majority of its
+ elements are 0.
+ In cases where a sparse H can be found (W TOO OR JUST H?), the product
+ WH can be seen as an approximation of X in which each feature of X is composed
+ of a small number of columns of W.
+ This is useful, as it highlights which latent components are most responsible
+ for each feature.
+ 
+\end_layout
+
+\begin_layout Standard
+Note that with sparse data, even through the orthogonality constraint is
+ relaxed, columns have a high probability of being orthogonal.
+ 
+\end_layout
+
+\begin_layout Subsection
+Matrix Decomposition as Optimization (JOSH??!)
+\end_layout
+
+\begin_layout Standard
+Factoring a n-by-m matrix 
+\begin_inset Formula $X$
+\end_inset
+
+ as a product 
+\begin_inset Formula $WH$
+\end_inset
+
+ can be formulated as an optimization problem:
+\begin_inset Formula 
+\begin{equation}
+\min_{W,H}f(W,H)=\frac{1}{2}||X-WH||_{F}^{2}\label{eq:bifactorization-optimization}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where 
+\begin_inset Formula $||\cdot||_{F}$
+\end_inset
+
+ is the Frobenius norm, 
+\begin_inset Formula $W\epsilon\mathbb{R}^{n\times k}$
+\end_inset
+
+ and 
+\begin_inset Formula $H\epsilon\mathbb{R}^{k\times m}$
+\end_inset
+
+.
+ Non-negativity can be imposed as an additional constraint on 
+\begin_inset Formula $W$
+\end_inset
+
+ and 
+\begin_inset Formula $H$
+\end_inset
+
+.
+ Sparsity can be controlled by adding a term penalizing the size of the
+ L0 norm of 
+\begin_inset Formula $W$
+\end_inset
+
+ and/or 
+\begin_inset Formula $H$
+\end_inset
+
+.
+ In practice the L1 norm is often used as an approximation of the L0 norm,
+ as using the L1 norm gives a convex optimiation problem.
+ 
+\end_layout
+
+\begin_layout Subsubsection
+Convex Optimization
+\end_layout
+
+\begin_layout Standard
+how it applies to this problem.
+ The general problem of factoring a matrix into a product of two or more
+ matrices is under-specified even with additional constraints such as non-negati
+vity.
+ In fact, requiring a non-negative factorization results in a more difficult
+ problem than a simple unconstrained decomposition such as SVD (because...).
+ Closed-form solutions to constrained matrix factorization problems are
+ in general not known, so for the most part these problems are formulated
+ as optimization problems and solved iteratively.
+ Solving an optimization problem such as 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:bifactorization-optimization"
+
+\end_inset
+
+ efficiently with guarantees of convergence and with known error bounds
+ is in general difficult if not impossible.
+ If the problem can be converted to a convex optimization it may become
+ tractable.
+ Several techniques may be used including 'relaxation' to a convex norm
+ (substituting a convex norm for a non-convex norm), and alternately optimizing
+ one matrix while holding the others constant.
+\end_layout
+
+\begin_layout Subsubsection
+Lagrange Multipliers
+\end_layout
+
+\begin_layout Standard
+A common approach to incorporating equality and inequality constraints with
+ an optimization problem such as 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:bifactorization-optimization"
+
+\end_inset
+
+ is to reformulate the problem with additional variables, one for each constrain
+t.
+ This new formulation is the Lagrangian dual problem and the new variables
+ are analogous to Lagrange multipliers.
+ For convex optimization problems the solution to the Lagrange dual problem
+ may be the exact solution to the original, or primal, problem.
+ The dual solution is at least a lower bound on the solution to the primal
+ problem.
+\end_layout
+
+\begin_layout Subsubsection
+Multiplicative Updates (THOMAS?)
+\end_layout
+
+\begin_layout Standard
+show how to re-write equation as multiplicative update
+\end_layout
+
+\begin_layout Subsection
+Data Preparation
+\end_layout
+
+\begin_layout Standard
+doubling, z-scoring
+\end_layout
+
+\begin_layout Standard
+\begin_inset Note Comment
+status open
+
+\begin_layout Plain Layout
+gene expression subject count: 248 
+\end_layout
+
+\begin_layout Plain Layout
+gene expression feature count: 3550 
+\end_layout
+
+\begin_layout Plain Layout
+image data subject count: 248 
+\end_layout
+
+\begin_layout Plain Layout
+image data feature count: 6642 
+\end_layout
+
+\begin_layout Plain Layout
+86 subjects have label "metastasis" 
+\end_layout
+
+\begin_layout Plain Layout
+162 subjects have label "non-metastasis" 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Complete data sets of gene expression information and cell image feature
+ information were acquired from [] and [].
+\end_layout
+
+\begin_layout Standard
+The complete gene expression data set contained 24,481 features for 248
+ subjects.
+ This data was preprocessed to remove expression information related to
+ genes for which no name was provided.
+ Also, gene expression features with low value were removed, as were gene
+ expression features with low variance.
+ The final gene expression data set contained 3,550 features.
+ Finally the features were normalized to have zero mean and unit variance.
+\end_layout
+
+\begin_layout Standard
+The complete image feature data set contained 6,642 features for the same
+ 248 subjects.
+ No preprocessing was necessary for this data set.
+ All 6,642 features were used.
+ As with the gene expression data, the cell image features were normalized
+ to zero mean and unit variance.
+\end_layout
+
+\begin_layout Standard
+The gene expression and cell image data both contained negative feature
+ values.
+ In order to use multiplicative updates every entry in the initial matrix
+ must be positive.
+ In order to replace the negative values with positive ones each data matrix
+ was doubled along the columns.
+ Positive values were retained and negative values set to zero in one half
+ of the doubled matrix.
+ In the other half positive values were set to zero and negative values
+ had their sign reversed.
+\end_layout
+
+\begin_layout Part
+Experiments
+\end_layout
+
+\begin_layout Standard
+The goal of this project is to evaluate the use of non-negative matrix factoriza
+tion as a tool for uncovering structure in large datasets.
+ With this in mind, we have three goals:
+\end_layout
+
+\begin_layout Enumerate
+Given a dataset with patients, corresponding features, and labels, use non-negat
+ive matrix factorization to uncover features, latent and actual, most relevant
+ to patient lables.
+\end_layout
+
+\begin_layout Enumerate
+Given the same dataset and two different types of features, determine whether
+ a common underlying structure (or common basis, in mathematical terms)
+ in those features relates to patient survival.
+ 
+\end_layout
+
+\begin_layout Enumerate
+Perform spectral clustering on the dataset both in a naive fashion (using
+ all features) and using the matrix factorization-based feature selection
+ developed below.
+\end_layout
+
+\begin_layout Section
+Supervised Approach
+\end_layout
+
+\begin_layout Standard
+In this section, we use non-negative matrix factorization to uncover latent
+ and actual features related to 
+\end_layout
+
+\begin_layout Standard
+(OH!)
+\end_layout
+
+\begin_layout Subsection
+Non-negative Matrix Tri-factorization
+\end_layout
+
+\begin_layout Standard
+In traditional SVD, a matrix X is factored into three matrices 
+\begin_inset Formula $X=USV^{T}$
+\end_inset
+
+ in such a way that the columns of U and V are orthonormal and are typically
+ composed of mixed-sign entries.
+ Columns of U are a basis for the column space of X, and are combinations
+ of values that can be thought of as 'latent features' composed of combinations
+ of the original columns in such that they point in the direction of greatest
+ variance, next greatest, and so on for each column of U.
+ 
+\end_layout
+
+\begin_layout Standard
+In an analogous way, we would like to perform a non-negative matrix tri-factoriz
+ation that uncovers latent features that account for the greatest variation
+ in our data.
+ If X is composed of two concatenated feature sets, these latent features
+ will be linear combinations of the original features, thereby providing
+ insight into combinations of features that combine to predict variability
+ in the patient labels.
+\end_layout
+
+\begin_layout Standard
+In order to maintain consistency with other non-negative matrix factorization
+ literature, we will use the matrix labels F, S and G to represent the three
+ factors of X.
+ Each row of X corresponds to a subject, and each column corresponds to
+ a feature.
+ Since we are attempting to uncover features and feature combinations as
+ they are relevant to patient labels (and not to overall variability among
+ patients), we will fix the matrix F and use it to encode patient labels.
+ Unlike SVD, non-negative matrix factorization is non-unique, and because
+ we are drastically constraining the values of F we are actually computing
+ S and G^T in such a way that FSG^T most closely approximates X, rather
+ than factors it exactly.
+ Form this perspective, the factorization is turned into a minimization
+ problem, namely computing non-negative S and G in a way that minimizes
+ 
+\begin_inset Formula $||X-FSG^{T}||_{F}$
+\end_inset
+
+, where 
+\begin_inset Formula $||\cdot||_{F}$
+\end_inset
+
+is the Frobenius norm, or rooted sum of squared elements.
+ 
+\end_layout
+
+\begin_layout Standard
+Let X_1 and X_2 be the two subject by feature matrices with common subjects
+ and different feature sets, and let L be a vector of binary labels for
+ subjects.
+ We then create an n
+\backslash
+times2m matrix X = [X_1 X_2] as a concatenated subject by feature matrix.
+ Constructing a non-negative version of X using the method described above,
+ we double the columns of X and obtain the n
+\backslash
+times4m matrix X'.
+ Let F be a 2-column matrix such that entries in the first column of F in
+ rows where L is 1, and entries in the second column of F are 1 where L
+ is 0.
+ S is a matrix with 2 rows and k columns, where k is the number of latent
+ feature vectors to be discovered.
+ Finally, G is a 4m by k matrix such that eacy row corresponds to a non-negative
+ feature and each column corresponds to a latent feature to be discovered.
+ A visualization of the matrices can be seen in Figure ???.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/tri-factorization.png
+	width 5in
+	rotateOrigin centerTop
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Non-negative tri-factorization shematic.
+ X corresponds to the data matrix, F to enforced labels, and S and G are
+ learned matrices.
+ M1 and M2 correspond to the data from different sources that are concatenated
+ to create X.
+ N is the number of subjects, and k is the number of latent features in
+ G.
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Problem Formulation (incl multiplicative updates)
+\end_layout
+
+\begin_layout Standard
+Keeping in mind that we desire sparse S and G, the problem described above
+ can be written as the following:
+\end_layout
+
+\begin_layout Standard
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\begin_inset Formula 
+\begin{equation}
+\min_{S\geq0,G\geq0}\frac{1}{2}(||X-FSG^{T}||_{F}^{2}+\lambda_{S}\sum_{j}||s_{j}||_{1}^{2}+\lambda_{S}\sum_{j'}||g_{j'}||_{1}^{2})\label{eq:tri-minimization}
+\end{equation}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+where both X and F are fixed.
+ The two additional 1-norm terms serve to enforce sparsity on S and G, and
+ represent a sum of the absolute values of each entry of each column, all
+ summed and then the result squared.
+ Since entries in S and G are non-negative, the terms represent the sum
+ of all elements of S and G, respectively.
+ Sparsity is ideally computed using the so-called 0-norm, which is the count
+ of non-zero elements of a matrix.
+ The 1-norm is a commonly used relaxation of the 0-norm, which is the closest
+ norm to the 0-norm that is also convex, and can therefore be optimized
+ using convex optimization methods.
+\end_layout
+
+\begin_layout Standard
+Following a similar formulation in 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Zhang:Bioinformatics:2011"
+
+\end_inset
+
+, The objective function corresponding to 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "eq:tri-minimization"
+
+\end_inset
+
+ can be written 
+\begin_inset Formula 
+\begin{equation}
+\mathcal{F}(S,G)=\frac{1}{2}(||X-FSG^{T}||_{F}^{2}+\lambda_{S}\sum e_{1\times2}SS^{T}e_{2\times1}^{T}+\lambda_{G}\sum e_{1\times k}GG^{T}e_{k\times1}^{T})
+\end{equation}
+
+\end_inset
+
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+ with the constraints 
+\begin_inset Formula $G\geq0$
+\end_inset
+
+ and 
+\begin_inset Formula $S\geq0$
+\end_inset
+
+.
+ The latter two terms again represent the sum of entries S and G squared,
+ and e is a vector of 1s.
+\end_layout
+
+\begin_layout Standard
+Formula ?? contains two variables and is therefore not convex in both, but
+ only in each individually.
+ To achieve convexity and optimize ???, we fix either S or G, calculate
+ the other, and iterate until a convergence criteria is met.
+ In order to construct an method of calculating S and G independently, we
+ first construct the Legrange 
+\begin_inset Formula $\mathcal{L}$
+\end_inset
+
+.
+ Let 
+\backslash
+phi_i_j and 
+\backslash
+psi_i_j be the Legrange multipliers for the constraints S
+\backslash
+geq 0 and G
+\backslash
+geq 0, respectively.
+ Then 
+\end_layout
+
+\begin_layout Standard
+
+\backslash
+mathcal{L} (S,G) = 
+\backslash
+mathcal{F} + Tr(
+\backslash
+Phi S^T) + Tr(
+\backslash
+Psi G^T)
+\end_layout
+
+\begin_layout Standard
+where 
+\backslash
+Phi = [
+\backslash
+phi_i_j] and 
+\backslash
+Psi = [
+\backslash
+psi_i_j].
+ The partial derivatives of 
+\backslash
+mathcal{L} with respect to S and G are:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\frac{\partial\mathcal{L}}{\partial S}=-F^{T}XG+F^{T}FSG^{T}G+\lambda_{S}e_{2\times2}S+\Phi
+\]
+
+\end_inset
+
+ 
+\end_layout
+
+\begin_layout Standard
+
+\family roman
+\series medium
+\shape up
+\size normal
+\emph off
+\bar no
+\strikeout off
+\uuline off
+\uwave off
+\noun off
+\color none
+\begin_inset Formula 
+\[
+\frac{\partial\mathcal{L}}{\partial G}=-X^{T}FS+GS^{T}F^{T}FS+\lambda_{G}e_{k\times k}G+\Psi
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Based on the KKT conditions 
+\backslash
+phi_i_j S_i_j = 0 and 
+\backslash
+psi_i_j G_i_j = 0, we get the following equations for S_i_j and G_i_j:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+(-F^{T}XG)_{i}{}_{j}S_{i}{}_{j}+(F^{T}SG^{T}G+\lambda_{S}e_{2\times2}S)_{i}{}_{j}S_{i}{}_{j}=0
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+(-X^{T}FS)_{i}{}_{j}G_{i}{}_{j}+(GS^{T}F^{T}FS+\lambda_{G}e_{k\times k}G)_{i}{}_{j}G_{i}{}_{j}=0
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Moving the first term of each to the right side of the equal sign and dividing
+ by the first part of the second term gives the following update rules,
+ which are used iteratively:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+S_{i}{}_{j}\leftarrow S_{i}{}_{j}\frac{(F^{T}XG)_{i}{}_{j}}{(F^{T}SG^{T}G+\lambda_{S}e_{2\times2}S)_{i}{}_{j}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+G_{i}{}_{j}\leftarrow G_{i}{}_{j}\frac{X^{T}FS}{(GS^{T}F^{T}FS+\lambda_{G}e_{k\times k}G)_{i}{}_{j}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+If the values are initialized as non-negative, the update rules are guaranteed
+ to be non-increasing and are only stationary if S and G are at a stationary
+ point (see Zhang 2011 supplementary material for a proof).
+ In practice, a small epsilon is added to the denominator of each update
+ rule to preclude devision by zero.
+ Additionally, F is column-normalized and G is row-normalized at each iteration
+ so that S absorbs the scaling from both matrices.
+\end_layout
+
+\begin_layout Standard
+As the update rules are multiplicative and each new value of S and G is
+ a function of past values, S and G must first be initialized.
+ The matrix F contains patient labels and can be thought of as an indicator
+ matrix for clustering patients.
+ Correspondingly, the matrix G can be thought of as clustering features,
+ which correspond to columns of X.
+ With this in mind, we initialize G using k-means on columns of X, where
+ the number of clusters used is the number of columns (latent features)
+ in G.
+ The resulting matrix is an n
+\backslash
+times k indicator matrix of feature clusters in which each column has a
+ single 1 representing cluster membership and all other entries are 0.
+ The initial G is set to this matrix.
+ S is a scaling matrix and is initialized to random numbers between 0 and
+ 1.
+\end_layout
+
+\begin_layout Subsection
+Feature Selection
+\end_layout
+
+\begin_layout Standard
+As mentioned above, rows of F indicate an enforced clustering on subjects
+ corresponding to clinical patient labels, in which each row contains a
+ zero and nonzero entry (not 1 because of column-wise scaling).
+ Group membership can be determined by assigning a subject to the column-label
+ with corresponding highest value in the subject's row in F.
+ Since F is predetermined and fixed, this merely represents a change in
+ interpretation from label to cluster membership.
+ 
+\end_layout
+
+\begin_layout Standard
+Once S and G are learned, we can consider the 2
+\backslash
+times m product SG^T, where m is the total number of non-negative features.
+ This can be thought of as an indicator matrix similar to F, except that
+ each feature is assigned to a feature cluster.
+ Unlike the random initialization of G, in which features were clustered
+ without taking into account patient labels, the learned SG^T represents
+ feature cluster membership as they relate to the patient labels.
+ In other words, each (normalized) column of SG^T represents a posterior
+ probability of that feature being relevant to classifying a patient in
+ one label or the other.
+ 
+\end_layout
+
+\begin_layout Standard
+When considered as probabilities, it is reasonable to state that the higher
+ a probability corresponding to one label is, the stronger the corresponding
+ feature will be in predicting class membership.
+ On the other hand, for feature in which both probabilities are similar
+ (both roughly 0.5), the predictive value of that feature is relatively small.
+\end_layout
+
+\begin_layout Standard
+In order to test this, we constructed a dataset using the Wisconsin Diagnostic
+ Breast Cancer dataset (CITE), which includes 30 real-valued image features
+ (10 features each from 3 cells) for 569 subjects.
+ We used features from two cells, making 20 features total.
+ Features were standardized, and for comparision purposes we added 10 additional
+ random features with entries drawn from a normal distribution.
+ After doubling the matrix size to make every entry positive (as described
+ above), the final size of the data matrix was 569 by 60.
+ Subjects were labeled as either benign or malignant, indicating the status
+ of subjets' cancer cells from which image features were derived.
+\end_layout
+
+\begin_layout Standard
+As indicated above, F was created by normalizing a binary indicator matrix
+ for feature labels.
+ S was initialized randomly, and G was initialized by choosing the k-means
+ clustering result with the lowest SSE over 10 runs.
+ k was chosen to be 29, which corresponds to the number of singular values
+ of the data matrix corresponding to 90% of the variance of the data matrix.
+\end_layout
+
+\begin_layout Standard
+The results of the tri-factorization are shown in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Tri-factorization-of-Wisconsin"
+
+\end_inset
+
+.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/tri-factorization-wisconsin-results.png
+	width 5in
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Tri-factorization of modified Wisconsin Diagnostic Breast Cancer dataset
+ X into F, S and G, respectively.
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:Tri-factorization-of-Wisconsin"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Class labels in F are readily apparent.
+ As desired, G is sparse and S approximately so, with only a few values
+ being relatively very high.
+ It is not immediately apparent how the features of W correspond to the
+ labels in F, however.
+ Multiplying S and G^T gives a much clearer picture, shown in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:wisconsin-SG"
+
+\end_inset
+
+.
+ It is readily apparent that values corresponding to actual cells typically
+ show much stronger contrast between one class and another than the random
+ data.
+ It appears that values corresponding to positive feature values (or, the
+ high-end of values once features are standardized) are are predictive of
+ the first class, whereas lower/negative values tend to be predictive of
+ the second class.
+ Of course, since there are only two classes, any extreme value is by default
+ predictive of membership in both classes.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement H
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/tri-factorization-wisconsin-results-SG.png
+	width 5in
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+SG^T from the factorization of the modified Wisconsin Diagnostic Breast
+ Cancer dataset.
+ Columns 1-20 correspond to 10 positive and 10 negative features from cell
+ 1.
+ Features 21-30 and 41-50 are positive and negative features from cell 2.
+ Features 31-40 and 51-60 are positive and negative random features drawn
+ from a normal distribution with mean 1 and standard deviation 0.
+ Note that columns are not normalized in this case.
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:wisconsin-SG"
+
+\end_inset
+
+
+\end_layout
+
+\end_inset
+
+Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:SG-ratios"
+
+\end_inset
+
+ displays ratios of the first to the second row as well as the converse.
+ Large values in both cases correspond to the highest power of features
+ to differentiate between patient classes.
+ Several aspects of this figure are worth noting.
+ First, entries corresponding to noise features show consistently low ratios
+ (close to 1).
+ Ratios between corresponding positive and negative features from Cell 2
+ are both high (in entries 21-30 and 41-50), which suggests that higher-than-ave
+rage values predict one class and lower-than-average of the same feature
+ predict the other class.
+ Finally, features from Cell 2 (entries 21-30 and 41-50) appear to be generally
+ stronger predictors than features from Cell 1 (entries 1-20).
+\end_layout
+
+\begin_layout Standard
+In order to validate the applicability of features with high ratios in Figure
+ 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:SG-ratios"
+
+\end_inset
+
+, we compare the top values from the top and bottom ratios to the features
+ with highest information gain with respect to class labels.
+ The top features from Row 1/Row 2 are features 23, 24, 21, 28 and 4, in
+ that order.
+ These correspond to features 14, 11, 13, 4 and 18 in the mixed-sign X'=[X1
+ X2] matrix of cell features.
+ The top features in Row 2 / Row 1 are numbers 43, 41, 48, 47 and 44, which
+ correspond to features 13, 11, 18, 17 and 14 in X'.
+ Calculating the information gain with respect to patient class, the top
+ six features are 13, 14, 11, 18, 4 and 17, all of which are in the top
+ feature ratios from Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:SG-ratios"
+
+\end_inset
+
+.
+ Thus, non-negative matrix factorization with a class-label matrix F produces
+ a SG^T matrix that can readily detect which features are relevant to class
+ labels.
+ 
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/SG-ratios.png
+	width 5in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Ratios between rows 1 and 2 of SG^T resulting from tri-matrix factorization.
+\end_layout
+
+\end_inset
+
+.
+ 
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:SG-ratios"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Subsection
+Feature Interaction
+\end_layout
+
+\begin_layout Standard
+\begin_inset Float figure
+placement h
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/wisconsin_tri_fact_X_correlation_matrix.png
+	width 3in
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figures/wisconsin_tri_fact_Gt_correlation_matrix.png
+	width 3in
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+\begin_inset Caption
+
+\begin_layout Plain Layout
+(some spots in the RIGHT matrix that aren't in the left)
+\end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:X-and-G-correlations"
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Section
+Unsupervised Approach
+\end_layout
+
+\begin_layout Standard
+find latent features that predict patient outcome
+\end_layout
+
+\begin_layout Standard
+optional: find relationship between two datasets
+\end_layout
+
+\begin_layout Standard
+-non-negative, sparse
+\end_layout
+
+\begin_layout Subsection
+Bifactorization with additional constraints
+\end_layout
+
+\begin_layout Subsection
+Comodules??
+\end_layout
+
+\begin_layout Standard
+Zhang 2011
+\end_layout
+
+\begin_layout Section
+Clustering (JOSH WRITE INTRO?)
+\end_layout
+
+\begin_layout Subsection
+Shared Nearest Neighbor Similarity
+\end_layout
+
+\begin_layout Standard
+Some clustering algorithms operate in feature-space, whereas others require
+ a graph-based representation of the data in the form of an adjacency matrix.
+ Consider each observation as a node in a graph.
+ An adjacency matrix A then consists of entries A_i_j thatcorrespond to
+ some measure of 
+\begin_inset Quotes eld
+\end_inset
+
+similarity
+\begin_inset Quotes erd
+\end_inset
+
+ between observations/nodes i and j in the graph.
+ In order to construct A, we must use a method that creates a similarity
+ measure between observations using their location in feature-space.
+ In low-dimensional space, Euclidean distance is often used as a similarity
+ measure.
+ As the number of dimensions grows, however, all points become 
+\begin_inset Quotes eld
+\end_inset
+
+closer
+\begin_inset Quotes erd
+\end_inset
+
+ and all pairwise distance become more alike and correspondingly less informatio
+n-bearing regarding pairwise observation similarity.
+ 
+\end_layout
+
+\begin_layout Standard
+One method for evaluating the similarity of points is to look at the collection
+ of points surrounding each in feature space.
+ The idea is that if two points have a similar feature 
+\begin_inset Quotes eld
+\end_inset
+
+neighborhood,
+\begin_inset Quotes erd
+\end_inset
+
+ they will then be similar to each other.
+ Using several nearest neighbors makes the Euclidean distance metric more
+ robust to high dimensionality.
+ The adjacency matrix is then comprised of the number of 
+\begin_inset Quotes eld
+\end_inset
+
+neareset neighbors
+\begin_inset Quotes erd
+\end_inset
+
+ two features have in common.
+ The benefit of the SNN method is that it is relative, that is, it constructs
+ a definition of similarity that is relatively robust in the face of high
+ dimensionality and variations in density throughout the feature space.
+ 
+\end_layout
+
+\begin_layout Standard
+In order to construct a shared nearest neighbor adjacency matrix for subjects,
+ pairwise Euclidean distance is first computed using standardizes features.
+ For each subject, distances to other subjects are ranked and the closest
+ N? subjects to that subject are identified.
+ Once each subject has a set of N? 
+\begin_inset Quotes eld
+\end_inset
+
+nearest neighbors,
+\begin_inset Quotes erd
+\end_inset
+
+ the SNN similarity measure between two subjects i and j, A_i_j, is calculated
+ as the cardinality of the pairwise interseections between two subjects'
+ nearest neighbor sets.
+ N? is user-specified and controlls the sparsity of the adjacency matrix
+ and was chosen to be 30 in our calculations.
+\end_layout
+
+\begin_layout Subsection
+Spectral Clustering
+\end_layout
+
+\begin_layout Standard
+Clustering is a very popular unsupervised learning technique for finding
+ related groups in large data sets.
+ Classical clustering methods include heirarchical clustering and k-means
+ clustering.
+ Heirarchical clustering assigns group labels based on some distance measure
+ between observations, grouping nearby observations together.
+ The k-means method is similar in that it uses a distance measure between
+ observations, but rather than using all pairwise distances between observations
+ this method tries to optimally locate some number, k, of cluster centers
+ and assign each observation to the nearest cluster center.
+ Because these methods are fundamentally based on a distance measurement
+ they may not be good choices for high-dimensional data, where distance
+ between observations often approaches a constant.
+ 
+\end_layout
+
+\begin_layout Standard
+Spectral clustering methods are able to operate on a more general notion
+ of similarity between observations, although choosing an appropriate similarity
+ measure is important to arriving at reasonable results.
+ The basic method is to treat the data set as a graph with observations
+ as vertices and similarity between observations as edge weights, calculate
+ the corresponding adjacency matrix and the related graph Laplacian matrix
+ 
+\begin_inset Formula $L$
+\end_inset
+
+, and cluster a subset of eigenvectors of 
+\begin_inset Formula $L$
+\end_inset
+
+.
+ Once a similarity measure 
+\begin_inset Formula $\phi$
+\end_inset
+
+ is chosen the corresponding adjacency matrix is calculated where each element
+ 
+\begin_inset Formula $A_{ij}$
+\end_inset
+
+ is the similarity between observations 
+\begin_inset Formula $i$
+\end_inset
+
+ and 
+\begin_inset Formula $j$
+\end_inset
+
+:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+A_{ij} & =\phi(i,j)\label{eq:adjacency-matrix}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Next a graph Laplacian is calculated using the adjacency matrix 
+\begin_inset Formula $A$
+\end_inset
+
+ and the diagonal matrix of row sums of 
+\begin_inset Formula $A$
+\end_inset
+
+, called 
+\begin_inset Formula $D$
+\end_inset
+
+ here.
+ At this point another choice must be made between three graph Laplacians:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align}
+L_{U} & =D-A\label{eq:unnormalized-graph-laplacian}\\
+L_{sym} & =D^{-1/2}L_{U}D^{-1/2}\label{eq:normalized-graph-laplacian}\\
+L_{rw} & =D^{-1}L_{U}\label{eq:random-walk-graph-laplacian}
+\end{align}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+These graph Laplacian matrices are called, respectively, 'unnormalized',
+ 'normalized symmetric', and 'normalized random walk'.
+ The tutorial 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "von2007tutorial"
+
+\end_inset
+
+ suggests using the distribution of degrees in the adjacency matrix as a
+ deciding factor.
+ If the distribution of degrees is narrow then the three graph Laplacians
+ are likely to give similar clustering results.
+ If the distribution of degrees is broad the normalized graph Laplacians
+ may be better choices.
+ Futhermore the normalized random walk graph Laplacian may be the better
+ choice.
+ 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "von2007tutorial"
+
+\end_inset
+
+ gives several supporting arguments for this choice.
+\end_layout
+
+\begin_layout Standard
+Finally compute the 
+\begin_inset Formula $k$
+\end_inset
+
+ smallest eigenvalues 
+\begin_inset Formula $v_{n}$
+\end_inset
+
+ and corresponding eigenvectors 
+\begin_inset Formula $u_{n}$
+\end_inset
+
+ of the chosed graph Laplacian, construct a matrix 
+\begin_inset Formula $C$
+\end_inset
+
+ with columns 
+\begin_inset Formula $u_{n}$
+\end_inset
+
+, and cluster the rows of 
+\begin_inset Formula $C$
+\end_inset
+
+ (using a method such as k-means) to assign cluster labels.
+\end_layout
+
+\begin_layout Subsection
+Feature Selection???
+\end_layout
+
+\begin_layout Standard
+Look at clusters and compute entropy vs ALL measures
+\end_layout
+
+\begin_layout Part
+Discussion
+\end_layout
+
+\begin_layout Section
+This is the section about math
+\end_layout
+
+\begin_layout Standard
+The formulation of the Network-Regularized Multiple NMF objective function:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+F(W,H_{1},H_{2}) & =||X_{1}-WH_{1}||_{F}^{2}+||X_{2}-WH_{2}||_{F}^{2}\\
+ & -\lambda_{1}Tr(H_{2}AH_{2}^{T})-\lambda_{2}Tr(H_{1}BH_{2}^{T})\\
+ & +\gamma_{1}||W||_{F}^{2}+\gamma_{2}(\sum_{j}||h_{j}||_{1}^{2}+\sum_{j'}||h_{j'}||_{1}^{2})\\
+ & +\lambda_{3}||H_{1}^{T}H_{2}-B||_{F}^{2}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+The formulation for our problem:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+F(H_{1},H_{2}) & =||X_{1}-H_{1}^{T}H_{2}||_{F}^{2}+||X_{2}-H_{1}^{T}H_{2}||
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+These are the variables we are using.
+ 
+\begin_inset Formula $X_{1}$
+\end_inset
+
+ is a subjects x (2x) image features.
+ 
+\begin_inset Formula $X_{2}$
+\end_inset
+
+ is subjects x (2x) gene expression.
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+\hat{X_{1}} & =\begin{bmatrix}1 & 1 & -1 & 1\\
+1 & -1 & -1 & -1\\
+1 & -1 & 1 & -1
+\end{bmatrix}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+X_{1} & =\begin{bmatrix}\begin{bmatrix}1 & 1 & 0 & 1\\
+1 & 0 & 0 & 0\\
+1 & 0 & 1 & 0
+\end{bmatrix} & \begin{bmatrix}0 & 0 & 1 & 0\\
+0 & 1 & 1 & 1\\
+0 & 1 & 0 & 1
+\end{bmatrix}\end{bmatrix}
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\begin{align*}
+F(W,H_{1},H_{2}) & ={\displaystyle \sum_{I=1,2}}||X_{I}-WH_{I}||_{F}^{2}\\
+\\
+\end{align*}
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+Multiplicative updates for bi-factorization:
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\min_{W\geq0}\sum_{I=1,2}||X_{I}-WH_{I}||_{F}^{2}+\gamma_{1}||W||^{2}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+w_{ij}\leftarrow w_{ij}\frac{(W_{1}H_{1}^{T}+X_{2}H_{2}^{T})_{ij}}{(WH_{1}H_{1}^{T}+WH_{2}H_{2}^{2}+\frac{\gamma_{1}}{2}W_{ij}}
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+\min_{H_{1},H_{2}\geq0}\sum_{I=1,2}||X_{I}-WH_{I}||_{F}^{2}-\lambda_{1}Tr(H_{2}AH_{2}^{T})-\lambda_{2}Tr(H_{1}BH_{2}^{T})+\gamma_{2}(\sum_{j}||h_{j}||_{1}^{2}+\sum_{j'}||h_{j'}||_{1}^{2})
+\]
+
+\end_inset
+
+
+\begin_inset Formula 
+\[
+h_{ij}^{1}\leftarrow h_{ij}^{1}\frac{(W^{T}X_{1}+\frac{\lambda_{2}}{2}H_{2}B^{T})_{ij}}{[(W^{T}W+\gamma_{2}e_{k\times k})H_{2}]_{ij}}
+\]
+
+\end_inset
+
+ 
+\begin_inset Formula 
+\[
+h_{ij}^{2}\leftarrow h_{ij}^{2}\frac{(W^{T}X_{2}+\lambda_{1}H_{2}A+\frac{\lambda_{2}}{2}H_{1}B^{T})_{ij}}{[(W^{T}W+\gamma_{2}e_{k\times k})H_{2}]_{ij}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+tri-matrix factorization
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+\min_{F\geq0,S\geq0,G\geq0}\frac{1}{2}(||X-FSG^{T}||_{F}^{2}+\lambda_{F}||F||_{1}^{2}+\lambda_{S}||S||_{1}^{2}+\lambda_{G}||G||_{1}^{2})
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+F_{ij}\leftarrow F_{ij}\frac{(XGS^{T})_{ij}}{(FSG^{T}GS^{T})_{ij}+\lambda_{F}||F||_{1}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+S_{ij}\leftarrow S_{ij}\frac{(F^{T}XG)_{ij}}{(F^{T}FSG^{T}G)_{ij}+\lambda_{S}||S||_{1}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset Formula 
+\[
+G_{ij}\leftarrow G_{ij}\frac{(X^{T}FS)_{ij}}{(GS^{T}F^{T}FS)_{ij}+\lambda_{G}||G||_{1}}
+\]
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
+\begin_inset CommandInset bibtex
+LatexCommand bibtex
+bibfiles "Sente References"
+options "plain"
+
+\end_inset
+
+
+\end_layout
+
+\end_body
+\end_document
