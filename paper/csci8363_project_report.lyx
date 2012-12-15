@@ -177,21 +177,23 @@ cause
 
  is expressed in several of the collected features.
  For example, the presence of a specific gene can give rise to the synthesis
- of many proteins (SOURCE?).
- Similarly, a disease may give rise to a collection of phenotypes.
+ of many proteins.
+ Similarly, a single disease may give rise to a collection of phenotypes.
  One way to model this relationship is to posit a latent causal or explanatory
- structure underlying the measurable data (see FIGURE ?).
+ structure underlying the measurable data (see Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:svd"
+
+\end_inset
+
+).
  Discovering hidden explanatory features can potentially lead to a simple
  explanation for various features, as well as drastically reduce the dimensional
 ity of the data.
  Though the domain is drastically different, a simliar approach is often
- used to uncover semantic cotent underlying language data (see e.g.
- SOURCE?).
+ used to uncover semantic content underlying language data.
  
-\end_layout
-
-\begin_layout Standard
-also relationships between different data types
 \end_layout
 
 \begin_layout Subsection
@@ -200,31 +202,31 @@ Matrix Decomposition
 
 \begin_layout Standard
 To model the relationship between latent variables and measurable features,
- we can assume that each feature is a linear combination of some number
- of latent variables.
+ we assume that each feature is a linear combination of some number of latent
+ variables.
  Mathematically, the features measured for each patient can be written as
  a vector 
 \begin_inset Formula $\mathbf{x}$
 \end_inset
 
- , where
+ , where 
 \begin_inset Formula $\mathbf{X}=[x_{1}x_{2}...x_{n}]^{T}$
 \end_inset
 
  is an 
-\begin_inset Formula $m\times n$
+\begin_inset Formula $n\times m$
 \end_inset
 
  matrix with 
 \begin_inset Formula $n$
 \end_inset
 
- features and 
+ patients and 
 \begin_inset Formula $m$
 \end_inset
 
- patients.
- In order to uncover the latent factors, we can decompose 
+ features.
+ In order to uncover the latent factors, we decompose 
 \begin_inset Formula $X$
 \end_inset
 
@@ -246,7 +248,7 @@ To model the relationship between latent variables and measurable features,
 \end_inset
 
  is 
-\begin_inset Formula $m\times k$
+\begin_inset Formula $n\times k$
 \end_inset
 
  matrix whose component vectors span the column space of 
@@ -266,12 +268,16 @@ To model the relationship between latent variables and measurable features,
 \begin_inset Formula $W$
 \end_inset
 
- with weights from
+ with weights from 
 \begin_inset Formula $H$
 \end_inset
 
 .
- W provides the 
+ 
+\begin_inset Formula $W$
+\end_inset
+
+ provides the 
 \begin_inset Formula $k$
 \end_inset
 
@@ -300,8 +306,8 @@ sources
 \begin_inset Formula $X$
 \end_inset
 
-, and the quality of the approximation is determined by partially by the
- choice of 
+, and the quality of the approximation is determined partially by the choice
+ of 
 \begin_inset Formula $k$
 \end_inset
 
@@ -351,9 +357,16 @@ latent source features
  that combine to explain feature combinations manifest in the data.
  An optional orthogonality constraint can be placed on source vectors.
  Additionally, a lower number of source vectors can be used to produce an
- approximation of the feature matrix, effectively reducing the dimensionalty
- of the data.
+ approximation of the feature matrix, resulting in an approximation of the
+ data matrix with reduced dimensionality.
 \end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:svd"
 
 \end_inset
 
@@ -371,7 +384,7 @@ Matrix factorization is not inherently unique, so an important question
 \begin_inset Formula $X$
 \end_inset
 
- into
+ into 
 \begin_inset Formula $H$
 \end_inset
 
@@ -422,7 +435,11 @@ Matrix factorization is not inherently unique, so an important question
 \end_inset
 
 .
- From the perspective of uncovering latient sources, however, SVD presents
+ 
+\end_layout
+
+\begin_layout Standard
+From the perspective of uncovering latent sources, however, SVD presents
  several problems.
  First, it may well be the case that latent sources are not actually orthogonal.
  In this case, the 
@@ -437,7 +454,7 @@ Matrix factorization is not inherently unique, so an important question
 \end_inset
 
 .
- A combination of positive and negative coeffients create both additive
+ A combination of positive and negative coefficients create both additive
  and subtractive components of each feature, making it very difficult to
  interpret how latent sources combine to create features.
  Lastly, SVD produces results which are dense (few 0s in the components
@@ -486,7 +503,8 @@ One approach to creating easily interpretable latent sources is to introduce
 
 , which gives a more intuitive decomposition of the data matrix.
  Moreover, in situations where data is naturally nonnegative (such as image
- data), negative components may not be readily interpretable.
+ data), negative components may not be readily interpretable and non-negative
+ decomposition is preferred.
  
 \end_layout
 
@@ -685,7 +703,8 @@ where
 \end_inset
 
  norm gives a convex optimiation problem while still enforcing sparsity.
- 
+ There are many well-studied algorithms for efficiently solving convex optimizat
+ion problems.
 \end_layout
 
 \begin_layout Subsubsection
@@ -697,10 +716,11 @@ The general problem of factoring a matrix into a product of two or more
  matrices is under-specified even with additional constraints such as non-negati
 vity.
  In fact, requiring a non-negative factorization results in a more difficult
- problem than a simple unconstrained decomposition such as SVD (because...).
- Closed-form solutions to constrained matrix factorization problems are
- in general not known, so for the most part these problems are formulated
- as optimization problems and solved iteratively.
+ problem than a simple unconstrained decomposition such as SVD because in
+ such cases no closed-form solution exists and results are not guaranteed
+ to be unique.
+ For the most part these problems are formulated as optimization problems
+ and solved iteratively.
  Solving an optimization problem such as 
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -709,12 +729,13 @@ reference "eq:bifactorization-optimization"
 \end_inset
 
  efficiently with guarantees of convergence and with known error bounds
- is in general difficult if not impossible.
+ is in general difficult.
  If the problem can be converted to a convex optimization it may become
  tractable.
  Several techniques may be used including 'relaxation' to a convex norm
  (substituting a convex norm for a non-convex norm), and alternately optimizing
  one matrix while holding the others constant.
+ The factorization methods used in this paper utilize both of these techniques.
 \end_layout
 
 \begin_layout Subsubsection
@@ -736,8 +757,8 @@ t.
  are analogous to Lagrange multipliers.
  For convex optimization problems the solution to the Lagrange dual problem
  may be the exact solution to the original, or primal, problem.
- The dual solution is at least a lower bound on the solution to the primal
- problem.
+ Even when the primal and dual solutions are not identical the dual solution
+ is at least a lower bound on the solution to the primal problem.
 \end_layout
 
 \begin_layout Subsection
@@ -779,18 +800,29 @@ image data feature count: 6642
 
 \begin_layout Standard
 Two datasets were used in the investigations below.
- The first, which we term the Gene-Image dataset, consists of gene expression
- information and cell image feature information from cancerous cells and
- were acquired from 
+ The first, which we term the Gene-Image dataset, consists of both gene
+ expression information and cell image feature information from cancerous
+ cells.
+ The gene and image components were acquired from 
 \begin_inset CommandInset citation
 LatexCommand cite
-key "deMJ:TheNewEnglandJournalOfMedicine:2002,Beck:SciTranslMed:2011"
+key "deMJ:TheNewEnglandJournalOfMedicine:2002"
 
 \end_inset
 
-.
- The complete gene expression dataset contains 24,481 features for 248
- subjects.
+ and 
+\begin_inset CommandInset citation
+LatexCommand cite
+key "Beck:SciTranslMed:2011"
+
+\end_inset
+
+, respectively.
+ 
+\end_layout
+
+\begin_layout Standard
+The complete gene expression dataset contains 24,481 features for 248 subjects.
  This data was preprocessed to remove expression information related to
  genes for which no name was provided.
  Also, gene expression features with absolute values lower than the 60th
@@ -805,21 +837,22 @@ The complete image feature data set contains 6,642 features for the same
  248 subjects.
  All 6,642 features were used.
  As with the gene expression data, the cell image features were standardized
- to zero mean and unit variance
+ to zero mean and unit variance.
 \end_layout
 
 \begin_layout Standard
 The gene expression and cell image data both contained negative feature
- values, even prior to normalization.
- In order to use multiplicative updates every entry in the matrix to be
+ values.
+ In order to use multiplicative updates, every entry in the matrix to be
  factored must be positive.
- In order to replace the negative values with positive ones each data matrix
- was doubled along the columns following standardization as described above.
+ After column-wise standardization, each data matrix was doubled along the
+ columns to impose non-negativity as described above.
  
 \end_layout
 
 \begin_layout Standard
-Subjects were also 
+Each patient was labeled as having cancer which had metastasized or not,
+ and duration of patient survival following treatment onset was also included.
 \end_layout
 
 \begin_layout Standard
@@ -830,7 +863,9 @@ The second dataset is called the Wisconsin Diagnostic Breast Cancer dataset
  Wolberg at the University of Wisconsin.
  The data consists of 10 image features extracted from each of three cells
  from 569 subjects.
- 
+ Only two cells (20 total features) were used, and the feature matrix was
+ normalized and made non-negative.
+ Each patient was labeled as having benign or malignant tumors.
 \end_layout
 
 \begin_layout Part
@@ -838,26 +873,26 @@ Experiments
 \end_layout
 
 \begin_layout Standard
-The goal of this project is to evaluate the use of non-negative matrix factoriza
-tion as a tool for uncovering structure in large datasets.
- With this in mind, we have three goals:
+The goal of this project was to evaluate the use of non-negative matrix
+ factorization as a tool for uncovering structure in large datasets.
+ With this in mind, we had three goals:
 \end_layout
 
 \begin_layout Enumerate
-Given a dataset with patients, corresponding features, and labels, use non-negat
-ive matrix factorization to uncover features, latent and actual, most relevant
- to patient lables.
+Given a dataset with patients, corresponding features, and labels, to use
+ non-negative matrix factorization to uncover features, latent and actual,
+ most relevant to patient labels.
 \end_layout
 
 \begin_layout Enumerate
-Given the same dataset and two different types of features, determine whether
- a common underlying structure (or common basis, in mathematical terms)
- in those features relates to patient survival.
+Given the same dataset and two different types of features, to determine
+ whether a common underlying structure (or common basis, in mathematical
+ terms) in those features relates to patient survival.
  
 \end_layout
 
 \begin_layout Enumerate
-Perform spectral clustering on the dataset both in a naive fashion (using
+To perform spectral clustering on the dataset both in a naive fashion (using
  all features) and using the matrix factorization-based feature selection
  developed below.
 \end_layout
@@ -867,8 +902,9 @@ Supervised Approach
 \end_layout
 
 \begin_layout Standard
-In this section, we use non-negative matrix factorization to uncover features
- and feature combinations related to 
+In this section, we used non-negative matrix factorization to uncover features
+ and feature combinations related to patient tumor category.
+ 
 \end_layout
 
 \begin_layout Subsection
@@ -876,7 +912,11 @@ Non-negative Matrix Tri-factorization
 \end_layout
 
 \begin_layout Standard
-In traditional SVD, a matrix X is factored into three matrices 
+In traditional SVD, a matrix 
+\begin_inset Formula $X$
+\end_inset
+
+ is factored into three matrices 
 \begin_inset Formula $X=USV^{T}$
 \end_inset
 
@@ -898,9 +938,9 @@ In traditional SVD, a matrix X is factored into three matrices
 \end_inset
 
 , and are combinations of values that can be thought of as 'latent features'
- composed of combinations of the original columns in such that they point
- in the direction of greatest variance, next greatest, and so on for each
- column of 
+ composed of combinations of the original columns such that they point in
+ the direction of greatest variance, next greatest, and so on for each column
+ of 
 \begin_inset Formula $U$
 \end_inset
 
@@ -909,22 +949,21 @@ In traditional SVD, a matrix X is factored into three matrices
 \end_layout
 
 \begin_layout Standard
-In an analogous way, we would like to perform a non-negative matrix tri-factoriz
-ation that uncovers latent features that account for the greatest variation
- in our data.
+In an analogous way, we perform a non-negative matrix tri-factorization
+ that uncovers latent features that account for the greatest variation in
+ our data.
  If 
 \begin_inset Formula $X$
 \end_inset
 
- is composed of two concatenated feature sets, these latent features will
- be linear combinations of the original features, thereby providing insight
- into combinations of features that combine to predict variability in the
- patient labels.
+ is composed of two concatenated feature sets, the latent features are linear
+ combinations of the original features, and thereby provide insight into
+ which features combine to predict variability in the patient labels.
 \end_layout
 
 \begin_layout Standard
 In order to maintain consistency with other non-negative matrix factorization
- literature, we will use the matrix labels 
+ literature, we use the matrix labels 
 \begin_inset Formula $F$
 \end_inset
 
@@ -972,7 +1011,7 @@ In order to maintain consistency with other non-negative matrix factorization
 \end_inset
 
  rather than factoring it exactly.
- Form this perspective, the factorization is turned into a minimization
+ From this perspective, the factorization is turned into a minimization
  problem, namely computing non-negative 
 \begin_inset Formula $S$
 \end_inset
@@ -985,7 +1024,11 @@ In order to maintain consistency with other non-negative matrix factorization
 \begin_inset Formula $||X-FSG^{T}||_{F}$
 \end_inset
 
-.
+, where 
+\begin_inset Formula $||\cdot||_{F}$
+\end_inset
+
+ indicates the Frobenius norm, or rooted sum of squared elements, of a matrix.
  
 \end_layout
 
@@ -998,7 +1041,7 @@ Let
 \begin_inset Formula $X_{2}$
 \end_inset
 
- be the two non-negative subject by feature matrices with common subjects
+ be the two non-negative subject-by-feature matrices with common subjects
  and different feature sets, and let 
 \begin_inset Formula $L$
 \end_inset
@@ -1008,7 +1051,7 @@ Let
 \begin_inset Formula $X=[X_{1}X_{2}]$
 \end_inset
 
- as a concatenated subject by feature matrix.
+ as a concatenated subject-by-feature matrix.
  Let 
 \begin_inset Formula $F$
 \end_inset
@@ -1057,7 +1100,21 @@ Let
 
  matrix such that eacy row corresponds to a non-negative feature and each
  column corresponds to a latent feature to be discovered.
- A visualization of the matrices can be seen in Figure 
+ As described below, 
+\begin_inset Formula $k$
+\end_inset
+
+ is chosen so that the rank of 
+\begin_inset Formula $G$
+\end_inset
+
+ corresponds to the number of singular values that explain roughly 90% of
+ the variance in 
+\begin_inset Formula $X$
+\end_inset
+
+.
+ A visual representation of the matrices can be seen in Figure 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:tri-matirx-visualization"
@@ -1090,7 +1147,7 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-Non-negative tri-factorization shematic using patient labels.
+Non-negative tri-factorization schematic using patient labels.
  
 \begin_inset Formula $X$
 \end_inset
@@ -1162,7 +1219,7 @@ Problem Formulation (incl multiplicative updates)
 \end_layout
 
 \begin_layout Standard
-Keeping in mind that we desire sparse 
+Keeping in mind that we desire sparse and non-negative 
 \begin_inset Formula $S$
 \end_inset
 
@@ -1206,7 +1263,7 @@ where both
 \end_inset
 
  are fixed.
- The two additional 1-norm terms serve to enforce sparsity on 
+ The two additional 1-norm terms serve to encourage sparsity in 
 \begin_inset Formula $S$
 \end_inset
 
@@ -1248,7 +1305,7 @@ key "Zhang:Bioinformatics:2011"
 
 \end_inset
 
-, The objective function corresponding to 
+, the objective function corresponding to 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "eq:tri-minimization"
@@ -1307,8 +1364,8 @@ reference "eq:trimatrix-objective-function"
 
 \end_inset
 
- contains two variables and is therefore not convex in both, but only in
- each individually.
+ contains two variables and is therefore not simultaneously convex in both,
+ but only in each individually.
  To achieve convexity and minimize the objective function, we fix either
  
 \begin_inset Formula $S$
@@ -1318,8 +1375,8 @@ reference "eq:trimatrix-objective-function"
 \begin_inset Formula $G$
 \end_inset
 
-, calculate the other, and iterate until a convergence criteria is met.
- In order to construct an method of calculating 
+, update the other, and iterate until a convergence criteria is met.
+ In order to construct a method of calculating 
 \begin_inset Formula $S$
 \end_inset
 
@@ -1327,7 +1384,7 @@ reference "eq:trimatrix-objective-function"
 \begin_inset Formula $G$
 \end_inset
 
- independently, we first construct the Legrange 
+ independently, we first construct the Lagrange 
 \begin_inset Formula $\mathcal{L}$
 \end_inset
 
@@ -1340,7 +1397,7 @@ reference "eq:trimatrix-objective-function"
 \begin_inset Formula $\psi_{i}{}_{j}$
 \end_inset
 
- be the Legrange multipliers for the constraints 
+ be the Lagrange multipliers for the constraints 
 \begin_inset Formula $S\geq0$
 \end_inset
 
@@ -1520,8 +1577,11 @@ key "Zhang:Bioinformatics:2011"
 \begin_inset Formula $G$
 \end_inset
 
- is row-normalized at each iteration so that S absorbs the scaling from
- both matrices.
+ is row-normalized at each iteration so that 
+\begin_inset Formula $S$
+\end_inset
+
+ absorbs the scaling from both matrices.
 \end_layout
 
 \begin_layout Standard
@@ -1562,7 +1622,7 @@ As the update rules are multiplicative and each new value of
 \begin_inset Formula $G$
 \end_inset
 
- using k-means on columns of 
+ using k-means clustering on columns of 
 \begin_inset Formula $X$
 \end_inset
 
@@ -1587,8 +1647,7 @@ As the update rules are multiplicative and each new value of
 \begin_inset Formula $S$
 \end_inset
 
- is a scaling matrix and is initialized to random numbers between 0 and
- 1.
+ is initialized to random numbers between 0 and 1.
 \end_layout
 
 \begin_layout Subsection
@@ -1635,12 +1694,16 @@ Once
 \begin_inset Formula $SG^{T}$
 \end_inset
 
-, where m is the total number of non-negative features.
+, where 
+\begin_inset Formula $m$
+\end_inset
+
+ is the total number of non-negative features.
  This can be thought of as an indicator matrix similar to 
 \begin_inset Formula $F$
 \end_inset
 
-, except that each feature is assigned to a feature cluster.
+, except that each feature is assigned to one of 2 feature clusters.
  Unlike the random initialization of 
 \begin_inset Formula $G$
 \end_inset
@@ -1664,25 +1727,13 @@ g a patient in one label or the other.
 When considered as probabilities, it is reasonable to state that the higher
  a probability corresponding to one label is, the stronger the corresponding
  feature will be in predicting class membership.
- On the other hand, for feature in which both probabilities are similar
+ On the other hand, for features in which both probabilities are similar
  (both roughly 0.5), the predictive value of that feature is relatively small.
 \end_layout
 
 \begin_layout Standard
-In order to test this, we constructed a dataset using the Wisconsin Diagnostic
- Breast Cancer dataset (CITE), which includes 30 real-valued image features
- (10 features each from 3 cells) for 569 subjects.
- We used features from two cells, making 20 features total.
- Features were standardized, and for comparision purposes we added 10 additional
- random features with entries drawn from a normal distribution.
- After doubling the matrix size to make every entry positive (as described
- above), the final size of the data matrix was 569 by 60.
- Subjects were labeled as either benign or malignant, indicating the status
- of subjets' cancer cells from which image features were derived.
-\end_layout
-
-\begin_layout Standard
-As indicated above, 
+We tested this method using the Wisconsin dataset.
+ As indicated above, 
 \begin_inset Formula $F$
 \end_inset
 
@@ -1778,7 +1829,14 @@ Class labels in
 \begin_inset Formula $F$
 \end_inset
 
- are readily apparent.
+ are readily apparent in Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:Tri-factorization-of-Wisconsin"
+
+\end_inset
+
+.
  As desired, 
 \begin_inset Formula $G$
 \end_inset
@@ -1813,17 +1871,16 @@ reference "fig:wisconsin-SG"
 \end_inset
 
 .
- It is readily apparent that values corresponding to actual cells typically
- show much stronger contrast between one class and another than the random
- data.
+ It is clear that values corresponding to actual cells typically show much
+ stronger contrast between one class and another than the random data.
  It appears that values corresponding to positive feature values (or, the
  high-end of values once features are standardized) are are predictive of
  the first class, whereas lower/negative values tend to be predictive of
  the second class.
  Of course, since there are only two classes, any extreme value is by default
  predictive of membership in both classes.
- The expected ratio is equivalent to the proportion of subjects in each
- group.
+ The expected ratio between class membership values for non-predictive features
+ is equivalent to the proportion of subjects in each group.
  Since there are roughly 1.8 times as many subjects in the second column
  of 
 \begin_inset Formula $F$
@@ -1869,12 +1926,12 @@ status open
 
 from the factorization of the modified Wisconsin Diagnostic Breast Cancer
  dataset.
- Columns 1-20 correspond to 10 positive and 10 negative features from cell
+ Columns 1-20 correspond to 10 positive and 10 negative features from Cell
  1.
- Features 21-30 and 41-50 are positive and negative features from cell 2.
+ Features 21-30 and 41-50 are positive and negative features from Cell 2.
  Features 31-40 and 51-60 are positive and negative random features drawn
  from a normal distribution with mean 1 and standard deviation 0.
- Note that columns are not normalized in this case.
+ Note that columns are not normalized in this figure.
 \end_layout
 
 \end_inset
@@ -1903,7 +1960,7 @@ reference "fig:SG-ratios"
  to differentiate between patient classes.
  Several aspects of this figure are worth noting.
  First, entries corresponding to noise features show consistently low ratios
- (close to 1).
+ (close to 1.8).
  Ratios between corresponding positive and negative features from Cell 2
  are both high (in entries 21-30 and 41-50), which suggests that higher-than-ave
 rage values predict one class and lower-than-average of the same feature
@@ -1936,9 +1993,11 @@ reference "fig:SG-ratios"
 \end_inset
 
 .
- Calculating the information gain with respect to patient class, the top
- six features are 13, 14, 11, 18, 4 and 17, all of which are in the top
- feature ratios from Figure 
+ We used WEKA (CITE) to calculate the information gain with respect to patient
+ class.
+ According to this measure, the most informative six features are 13, 14,
+ 11, 18, 4 and 17, all of which are in the top feature ratios from Figure
+ 
 \begin_inset CommandInset ref
 LatexCommand ref
 reference "fig:SG-ratios"
@@ -1980,7 +2039,11 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-Ratios between rows 1 and 2 of SG^T resulting from tri-matrix factorization.
+Ratios between rows 1 and 2 of 
+\begin_inset Formula $SG^{T}$
+\end_inset
+
+ resulting from tri-matrix factorization.
 \end_layout
 
 \end_inset
@@ -2102,12 +2165,7 @@ The left graphic shows correlations between features in the data matrix
  to highlight only those correlations that relate to the subject labels.
  However, some correlations in noise features can also be seen in the right
  matrix which are not present in the left.
- This may be the result of the scaling of 
-\begin_inset Formula $G^{T}$
-\end_inset
-
-.
- CHECK????
+ 
 \end_layout
 
 \end_inset
@@ -2144,6 +2202,11 @@ Accurate patient prognosis is a vital part of medical practice.
  and the appropriate allocation of medical funds.
 \end_layout
 
+\begin_layout Standard
+In what follows, we use non-negative matrix factorization to uncover structure
+ in patient biometric data that is predictive of patient survival.
+\end_layout
+
 \begin_layout Subsection
 Survival analysis
 \end_layout
@@ -2160,8 +2223,8 @@ Kaplan-Meier survival analysis is a commonly used technique for determining
  In a typical Kaplan-Meier plot, subjects are split into two groups according
  to the value of a biometric marker.
  The fraction of each group surviving at every time point is then plotted.
- The log-rank statistical test is used to determine whether the survival
- curves differ significantly.
+ The log-rank statistical test is used to determine whether the difference
+ between survival curves is statistically significant.
 \end_layout
 
 \begin_layout Standard
@@ -2234,8 +2297,8 @@ Let
 \begin_inset Formula $n\times g$
 \end_inset
 
- matrix of standardized gene expression data, prepared as explained in the
- introduction, and let 
+ matrix of gene expression data, prepared as explained in the introduction,
+ and let 
 \begin_inset Formula $X_{I}$
 \end_inset
 
@@ -2243,7 +2306,7 @@ Let
 \begin_inset Formula $n\times i$
 \end_inset
 
- matrix of non-negative, standardized image features.
+ matrix of image features.
  Our goal is to discover an approximate common basis for 
 \begin_inset Formula $X_{G}$
 \end_inset
@@ -2253,11 +2316,11 @@ Let
 \end_inset
 
 , and use the basis vectors to separate patients into groups.
- Once separated, we wish perform Kaplan-Meier survival analysis to determine
+ Once separated, we perform Kaplan-Meier survival analysis to determine
  whether the groups have significantly different survival outcome, and therefore
  whether the common basis vectors relate to patient outcome.
- Patient labels are not used in the factorization, and this therefore represents
- an unsupervised approach to uncovering structure in patient biometric data.
+ Patient labels are not used in the factorization, so this represents an
+ unsupervised approach to uncovering structure in patient biometric data.
 \end_layout
 
 \begin_layout Standard
@@ -2303,7 +2366,7 @@ Given
 \begin_inset Formula $W$
 \end_inset
 
- (WHY?), and encourage sparse 
+ and encourage sparse 
 \begin_inset Formula $H_{G}$
 \end_inset
 
@@ -2321,8 +2384,8 @@ Given
 \begin_inset Formula $A$
 \end_inset
 
- (FROM WHERE?) as prior knowledge that serve to force covariance between
- gene expression values that are known to be interrelated.
+ (provided by TaeHyun Hwang) as prior knowledge that serve to force covariance
+ between gene expression values that are known to be interrelated.
  Finally, hypothetical and unknown gene expression / image feature relationships
  can be represented by a matrix 
 \begin_inset Formula $B$
@@ -2363,7 +2426,7 @@ The first line indicates the factor approximation of
 \end_inset
 
  to be computed.
- Terms in the second line represent Gene-Gene interaction and Gene-Image
+ Terms in the second line represent gene-gene interaction and gene-image
  relationships, respectively.
  They are subtracted as we wish to compute 
 \begin_inset Formula $W$
@@ -2609,8 +2672,10 @@ key "Zhang:Bioinformatics:2011"
 
 .
  First, the objective function 
-\backslash
-mathcal F can be rewritten as the following (FROBENIUS NOROM PROPERTY):
+\begin_inset Formula $\mathcal{F}$
+\end_inset
+
+ can be rewritten as the following:
 \end_layout
 
 \begin_layout Standard
@@ -2644,7 +2709,7 @@ To minimize
 \begin_inset Formula $H_{G}\geq0$
 \end_inset
 
- we create the Legrangian 
+ we create the Lagrangian 
 \end_layout
 
 \begin_layout Standard
@@ -2683,7 +2748,7 @@ where
 \begin_inset Formula $\Psi_{G}=[(\psi_{G})_{ij}]$
 \end_inset
 
- are the Legrange multipliers for the constraints 
+ are the Lagrange multipliers for the constraints 
 \begin_inset Formula $W_{ij}\geq0$
 \end_inset
 
@@ -2697,8 +2762,10 @@ where
 
  respectively.
  The partial derivatives of 
-\backslash
-mathcal L with respect to 
+\begin_inset Formula $\mathcal{L}$
+\end_inset
+
+ with respect to 
 \begin_inset Formula $W$
 \end_inset
 
@@ -2831,14 +2898,56 @@ key "Zhang:Bioinformatics:2011"
 
 \end_inset
 
-, parameters were set to _____.
+, parameters 
+\begin_inset Formula $\lambda_{1}$
+\end_inset
+
+, 
+\begin_inset Formula $\lambda_{2}$
+\end_inset
+
+, 
+\begin_inset Formula $\lambda_{3}$
+\end_inset
+
+, 
+\begin_inset Formula $\gamma_{1}$
+\end_inset
+
+ and 
+\begin_inset Formula $\gamma_{2}$
+\end_inset
+
+ were set to 0.0001, 0.01, 0.001, 20 and 10, respectively.
  A parameter sweep confirmed that these values give consistently reasonable
  results.
  20 factorizations were performed for each of the 5 conditions detailed
  above (3 complete bi-factorizations, one image-only and one gene-only).
- For each optimization, W, H_I and H_G were initialized to random values
- between 0 and 1, and the same W, H_I and H_G were used for each of the
- 5 methods.
+ For each optimization, 
+\begin_inset Formula $W$
+\end_inset
+
+, 
+\begin_inset Formula $H_{I}$
+\end_inset
+
+ and 
+\begin_inset Formula $H_{G}$
+\end_inset
+
+ were initialized to random values between 0 and 1, and the same 
+\begin_inset Formula $W$
+\end_inset
+
+, 
+\begin_inset Formula $H_{I}$
+\end_inset
+
+ and 
+\begin_inset Formula $H_{G}$
+\end_inset
+
+ were used for each of the 5 methods.
  Multiplicative updates were repeated until the objective function was improved
  by less than 0.01%.
  Figure 
@@ -2887,7 +2996,7 @@ name "fig:convergence-trajectories"
 
 \end_inset
 
-(PASSIVE VOICE?) For each initialization of 
+For each initialization of 
 \begin_inset Formula $W$
 \end_inset
 
@@ -2905,23 +3014,37 @@ name "fig:convergence-trajectories"
 \end_inset
 
  was computed, subjects were ranked according to corresponding values of
- each column of W in turn.
+ each column of 
+\begin_inset Formula $W$
+\end_inset
+
+ in turn.
  The top 50 subjects were labeled Group 1 and the bottom 50 subjects were
  labeled Group 2.
  The log-rank test was then performed to determine whether the survival
  outcome of the two groups was significantly different.
- The number of columns of W providing a significant separation of group
- outcomes was then counted.
+ The number of columns of 
+\begin_inset Formula $W$
+\end_inset
+
+ providing a significant separation of group outcomes was then counted.
 \end_layout
 
 \begin_layout Standard
 Though this method is used in the literature for uncovering latent explanatory
- variables (SEE TAE HYUN TRI-FACTORIZATION), it is worth asking whether
+ variables (SEE CITE TAE HYUN TRI-FACTORIZATION), it is worth asking whether
  the count of columns leading to significant group difference has meaning.
  Non-negative matrix factorization does not guarantee orthogonal columns
  in its result.
- Columns of W may be correlated, in which case counting 2 columns of W that
- produce significant group differences may amount to tallying two vectors
+ Columns of 
+\begin_inset Formula $W$
+\end_inset
+
+ may be correlated, in which case counting 2 columns of 
+\begin_inset Formula $W$
+\end_inset
+
+ that produce significant group differences may amount to tallying two vectors
  in a similar direction.
  As can be seen in 
 \begin_inset CommandInset ref
@@ -2930,7 +3053,11 @@ reference "fig:W-correlations"
 
 \end_inset
 
-, the majority of columns of W are nearly orthogonal.
+, the majority of columns of 
+\begin_inset Formula $W$
+\end_inset
+
+ are nearly orthogonal.
  There are notable exceptions, however.
  In this example, column 24 is highly positively correlated with columns
  7 and 20, and there are a number of high negative correlations.
@@ -2974,10 +3101,13 @@ name "fig:W-correlations"
 
 \end_inset
 
-Due to the lack of an orthogonality constraint, columns of W are not independent
- and column count cannot be used as a standalone measure of the ability
- of bi-factorization to uncover features that significantly differentiate
- patient groups.
+Due to the lack of an orthogonality constraint, columns of 
+\begin_inset Formula $W$
+\end_inset
+
+ are not independent and column count cannot be used as a standalone measure
+ of the ability of bi-factorization to uncover features that significantly
+ differentiate patient groups.
  In order to provide a better basis of comparison, we created a randomized
  dataset and performed the same five factorization routines.
  We shuffled feature values across subjects within each feature (i.e.
@@ -3019,8 +3149,12 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-Number of columns of W that significantly differented patients into low-
- and high-survival groups at an 
+Number of columns of 
+\begin_inset Formula $W$
+\end_inset
+
+ that significantly differented patients into low- and high-survival groups
+ at an 
 \begin_inset Formula $p=0.05$
 \end_inset
 
@@ -3054,7 +3188,11 @@ name "fig:bi-factorization-results"
 The results we found were somewhat surprising.
  There was virtually no difference between variations of the bifactorization
  method, that is, including a gene-image interaction term did not impact
- the number of columns of W significantly differentiating patients.
+ the number of columns of 
+\begin_inset Formula $W$
+\end_inset
+
+ significantly differentiating patients.
  However, including both types of data constrained the column count considerably
 , as entries 1-3 have much less variation than entries 4 and 5 (gene-only
  and image-only, respectively) in Figure 
@@ -3067,8 +3205,8 @@ reference "fig:bi-factorization-results"
 .
  Another interesting result is that factorizations using real data consistently
  uncovered several columns predictive of patient survival, whereas the median
- number of columns from random data predicting patient survival was much
- lower (0 in the case of the 3 methods using both data types).
+ number of columns from randomly permuted data predicting patient survival
+ was much lower (0 in the case of the 3 methods using both data types).
 \end_layout
 
 \begin_layout Section
@@ -3076,29 +3214,50 @@ Clustering
 \end_layout
 
 \begin_layout Standard
-what we are doing, why cluster anything? with this data what does clustering
- mean
+Clustering is a general famliy of unsupervised learning methods for partitioning
+ a data set into groups of similar observations.
+ There are many varieties of clustering algorithms, and each is most usefully
+ applied to data with particular characteristics.
+ Classical clustering methods include heirarchical clustering and k-means
+ clustering.
+ Heirarchical clustering assigns group labels based on some distance measure
+ between observations, grouping nearby observations together.
+ The k-means method is similar in that it uses a distance measure between
+ observations, but rather than using all pairwise distances between observations
+ this method tries to optimally locate some number, 
+\begin_inset Formula $k$
+\end_inset
+
+, of cluster centers and assign each observation to the nearest cluster
+ center.
+ 
 \end_layout
 
 \begin_layout Standard
-Clustering is a general famliy of unsupervised learning methods for partitioning
- a data set into groups of similar observations.
- There are many varieties of clustering algorithms, some more generally
- applicable than others.
+Because these methods are based on a distance measurement they may not be
+ good choices for data with irregularly shaped clusters.
+ High-dimensional data is also challenging for the classical clustering
+ methods since variance of distance between observations approaches zero
+ as dimension increases and as the number of observations decreases.
  We use a relatively modern, generally robust method called spectral clustering
- to evaluate the results of trifactorization.
- Classification by spectral clustering on all features of the Wisconsin
- and gene-image data establishes a useful point of comparison for the classifica
-tion performance of the trifactorization, although we certainly expect trifactor
-ization to perform better because it is a supervised method and has extra
- information available in the form of the gene-gene interaction network.
- Additionally, since spectral clustering performance improved using the
- best features as determined by the trifactorization we have evidence supporting
- the trifactorization results.
- However, the results of spectral clustering on both the full gene-image
- data set were poor.
- This suggests the trifactorization algorithm is better able to negotiate
- that data set than our spectral clustering method.
+ to evaluate the feature selection results provided by non-negative matrix
+ trifactorization.
+ Spectral clustering methods are able to operate on a more general notion
+ of similarity between observations than k-means and hierarchical clustering,
+ although choosing an appropriate similarity measure is important to arriving
+ at reasonable results.
+ This allows for selection of similarity measures that may be more appropriate
+ than euclidean distance or some related distance.
+ Additionally, spectral clustering methods have simlple implementations
+ that take advantage of general-purpose linear algebraic operations.
+\end_layout
+
+\begin_layout Standard
+Classification by spectral clustering on all features of the Wisconsin and
+ Gene-Image data establishes a useful point of comparison for the feature-select
+ion performance of the trifactorization, although we certainly expect trifactori
+zation to perform better because it is a supervised method.
+ 
 \end_layout
 
 \begin_layout Subsection
@@ -3109,8 +3268,15 @@ Shared Nearest Neighbor Similarity
 Some clustering algorithms operate in feature-space, whereas others require
  a graph-based representation of the data in the form of an adjacency matrix.
  Consider each observation as a node in a graph.
- An adjacency matrix A then consists of entries A_i_j thatcorrespond to
- some measure of 
+ An adjacency matrix 
+\begin_inset Formula $A$
+\end_inset
+
+ consists of entries 
+\begin_inset Formula $A_{i}{}_{j}$
+\end_inset
+
+ that correspond to some measure of 
 \begin_inset Quotes eld
 \end_inset
 
@@ -3118,21 +3284,26 @@ similarity
 \begin_inset Quotes erd
 \end_inset
 
- between observations/nodes i and j in the graph.
- In order to construct A, we must use a method that creates a similarity
- measure between observations using their location in feature-space.
+ between observations/nodes 
+\begin_inset Formula $i$
+\end_inset
+
+ and 
+\begin_inset Formula $j$
+\end_inset
+
+ in the graph.
+ In order to construct 
+\begin_inset Formula $A$
+\end_inset
+
+, we must use a method that creates a similarity measure between observations
+ using their location in feature-space.
  In low-dimensional space, Euclidean distance is often used as a similarity
  measure.
- As the number of dimensions grows, however, all points become 
-\begin_inset Quotes eld
-\end_inset
-
-closer
-\begin_inset Quotes erd
-\end_inset
-
- and all pairwise distance become more alike and correspondingly less informatio
-n-bearing regarding pairwise observation similarity.
+ As the number of dimensions grows, however, all pairwise distances become
+ more alike and correspondingly less information-bearing regarding pairwise
+ observation similarity.
  
 \end_layout
 
@@ -3159,18 +3330,67 @@ neareset neighbors
 \end_inset
 
  two features have in common.
- The benefit of the SNN method is that it is relative, that is, it constructs
- a definition of similarity that is relatively robust in the face of high
- dimensionality and variations in density throughout the feature space.
+ The benefit of the SNN method is that it is relative to the local geometry.
+ That is, SNN constructs a definition of similarity that is relatively robust
+ in the face of high dimensionality and variations in density throughout
+ the feature space.
  
 \end_layout
 
 \begin_layout Standard
+\begin_inset Float figure
+wide false
+sideways false
+status open
+
+\begin_layout Plain Layout
+\align center
+\begin_inset Graphics
+	filename figures/SNN graphic (CITE).png
+	width 3.5in
+
+\end_inset
+
+
+\begin_inset Caption
+
+\begin_layout Plain Layout
+Creation of a Shared-Nearest-Neighbor (SNN) similarity matrix.
+ (CITE) 
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Plain Layout
+
+\end_layout
+
+\end_inset
+
+
+\end_layout
+
+\begin_layout Standard
 In order to construct a shared nearest neighbor adjacency matrix for subjects,
- pairwise Euclidean distance is first computed using standardizes features.
+ pairwise Euclidean distance is first computed using standardized features.
  For each subject, distances to other subjects are ranked and the closest
- N? subjects to that subject are identified.
- Once each subject has a set of N? 
+ 
+\family typewriter
+
+\begin_inset Formula $p$
+\end_inset
+
+
+\family default
+ subjects to that subject are identified.
+ Once each subject has a set of 
+\begin_inset Formula $p$
+\end_inset
+
+ 
 \begin_inset Quotes eld
 \end_inset
 
@@ -3178,11 +3398,26 @@ nearest neighbors,
 \begin_inset Quotes erd
 \end_inset
 
- the SNN similarity measure between two subjects i and j, A_i_j, is calculated
- as the cardinality of the pairwise interseections between two subjects'
- nearest neighbor sets.
- N? is user-specified and controlls the sparsity of the adjacency matrix
- and was chosen to be 30 in our calculations.
+ the SNN similarity measure between two subjects 
+\begin_inset Formula $i$
+\end_inset
+
+ and 
+\begin_inset Formula $j$
+\end_inset
+
+, 
+\begin_inset Formula $A_{ij}$
+\end_inset
+
+, is calculated as the cardinality of the pairwise intersections between
+ two subjects' nearest neighbor sets.
+ The parameter 
+\begin_inset Formula $p$
+\end_inset
+
+ is user-specified and controls the sparsity of the adjacency matrix and
+ was chosen to be 30 in our calculations.
 \end_layout
 
 \begin_layout Subsection
@@ -3192,39 +3427,25 @@ Spectral Clustering
 \begin_layout Standard
 Clustering is a very popular unsupervised learning technique for finding
  related groups in large data sets.
- Classical clustering methods include heirarchical clustering and k-means
- clustering.
- Heirarchical clustering assigns group labels based on some distance measure
- between observations, grouping nearby observations together.
- The k-means method is similar in that it uses a distance measure between
- observations, but rather than using all pairwise distances between observations
- this method tries to optimally locate some number, k, of cluster centers
- and assign each observation to the nearest cluster center.
- Because these methods are based on a distance measurement they may not
- be good choices for data with oddly shaped clusters.
- High-dimensional data is also challenging for the classical clustering
- methods since variance of distance between observations approaches zero
- as dimension increases and as the number of observations decreases.
+ Due to the requirement to reduce the dimensionality of the data, we found
+ it convenient to convert the data from feature space into a graph-based
+ representation.
+ Spectral clustering is a robust and well-understood method for clustering
+ nodes in a graph.
+ Accordingly, we use it to partition the adjacency matrix in order to uncover
+ patient groups.
  
 \end_layout
 
 \begin_layout Standard
-Spectral clustering methods are able to operate on a more general notion
- of similarity between observations than k-means and hierarchical clustering,
- although choosing an appropriate similarity measure is important to arriving
- at reasonable results.
- This allows for selection of similarity measures that may be more appropriate
- than euclidean distance or some related distance.
- Additionally, spectral clustering methods have simlple implementations
- that take advantage of general-purpose linear algebraic operations.
- The basic method is to treat the data set as a graph with observations
- as vertices and similarity between observations as edge weights, calculate
- the corresponding adjacency matrix and the related graph Laplacian matrix
- 
+The basic spectral clustering method is to treat the data set as a graph
+ with observations as vertices and similarity between observations as edge
+ weights, calculate the corresponding adjacency matrix and the related graph
+ Laplacian matrix 
 \begin_inset Formula $L$
 \end_inset
 
-, and cluster a subset of eigenvectors of 
+ and cluster the elements of a subset of eigenvectors of 
 \begin_inset Formula $L$
 \end_inset
 
@@ -3273,7 +3494,7 @@ Next a graph Laplacian is calculated using the adjacency matrix
 \begin_inset Formula $D$
 \end_inset
 
- here.
+.
  At this point another choice must be made between three graph Laplacians:
 \end_layout
 
@@ -3359,6 +3580,27 @@ g in all cases.
 \end_layout
 
 \begin_layout Standard
+Sparse graphs are typically easier to cluster.
+ As shown in Figures 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:wisconsin-edge-weights"
+
+\end_inset
+
+ and 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:gene-image-adjacency-feature-selection"
+
+\end_inset
+
+, selecting a subset of features leads to the construction of a much sparser
+ graph, with the vast majority of pairwise edge weights equalling 0.
+ 
+\end_layout
+
+\begin_layout Standard
 \begin_inset Float figure
 wide false
 sideways false
@@ -3368,14 +3610,14 @@ status open
 \align center
 \begin_inset Graphics
 	filename figures/wisconsin-SNN-edge-weight-distribution.png
-	width 5in
+	width 3in
 
 \end_inset
 
 
 \begin_inset Graphics
 	filename figures/wisconsin-selected-features-SNN-edge-weight-distribution.png
-	width 5in
+	width 3in
 
 \end_inset
 
@@ -3386,9 +3628,21 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-edge weight distribution with SNN similarity for Wisconsin data with and
- without feature selection
+Edge weight distribution of the subject adjacency matrix 
+\begin_inset Formula $A$
+\end_inset
+
+ with SNN similarity for Wisconsin data with and without feature selection.
+ Note that feature selection creates a much sparser adjacency matrix.
+ 
 \end_layout
+
+\end_inset
+
+
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:wisconsin-edge-weights"
 
 \end_inset
 
@@ -3418,7 +3672,14 @@ status open
 \align center
 \begin_inset Graphics
 	filename figures/gene-image-SNN-edge-weight-distribution.png
-	width 5in
+	width 3in
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figures/gene-image-selected-features-SNN-edge-weight-distribution.png
+	width 3in
 
 \end_inset
 
@@ -3426,20 +3687,23 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-edge weight distribution with SNN similarity for gene and image data with
- and without feature selection 
+Edge weight distribution of the adjacency matrix 
+\begin_inset Formula $A$
+\end_inset
+
+ with SNN similarity for the Gene-Image dataset with and without feature
+ selection.
+ Note that once again the adjacency matrix is much sparser after using feature
+ selection.
+ 
 \end_layout
 
 \end_inset
 
 
-\end_layout
-
-\begin_layout Plain Layout
-\align center
-\begin_inset Graphics
-	filename figures/gene-image-selected-features-SNN-edge-weight-distribution.png
-	width 5in
+\begin_inset CommandInset label
+LatexCommand label
+name "fig:gene-image-adjacency-feature-selection"
 
 \end_inset
 
@@ -3456,19 +3720,13 @@ Feature Selection
 \end_layout
 
 \begin_layout Standard
-Spectral clustering is used here as a method for comparison with the classificat
-ions derived from matrix bifactorization, where subjects were classified
- according to individual columns of 
-\begin_inset Formula $W$
+Spectral clustering is used here as a method for evaluating feature selection
+ derived from matrix bifactorization, where subjects were labeled according
+ to individual columns of 
+\begin_inset Formula $F$
 \end_inset
 
 .
- This is method of classification is already quite similar to spectral clusterin
-g, with
-\begin_inset Formula $W$
-\end_inset
-
- taking the place of the matrix of eigenvalues of a graph Laplacian.
  The benefit of feature selection is evaluated with total cluster entropy,
  defined as
 \end_layout
@@ -3499,11 +3757,13 @@ where
 \end_inset
 
  indexes the known subject labels.
+ This formulation represents a sum of the entropy of individual clusters,
+ weighted by cluster size.
 \end_layout
 
 \begin_layout Standard
 The Wisconsin breast cancer data set has relatively small dimensionality
- and is well-separated in the cell 2 data, as can be seen in a plot of the
+ and is well-separated in the Cell 2 data, as can be seen in a plot of the
  first two singular vectors 
 \begin_inset CommandInset ref
 LatexCommand ref
@@ -3514,18 +3774,35 @@ reference "fig:wisconsin-top-2-singular-vectors"
 .
  Spectral clustering classifies this data with total cluster entropy 0.4430
  (error rate of 0.11) without feature selection.
- Selecting the best features as determined by matrix trifactorization, spectral
- clustering classifies this data with total cluster entropy 0.2553 (error
- rate 0.09).
+ Selecting the best 6 features as determined by matrix trifactorization,
+ spectral clustering classifies this data with total cluster entropy 0.2553
+ (error rate 0.09).
 \end_layout
 
 \begin_layout Standard
-The gene-image data set is high-dimensional and has a relatively small number
+The Gene-Image dataset is high-dimensional and has a relatively small number
  of subjects.
  Spectral clustering with all features gave poor classification results,
- total cluster entropy 0.9259 (error rate 0.35).
+ with total cluster entropy 0.9259 (error rate 0.35).
  Selecting features based on the corresponding trifactorization improved
- the results, total cluster entropy 0.8426 (error rate 0.32).
+ the results, giving total cluster entropy 0.8426 (error rate 0.32).
+\end_layout
+
+\begin_layout Standard
+In order to provide a 2D visualization with and without feature selection,
+ Figure 
+\begin_inset CommandInset ref
+LatexCommand ref
+reference "fig:wisconsin-top-2-singular-vectors"
+
+\end_inset
+
+ contains plots of the Wisconsin dataset projected onto the first two singular
+ vectors with all features and only the top features, respectively.
+ Interestingly, despite an improvement in spectral clustering using the
+ SNN-derived adjacency matrix, there is negligable difference between the
+ data in top-2 singular vector space using all and selected features.
+ 
 \end_layout
 
 \begin_layout Standard
@@ -3538,7 +3815,14 @@ status open
 \align center
 \begin_inset Graphics
 	filename figures/wisconsin-2-singular-vectors.png
-	width 5in
+	width 3in
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figures/wisconsin-selected-features-2-singular-vectors.png
+	width 3in
 
 \end_inset
 
@@ -3546,7 +3830,8 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-Wisconsin data top 2 singular vectors
+Wisconsin data projected onto the top-2 singular vector space, with and
+ without feature selection.
 \end_layout
 
 \end_inset
@@ -3573,37 +3858,6 @@ sideways false
 status open
 
 \begin_layout Plain Layout
-\align center
-\begin_inset Graphics
-	filename figures/wisconsin-selected-features-2-singular-vectors.png
-	width 5in
-
-\end_inset
-
-
-\begin_inset Caption
-
-\begin_layout Plain Layout
-Wisconsin data top 2 singular vectors, selected features
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Standard
-\begin_inset Float figure
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
 
 \end_layout
 
@@ -3611,7 +3865,14 @@ status open
 \align center
 \begin_inset Graphics
 	filename figures/gene-image-2-singular-vectors.png
-	width 5in
+	width 3in
+
+\end_inset
+
+
+\begin_inset Graphics
+	filename figures/gene-no-image-selected-features-2-singular-vectors.png
+	width 1.5in
 
 \end_inset
 
@@ -3619,15 +3880,16 @@ status open
 \begin_inset Caption
 
 \begin_layout Plain Layout
-gene-image data top 2 singular vectors, all features
+Gene-Image data points projected onto the first 2 singular vectors of the
+ individual gene expression and image feature data.
+ The left plot shows the projection using all features, and the right plot
+ shows the same projection using only the top 100 features.
+ None of the image features were among the top 100 features as determined
+ by non-negative trifactorization feature selection.
 \end_layout
 
 \end_inset
 
-
-\end_layout
-
-\begin_layout Plain Layout
 
 \end_layout
 
@@ -3637,42 +3899,22 @@ gene-image data top 2 singular vectors, all features
 \end_layout
 
 \begin_layout Standard
-\begin_inset Float figure
-wide false
-sideways false
-status open
-
-\begin_layout Plain Layout
-\align center
-\begin_inset Graphics
-	filename figures/gene-no-image-selected-features-2-singular-vectors.png
-	width 5in
-
-\end_inset
-
-
+It seems clear from our results that non-negative matrix trifactorization
+ is a useful tool for supervised feature selection.
+ Spectral clustering performance improved in both the Wisconsin and Gene-Image
+ dataset when feature selection was applied.
+ This is not surprising, but serves as an additional validation step of
+ the non-negative matrix trifactorization feature selection method.
 \end_layout
 
-\begin_layout Plain Layout
-\begin_inset Caption
-
-\begin_layout Plain Layout
-gene-image data top 2 singular vectors, selected features (image features
- were not in the top 100)
-\end_layout
-
-\end_inset
-
-
-\end_layout
-
-\begin_layout Plain Layout
-
-\end_layout
-
-\end_inset
-
-Look at clusters and compute entropy vs ALL measures
+\begin_layout Standard
+It is interesting that in the feature selection of the Gene-Image dataset,
+ all top 100 features are from genetic data and not image data.
+ To look at it another way, gene expression data appears to be more predictive
+ of whether cancer will metastasize than visual inspection of the cancer
+ cells themselves.
+ This suggests that genetic tests are a critical biomarker in determining
+ patient prognosis.
 \end_layout
 
 \begin_layout Standard
@@ -4047,6 +4289,7 @@ The findings presented in the bifactorization section are an interesting
  Performing multiplicative updates with an orthogonality constraint is not
  difficult (see ???? for an example), so we would include this requirement
  were we to perform this analysis in the future.
+ (ALSO it could be that shuffling simply removed correlation...)
 \end_layout
 
 \begin_layout Standard
@@ -4059,10 +4302,6 @@ Clustering worked poorly without feature selection on gene-image data.
  probability high dimensionality and lack of good features.
  Tri-factorization -> feature selection then clustering worked much better.
  
-\end_layout
-
-\begin_layout Section
-This is the section about math
 \end_layout
 
 \begin_layout Standard
